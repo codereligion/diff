@@ -48,9 +48,19 @@ public class DifferTest {
 	public ExpectedException expectedException = ExpectedException.none();
 	
 	@Test
+	@SuppressWarnings("unused")
+	public void throwsIllegalArgumentExceptionForNullDiffConfig() throws Exception {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("diffConfig must not be null.");
+		
+		new Differ(null);
+	}
+	
+	@Test
 	public void serilizesNullToTheWordNull() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
-			.addExcludedPropery("class")
+			.excludePropery("class")
 			.addSerializer(new IncludeSerializer(String.class, Integer.class));
 
 		final Address working = new Address();
@@ -61,9 +71,9 @@ public class DifferTest {
 	}
 	
 	@Test
-	public void serilizesEmptyStringToTwoQuotes() throws Exception {
+	public void serializesEmptyStringToTwoQuotes() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
-			.addExcludedPropery("class")
+			.excludePropery("class")
 			.addSerializer(new IncludeSerializer(String.class, Integer.class));
 
 		final Address working = new Address();
@@ -75,11 +85,24 @@ public class DifferTest {
 	}
 	
 	@Test
+	public void providesDefaultSerializationForClassProperty() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.addSerializer(new IncludeSerializer(Address.class))
+			.addComparator(StubComparator.INSTANCE);
+		
+		final Address base = createAddress();
+		final User working = createUser();
+		
+		final List<String> result = new Differ(diffConfig).diff(base, working);
+		
+		assertThat(result, hasItem("+User.class='com.codereligion.diff.util.User'"));
+	}
+	
+	@Test
 	public void customSerializerHavePrecendenceOverBuiltInIterablesSerialization() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(User.class, Address.class, Set.class))
-			.addComparator(StubComparator.INSTANCE)
-			.addExcludedPropery("class");
+			.addComparator(StubComparator.INSTANCE);
 		
 		final User base = createUser();
 		final User working = createUser();
@@ -104,27 +127,27 @@ public class DifferTest {
 		assertThat(result, not(hasItem("+User.class='com.codereligion.diff.util.User'")));
 	}
 	
+	
 	@Test
-	public void throwsMissingConfigExceptionForUnknownPropertyType() throws Exception {
+	public void throwsMissingSerializerExceptionForUnknownPropertyType() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(String.class))
-			.addComparator(StubComparator.INSTANCE)
-			.addExcludedPropery("class");
+			.excludePropery("class")
+			.addComparator(StubComparator.INSTANCE);
 		
-		expectedException.expect(MissingConfigException.class);
-		expectedException.expectMessage("Could not serialize property: User.address.zipCode with value: 12345");
+		expectedException.expectMessage("Could not find serializer for 'User.address.zipCode' with value: 12345");
 		
 		new Differ(diffConfig).diff(null, createUser());
 	}
 	
 	@Test
-	public void throwsMissingConfigExceptionForUncomparableIterableType() throws Exception {
+	public void throwsMissingComparatorExceptionForUncomparableIterableType() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
-			.addSerializer(new IncludeSerializer(Credential.class, Address.class, String.class, Integer.class))
-			.addExcludedPropery("class");
+			.excludePropery("class")
+			.addSerializer(new IncludeSerializer(Credential.class, Address.class, String.class, Integer.class));
 		
-		expectedException.expect(MissingConfigException.class);
-		expectedException.expectMessage("Could not find comparator to sort: [com.codereligion.diff.util.Credential");
+		expectedException.expect(MissingObjectComparatorException.class);
+		expectedException.expectMessage("Could not find object comparator for 'User.credentials' with value: [com.codereligion.diff.util.Credential");
 		
 		new Differ(diffConfig).diff(null, createUser());
 	}
@@ -133,8 +156,8 @@ public class DifferTest {
 	public void diffsFlatObjects() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(String.class, Integer.class))
-			.addComparator(StubComparator.INSTANCE)
-			.addExcludedPropery("class");
+			.excludePropery("class")
+			.addComparator(StubComparator.INSTANCE);
 	
 		final Address base = createAddress();
 		final Address working = createAddress();
@@ -142,9 +165,6 @@ public class DifferTest {
 		
 		final List<String> result = new Differ(diffConfig).diff(base, working);
 		
-		assertThat(result, hasItem("--- "));
-		assertThat(result, hasItem("+++ "));
-		assertThat(result, hasItem("@@ -1,1 +1,1 @@"));
 		assertThat(result, hasItem("-Address.street='street'"));
 		assertThat(result, hasItem("+Address.street='something new'"));
 	}
@@ -153,8 +173,8 @@ public class DifferTest {
 	public void diffsNestedObjects() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(String.class, Integer.class))
-			.addComparator(StubComparator.INSTANCE)
-			.addExcludedPropery("class");
+			.excludePropery("class")
+			.addComparator(StubComparator.INSTANCE);
 		
 		final User base = createUser();
 		final User working = createUser();
@@ -162,19 +182,15 @@ public class DifferTest {
 		
 		final List<String> result = new Differ(diffConfig).diff(base, working);
 		
-		assertThat(result, hasItem("--- "));
-		assertThat(result, hasItem("+++ "));
-		assertThat(result, hasItem("@@ -1,1 +1,1 @@"));
 		assertThat(result, hasItem("-User.address.street='street'"));
 		assertThat(result, hasItem("+User.address.street='something new'"));
 	}
 	
 	@Test
-	public void diffsIterablesObjects() throws Exception {
+	public void diffsIterableObjects() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(Integer.class))
-			.addComparator(StubComparator.INSTANCE)
-			.addExcludedPropery("class");
+			.addComparator(StubComparator.INSTANCE);
 		
 		final Set<Integer> base = Sets.newHashSet(1, 2, 3);
 		final Set<Integer> working = Sets.newHashSet(2, 3, 4);
@@ -188,25 +204,31 @@ public class DifferTest {
 	public void returnsEmptyListForSameObjects() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(String.class, Integer.class))
-			.addComparator(StubComparator.INSTANCE)
-			.addExcludedPropery("class");
+			.excludePropery("class")
+			.addComparator(StubComparator.INSTANCE);
 		
 		final List<String> result = new Differ(diffConfig).diff(createUser(), createUser());
 		assertTrue(result.isEmpty());
 	}
 	
 	@Test
+	public void throwsIllegalArgumentExceptionForNullWorkingObject() throws Exception {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("working object must not be null.");
+		
+		new Differ(new DiffConfig()).diff(null, null);
+	}
+	
+	@Test
 	public void allowsBaseToBeNull() throws Exception{
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(String.class, Integer.class))
-			.addComparator(StubComparator.INSTANCE)
-			.addExcludedPropery("class");
+			.excludePropery("class")
+			.addComparator(StubComparator.INSTANCE);
 	
 		final List<String> result = new Differ(diffConfig).diff(null, createUser());
 		
-		assertThat(result, hasItem("--- "));
-		assertThat(result, hasItem("+++ "));
-		assertThat(result, hasItem("@@ -1,0 +1,3 @@"));
 		assertThat(result, hasItem("+User.address.street='street'"));
 		assertThat(result, hasItem("+User.address.zipCode='12345'"));
 		assertThat(result, hasItem("+User.credentials[0].password='password'"));
@@ -216,8 +238,8 @@ public class DifferTest {
 	public void addsBeanNameInTheBeginningOfEachProperty() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(String.class, Integer.class))
-			.addComparator(StubComparator.INSTANCE)
-			.addExcludedPropery("class");
+			.excludePropery("class")
+			.addComparator(StubComparator.INSTANCE);
 	
 		final List<String> result = new Differ(diffConfig).diff(null, createUser());
 		

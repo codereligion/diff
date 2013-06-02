@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Creates a diff between two given objects applying the given {@link DiffConfig} and returning
@@ -38,7 +38,8 @@ import javax.annotation.Nullable;
  * @since 10.05.2013
  * @see DiffConfig
  */
-public class Differ {
+@ThreadSafe
+public final class Differ {
 	
 	/**
 	 * The configuration to use.
@@ -49,8 +50,14 @@ public class Differ {
 	 * Constructs a new instance for the given {@link DiffConfig}.
 	 * 
 	 * @param diffConfig the config to use
+	 * @throws IllegalArgumentException when the given {@code diffConfig} is {@code null}
 	 */
 	public Differ(final DiffConfig diffConfig) {
+		
+		if (diffConfig == null) {
+			throw new IllegalArgumentException("diffConfig must not be null.");
+		}
+		
 		this.diffConfig = diffConfig;
 	}
 	
@@ -64,14 +71,20 @@ public class Differ {
 	 * 
 	 * @param base the object which represents the state before a change
 	 * @param working the object which represents the state after a change
+	 * @throws IllegalArgumentException when the given {@code working} object is {@code null}
+	 * @throws MissingSerializerException when the {@link DiffConfig} is missing a {@link Serializer} to perform the diff
+	 * @throws MissingComparatorException when the {@link DiffConfig} is missing an {@link ObjectComparator} to perform the diff
 	 * @throws InvocationTargetException when a getter of one of the given objects threw an exception
 	 * @throws IllegalAccessException when a getter of one of the given objects is not accessible
 	 * @throws IntrospectionException when one of the given objects could not be introspected
-	 * @throws MissingConfigException when the {@link DiffConfig} is missing essential data to diff the given objects
 	 */
 	public List<String> diff(
-			@Nullable final Object base,
+			final Object base,
 			final Object working) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
+		
+		if (working == null) {
+			throw new IllegalArgumentException("working object must not be null.");
+		}
 		
 		final List<String> serializedPropertiesOfBase = Lists.newArrayList();
 		final List<String> serializedPropertiesOfWorking = Lists.newArrayList();
@@ -101,46 +114,46 @@ public class Differ {
 	private void diffObject(
 			final List<String> lines,
 			final String path,
-			@Nullable final Object object) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
+			final Object value) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
 		
-		if (object == null) {
+		if (value == null) {
 			lines.add(path + "=null");
 			return;
 		}
 		
-		final Serializer serializer = diffConfig.findSerializerFor(object);
+		final Serializer serializer = diffConfig.findSerializerFor(value);
 		if (serializer != null) {
-			lines.add(path + "='" + serializer.serialize(object) + "'");
+			lines.add(path + "='" + serializer.serialize(value) + "'");
 			return;
 		}
 		
-		if (object instanceof Iterable) {
-			diffIterable(lines, path, object);
+		if (value instanceof Iterable) {
+			diffIterable(lines, path, value);
 			return;
 		}
 		
-		if (object instanceof Class) {
-			lines.add(path + "='" + ((Class<?>) object).getCanonicalName() + "'");
+		if (value instanceof Class) {
+			lines.add(path + "='" + ((Class<?>) value).getCanonicalName() + "'");
 			return;
 		}
 		
-		diffObjectProperties(lines, path, object);
+		diffObjectProperties(lines, path, value);
 	}
 	
 	private void diffIterable(
 			final List<String> lines,
-			final String propertyName,
-			final Object property) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
+			final String path,
+			final Object value) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
 		
-		final List<Object> iterableProperty = transformToSortedList((Iterable<?>) property);
+		final List<Object> iterableProperty = transformToSortedList(path, (Iterable<?>) value);
 		int i = 0;
 		for (final Object nestedProperty : iterableProperty) {
-			diffObject(lines, propertyName + "[" + i++ + "]", nestedProperty);
+			diffObject(lines, path + "[" + i++ + "]", nestedProperty);
 		}
 	}
 
-	private List<Object> transformToSortedList(final Iterable<?> iterable) {
-		final List<Object> list = Lists.newArrayList(iterable);
+	private List<Object> transformToSortedList(final String path, final Iterable<?> value) {
+		final List<Object> list = Lists.newArrayList(value);
 		
 		if (list.isEmpty()) {
 			return list;
@@ -149,7 +162,7 @@ public class Differ {
 		final Comparator<Object> comparator = diffConfig.findComparatorFor(list.get(0));
 		
 		if (comparator == null) {
-			throw new MissingConfigException("Could not find comparator to sort: " + iterable);
+			throw new MissingObjectComparatorException(path, value);
 		}
 		
 		Collections.sort(list, comparator);
@@ -159,10 +172,10 @@ public class Differ {
 	private void diffObjectProperties(
 			final List<String> lines,
 			final String path,
-			final Object object) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
+			final Object value) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
 		
 		final int linesBefore = lines.size();
-		final Class<?> beanClass = object.getClass();
+		final Class<?> beanClass = value.getClass();
 		final BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
 	
 		for (final PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
@@ -178,14 +191,14 @@ public class Differ {
 				continue;
 			}
 			
-			final Object property = readMethod.invoke(object);
+			final Object propertyValue = readMethod.invoke(value);
 			final String fullPath = path + "." + propertyName;
-			diffObject(lines, fullPath, property);
+			diffObject(lines, fullPath, propertyValue);
 		}
 		
 		final boolean serializationFailed = linesBefore == lines.size();
 		if (serializationFailed) {
-			throw new MissingConfigException("Could not serialize property: " + path + " with value: " + object);
+			throw new MissingSerializerException(path, value);
 		}
 	}
 }

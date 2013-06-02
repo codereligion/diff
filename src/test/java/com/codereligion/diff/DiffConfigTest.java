@@ -23,7 +23,9 @@ import static org.junit.Assert.assertTrue;
 import com.codereligion.diff.util.IncludeSerializer;
 import com.codereligion.diff.util.StubComparator;
 import java.util.Comparator;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Tests {@link DiffConfig}.
@@ -32,7 +34,37 @@ import org.junit.Test;
  * @since 12.05.2013
  */
 public class DiffConfigTest {
+	
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
 
+	@Test
+	public void addComparatorThrowsIllegalArgumentExceptionOnNullValue() {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("comparator must not be null.");
+		
+		new DiffConfig().addComparator(null);
+	}
+	
+	@Test
+	public void addExcludedPropertyThrowsIllegalArgumentExceptionOnNullValue() {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("propertyName must not be null.");
+		
+		new DiffConfig().excludePropery(null);
+	}
+	
+	@Test
+	public void addExcludedSerializerThrowsIllegalArgumentExceptionOnNullValue() {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("serializer must not be null.");
+		
+		new DiffConfig().addSerializer(null);
+	}
+	
 	@Test
 	public void hasDefaultEmptyStringForBaseObjectName() {
 		assertThat(new DiffConfig().getBaseObjectName(), is(""));
@@ -62,7 +94,7 @@ public class DiffConfigTest {
 	@Test
 	public void allowsAddingAndRetrievingOfCompartors() {
 		final String property = "property";
-		final DiffConfig config = new DiffConfig().addExcludedPropery(property);
+		final DiffConfig config = new DiffConfig().excludePropery(property);
 		
 		assertTrue(config.isPropertyExcluded(property));
 	}

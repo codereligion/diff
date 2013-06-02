@@ -18,23 +18,24 @@ package com.codereligion.diff;
 
 
 /**
- * Indicates that the {@link Differ} could not create the diff, because of a missing configuration.
+ * Indicates that the {@link Differ} could not create the diff, because of a missing {@link Serializer}.
  * 
  * @author Sebastian Gröbler
  * @since 12.05.2013
  * @see Differ
  * @see DiffConfig
  */
-public class MissingConfigException extends RuntimeException {
+public class MissingSerializerException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Creates a new instance for the given message
+	 * Creates a new instance for the given {@code path} and {@code object}.
 	 * 
-	 * @param message the message describing the missing configuration
+	 * @param path the path of the property, that caused the exception
+	 * @param object the object for which no {@link Serializer} could be found
 	 */
-	public MissingConfigException(final String message) {
-		super(message);
+	public MissingSerializerException(final String path, final Object object) {
+		super("Could not find serializer for '" + path + "' with value: " + object);
 	}
 }

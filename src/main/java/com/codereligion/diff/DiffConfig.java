@@ -19,6 +19,7 @@ package com.codereligion.diff;
 import com.google.common.collect.Sets;
 import java.util.Comparator;
 import java.util.Set;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * The configuration for the {@link Differ}.
@@ -27,7 +28,8 @@ import java.util.Set;
  * @since 11.05.2013
  * @see Differ
  */
-public class DiffConfig {
+@NotThreadSafe
+public final class DiffConfig {
 
 	/**
 	 * Simple property names that will be excluded from the diff of all object in the graph.
@@ -61,7 +63,7 @@ public class DiffConfig {
 	 * @return a {@link Comparator} or {@code null} if none was found
 	 * @see Comparator
 	 */
-	public Comparator<Object> findComparatorFor(final Object object) {
+	Comparator<Object> findComparatorFor(final Object object) {
 		for (final ObjectComparator<?> comparator : comparators) {
 			if (comparator.compares(object)) {
 				return comparator;
@@ -77,7 +79,7 @@ public class DiffConfig {
 	 * @return a {@link Serializer} or {@code null} if none was found
 	 * @see Serializer
 	 */
-	public Serializer findSerializerFor(final Object object) {
+	Serializer findSerializerFor(final Object object) {
 		for(final Serializer serializer: serializers) {
 			if (serializer.serializes(object)) {
 				return serializer;
@@ -93,7 +95,7 @@ public class DiffConfig {
 	 * @param propertyName the name of the property
 	 * @return true if it is excluded, false otherwise
 	 */
-	public boolean isPropertyExcluded(final String propertyName) {
+	boolean isPropertyExcluded(final String propertyName) {
 		return excludedProperties.contains(propertyName);
 	}
 
@@ -101,11 +103,17 @@ public class DiffConfig {
 	 * Adds a property to be excluded for the diff. The property will be excluded for
 	 * all objects in the graph of the to be diffed object.
 	 * 
-	 * @param property the name of the property to be excluded
+	 * @param propertyName the name of the property to be excluded
 	 * @return a reference to this instance
+	 * @throws IllegalArgumentException when the given {@code propertyName} is {@code null} 
 	 */
-	public DiffConfig addExcludedPropery(final String property) {
-		excludedProperties.add(property);
+	public DiffConfig excludePropery(final String propertyName) {
+		
+		if (propertyName == null) {
+			throw new IllegalArgumentException("propertyName must not be null.");
+		}
+		
+		excludedProperties.add(propertyName);
 		return this;
 	}
 
@@ -115,9 +123,15 @@ public class DiffConfig {
 	 * 
 	 * @param comparator the {@link ObjectComparator} to add
 	 * @return a reference to this instance
+	 * @throws IllegalArgumentException when the given {@code comparator} is {@code null}
 	 * @see ObjectComparator
 	 */
 	public DiffConfig addComparator(final ObjectComparator<?> comparator) {
+		
+		if (comparator == null) {
+			throw new IllegalArgumentException("comparator must not be null.");
+		}
+		
 		comparators.add(comparator);
 		return this;
 	}
@@ -127,9 +141,15 @@ public class DiffConfig {
 	 * 
 	 * @param serializer the {@link Serializer} to add
 	 * @return a reference to this instance
+	 * @throws IllegalArgumentException when the given {@code serializer} is {@code null}
 	 * @see Serializer
 	 */
 	public DiffConfig addSerializer(final Serializer serializer) {
+		
+		if (serializer == null) {
+			throw new IllegalArgumentException("serializer must not be null.");
+		}
+		
 		serializers.add(serializer);
 		return this;
 	}
@@ -161,7 +181,7 @@ public class DiffConfig {
 	 * 
 	 * @return the name of the base object
 	 */
-	public String getBaseObjectName() {
+	String getBaseObjectName() {
 		return baseObjectName;
 	}
 
@@ -170,7 +190,7 @@ public class DiffConfig {
 	 * 
 	 * @return the name of the working object
 	 */
-	public String getWorkingObjectName() {
+	String getWorkingObjectName() {
 		return workingObjectName;
 	}
 }
