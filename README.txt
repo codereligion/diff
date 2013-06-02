@@ -1,0 +1,1 @@
+See https://github.com/codereligion/diff/wiki
