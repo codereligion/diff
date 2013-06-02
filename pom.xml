@@ -3,7 +3,7 @@
 
     <groupId>com.codereligion</groupId>
     <artifactId>codereligion-diff</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <name>Diff</name>
 
 	<description>Allows to diff two arbitrary Java objects and retrieve the diff result as a list of strings.</description>
@@ -24,35 +24,18 @@
         <java.version>1.6</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <compiler.plugin.version>3.0</compiler.plugin.version>
-        <war.plugin.version>2.3</war.plugin.version>
         <release.plugin.version>2.4</release.plugin.version>
+        <surefire.plugin.version>2.12.2</surefire.plugin.version>
 
         <!-- dependency versions -->
-        <slf4j.version>1.6.4</slf4j.version>
-        <logback.version>0.9.29</logback.version>
-		<scala.version>2.9.2</scala.version>
-		<diffutils.version>1.2</diffutils.version>
-		<mockito.version>1.9.5</mockito.version>
         <junit.version>4.11</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
+		<diffutils.version>1.2</diffutils.version>
+        <guava.version>11.0.1</guava.version>
 
     </properties>
 
     <dependencies>
-
-        <!-- ******************** -->
-        <!-- LOGGING DEPENDENCIES -->
-        <!-- ******************** -->
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-
-        <!-- ******************* -->
-        <!-- TESTING DEPENDENCIES -->
-        <!-- ******************* -->
 
         <dependency>
             <groupId>junit</groupId>
@@ -62,33 +45,16 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hamcrest</groupId>
-                    <artifactId>hamcrest-all</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-integration</artifactId>
             <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
 
-        <!-- ******************** -->
-        <!-- MISC DEPENDENCIES -->
-        <!-- ******************** -->
-
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>11.0.1</version>
+            <version>${guava.version}</version>
         </dependency>
 
 		<dependency>
@@ -101,6 +67,12 @@
 
     <build>
         <plugins>
+        
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.plugin.version}</version>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -126,62 +98,7 @@
                 </configuration>
             </plugin>
 
-
-            <!-- skip default execution of surefire -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12.2</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
 
-    <profiles>
-
-        <!-- ********* -->
-        <!-- UNIT TEST -->
-        <!-- ********* -->
-
-        <!-- this profile is ment to be executed before each commit to assure that
-            the application passes all basic unit tests. example call: mvn clean verify
-            -Dunit.test you can skip code coverage analysis by specifying the property
-            "skip.code.coverage" -->
-        <profile>
-            <id>unit.test</id>
-
-            <activation>
-                <property>
-                    <name>unit.test</name>
-                </property>
-            </activation>
-
-            <build>
-                <plugins>
-                    <!-- execute actual unit tests -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <skip>false</skip>
-                            <systemPropertyVariables>
-                                <logs.folder>${project.build.directory}/logs/test</logs.folder>
-                            </systemPropertyVariables>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>run.unit.tests</id>
-                                <goals>
-                                    <goal>test</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

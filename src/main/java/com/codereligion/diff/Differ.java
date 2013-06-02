@@ -98,46 +98,13 @@ public class Differ {
 		return before.getClass().getSimpleName();
 	}
 
-	private void diffObjectProperties(
-			final List<String> lines,
-			final String path,
-			final Object object) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
-		
-		final int linesBefore = lines.size();
-		final Class<?> beanClass = object.getClass();
-		final BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
-	
-		for (final PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
-			final String propertyName = descriptor.getName();
-	
-			if (diffConfig.isPropertyExcluded(propertyName)) {
-				continue;
-			}
-			
-			final Method readMethod = descriptor.getReadMethod();
-			
-			if (readMethod == null) {
-				continue;
-			}
-			
-			final Object property = readMethod.invoke(object);
-			final String fullPath = path + "." + propertyName;
-			diffObject(lines, fullPath, property);
-		}
-		
-		final boolean serializationFailed = linesBefore == lines.size();
-		if (serializationFailed) {
-			throw new MissingConfigException("Could not serialize property: " + path + " with value: " + object);
-		}
-	}
-	
 	private void diffObject(
 			final List<String> lines,
 			final String path,
 			@Nullable final Object object) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
 		
 		if (object == null) {
-			lines.add(path + "=''");
+			lines.add(path + "=null");
 			return;
 		}
 		
@@ -171,7 +138,7 @@ public class Differ {
 			diffObject(lines, propertyName + "[" + i++ + "]", nestedProperty);
 		}
 	}
-	
+
 	private List<Object> transformToSortedList(final Iterable<?> iterable) {
 		final List<Object> list = Lists.newArrayList(iterable);
 		
@@ -187,5 +154,38 @@ public class Differ {
 		
 		Collections.sort(list, comparator);
 		return list;
+	}
+	
+	private void diffObjectProperties(
+			final List<String> lines,
+			final String path,
+			final Object object) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
+		
+		final int linesBefore = lines.size();
+		final Class<?> beanClass = object.getClass();
+		final BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
+	
+		for (final PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
+			final String propertyName = descriptor.getName();
+	
+			if (diffConfig.isPropertyExcluded(propertyName)) {
+				continue;
+			}
+			
+			final Method readMethod = descriptor.getReadMethod();
+			
+			if (readMethod == null) {
+				continue;
+			}
+			
+			final Object property = readMethod.invoke(object);
+			final String fullPath = path + "." + propertyName;
+			diffObject(lines, fullPath, property);
+		}
+		
+		final boolean serializationFailed = linesBefore == lines.size();
+		if (serializationFailed) {
+			throw new MissingConfigException("Could not serialize property: " + path + " with value: " + object);
+		}
 	}
 }

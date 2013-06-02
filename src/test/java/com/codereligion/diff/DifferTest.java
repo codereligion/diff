@@ -48,6 +48,33 @@ public class DifferTest {
 	public ExpectedException expectedException = ExpectedException.none();
 	
 	@Test
+	public void serilizesNullToTheWordNull() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.addExcludedPropery("class")
+			.addSerializer(new IncludeSerializer(String.class, Integer.class));
+
+		final Address working = new Address();
+		
+		final List<String> result = new Differ(diffConfig).diff(null, working);
+		
+		assertThat(result, hasItem(containsString("null")));
+	}
+	
+	@Test
+	public void serilizesEmptyStringToTwoQuotes() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.addExcludedPropery("class")
+			.addSerializer(new IncludeSerializer(String.class, Integer.class));
+
+		final Address working = new Address();
+		working.setStreet("");
+		
+		final List<String> result = new Differ(diffConfig).diff(null, working);
+		
+		assertThat(result, hasItem(containsString("''")));
+	}
+	
+	@Test
 	public void customSerializerHavePrecendenceOverBuiltInIterablesSerialization() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(User.class, Address.class, Set.class))
