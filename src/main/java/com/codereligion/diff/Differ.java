@@ -71,7 +71,7 @@ public final class Differ {
 	 * @param working the object which represents the state after a change
 	 * @throws IllegalArgumentException when the given {@code working} object is {@code null}
 	 * @throws MissingSerializerException when the {@link DiffConfig} is missing a {@link Serializer} to perform the diff
-	 * @throws MissingComparatorException when the {@link DiffConfig} is missing an {@link ObjectComparator} to perform the diff
+	 * @throws MissingObjectComparatorException when the {@link DiffConfig} is missing an {@link ObjectComparator} to perform the diff
 	 * @throws InvocationTargetException when a getter of one of the given objects threw an exception
 	 * @throws IllegalAccessException when a getter of one of the given objects is not accessible
 	 * @throws IntrospectionException when one of the given objects could not be introspected

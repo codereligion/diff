@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Sets;
 import java.util.Comparator;
 import java.util.Set;
-import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * The configuration for the {@link Differ}.
@@ -30,7 +30,7 @@ import javax.annotation.concurrent.NotThreadSafe;
  * @since 11.05.2013
  * @see Differ
  */
-@NotThreadSafe
+@ThreadSafe
 public final class DiffConfig {
 
 	/**
@@ -64,85 +64,91 @@ public final class DiffConfig {
 	private String workingObjectName = ""; 
 
 	/**
-	 * Adds a property to be excluded for the diff. The property will be excluded for
-	 * all objects in the graph of the to be diffed object.
+	 * Returns a copy of this config with the given {@code propertyName} added to be excluded for the diff.
+	 * The property will be excluded for all objects in the graph of the to be diffed object.
 	 * 
 	 * @param propertyName the name of the property to be excluded
-	 * @return a reference to this instance
+	 * @return a copy of this instance
 	 * @throws IllegalArgumentException when the given {@code propertyName} is {@code null} 
 	 */
-	public DiffConfig excludePropery(final String propertyName) {
+	public DiffConfig excludeProperty(final String propertyName) {
 		checkArgument(propertyName != null, "propertyName must not be null.");
-		excludedProperties.add(propertyName);
-		return this;
+		final DiffConfig copy = this.copy();
+		copy.excludedProperties.add(propertyName);
+		return copy;
 	}
 
 	/**
-	 * Adds a {@code comparator} to be used for sorting iterables, so that they can be ordered
-	 * and compared consistently.
+	 * Returns a copy of this config with the given {@code comparator} added to be used for sorting iterables,
+	 * so that they can be ordered and compared consistently.
 	 * 
 	 * @param comparator the {@link ObjectComparator} to add
-	 * @return a reference to this instance
+	 * @return a copy of this instance
 	 * @throws IllegalArgumentException when the given {@code comparator} is {@code null}
 	 * @see ObjectComparator
 	 */
 	public DiffConfig addComparator(final ObjectComparator<?> comparator) {
 		checkArgument(comparator != null, "comparator must not be null.");
-		comparators.add(comparator);
-		return this;
+		final DiffConfig copy = this.copy();
+		copy.comparators.add(comparator);
+		return copy;
 	}
 	
 	/**
-	 * Adds a {@code comparable} which is used to identify objects that implement the {@link Comparable}
-	 * interface in order to use them directly and not require a {@link Comparator}.
+	 * Returns a copy of this config with the given {@code comparable} added to be used to identify objects
+	 * that implement the {@link Comparable} interface in order to use them directly and not require a {@link Comparator}.
 	 * 
-	 * <p>Comparables are prioritized over comparators.
+	 * <p>Comparables are prioritized over custom comparators.
 	 * 
 	 * @param comparable the {@link Comparable} to add
-	 * @return a reference to this instance
+	 * @return a copy of this instance
 	 * @throws IllegalArgumentException when the given {@code comparable} is {@code null}
 	 * @see Comparable
 	 */
 	public DiffConfig addComparable(final Class<? extends Comparable<?>> comparable) {
 		checkArgument(comparable != null, "comparable must not be null.");
-		comparables.add(comparable);
-		return this;
+		final DiffConfig copy = this.copy();
+		copy.comparables.add(comparable);
+		return copy;
 	}
 	
 	/**
-	 * Adds the given serializer to be used for serializing specific objects.
+	 * Returns a copy of this config with the given {@code serializer} added to be used for serializing objects.
 	 * 
 	 * @param serializer the {@link Serializer} to add
-	 * @return a reference to this instance
+	 * @return a copy of this instance
 	 * @throws IllegalArgumentException when the given {@code serializer} is {@code null}
 	 * @see Serializer
 	 */
 	public DiffConfig addSerializer(final Serializer serializer) {
 		checkArgument(serializer != null, "serializer must not be null.");
-		serializers.add(serializer);
-		return this;
+		final DiffConfig copy = this.copy();
+		copy.serializers.add(serializer);
+		return copy;
 	}
 	
 	/**
-	 * Sets the name of the working object.
+	 * Returns a copy of this config with the given {@code objectName} added to be used for the working object.
 	 * 
-	 * @param objectName the name of the working object
-	 * @return a reference to this instance
+	 * @param objectName the name of the working object, may be null
+	 * @return a copy of this instance
 	 */
 	public DiffConfig setWorkingObjectName(final String objectName) {
-		this.workingObjectName = objectName;
-		return this;
+		final DiffConfig copy = this.copy();
+		copy.workingObjectName = objectName;
+		return copy;
 	}
 	
 	/**
-	 * Sets the name of the base object
+	 * Returns a copy of this config with the given {@code objectName} added to be used for the base object.
 	 * 
-	 * @param objectName the name of the base object
-	 * @return a reference to this instance
+	 * @param objectName the name of the base object, may be null
+	 * @return a copy of this instance
 	 */
 	public DiffConfig setBaseObjectName(final String objectName) {
-		this.baseObjectName = objectName;
-		return this;
+		final DiffConfig copy = this.copy();
+		copy.baseObjectName = objectName;
+		return copy;
 	}
 
 	/**
@@ -222,5 +228,29 @@ public final class DiffConfig {
 	 */
 	boolean isPropertyExcluded(final String propertyName) {
 		return excludedProperties.contains(propertyName);
+	}
+	
+	private DiffConfig copy() {
+		final DiffConfig copy = new DiffConfig();
+		copy.baseObjectName = this.baseObjectName;
+		copy.workingObjectName = this.workingObjectName;
+		
+		for (final Class<? extends Comparable<?>> comparable : this.comparables) {
+			copy.comparables.add(comparable);
+		}
+		
+		for (final ObjectComparator<?> comparator : this.comparators) {
+			copy.comparators.add(comparator);
+		}
+		
+		for (final Serializer serializer : this.serializers) {
+			copy.serializers.add(serializer);
+		}
+		
+		for (final String exlcudedProperty : this.excludedProperties) {
+			copy.excludedProperties.add(exlcudedProperty);
+		}
+				
+		return copy;
 	}
 }

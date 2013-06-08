@@ -17,6 +17,9 @@
 package com.codereligion.diff;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -38,6 +41,105 @@ public class DiffConfigTest {
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
+	
+	@Test
+	public void addComparatorReturnsNewInstance() {
+		final DiffConfig original = new DiffConfig();
+		final DiffConfig copy = original.addComparator(new StubComparator());
+		
+		assertThat(original, is(not(sameInstance(copy))));
+	}
+	
+	@Test
+	public void addComparatorLeavesOriginalUntouched() {
+		final DiffConfig original = new DiffConfig();
+		original.addComparator(new StubComparator(String.class));
+		
+		assertThat(original.findComparatorFor(""), is(nullValue()));
+	}
+	
+	@Test
+	public void addComparableReturnsNewInstance() {
+		final DiffConfig original = new DiffConfig();
+		final DiffConfig copy = original.addComparable(Credential.class);
+		
+		assertThat(original, is(not(sameInstance(copy))));
+	}
+
+	@Test
+	public void addComparableLeavesOriginalUntouched() {
+		final DiffConfig original = new DiffConfig();
+		original.addComparable(Credential.class);
+		
+		assertThat(original.isComparable(new Credential()), is(Boolean.FALSE));
+	}
+	
+	@Test
+	public void addSerializerReturnsNewInstance() {
+		final DiffConfig original = new DiffConfig();
+		final DiffConfig copy = original.addSerializer(new IncludeSerializer());
+		
+		assertThat(original, is(not(sameInstance(copy))));
+	}
+	
+	@Test
+	public void addSerializerLeavesOriginalUntouched() {
+		final DiffConfig original = new DiffConfig();
+		original.addSerializer(new IncludeSerializer(String.class));
+		
+		assertThat(original.findSerializerFor("foo"), is(nullValue()));
+	}
+	
+	@Test
+	public void excludePropertyReturnsNewInstance() {
+		final DiffConfig original = new DiffConfig();
+		final DiffConfig copy = original.excludeProperty("foo");
+		
+		assertThat(original, is(not(sameInstance(copy))));
+	}
+	
+	@Test
+	public void excludePropertyLeavesOriginalUntouched() {
+		final String propertyName = "foo";
+		final DiffConfig original = new DiffConfig();
+		original.excludeProperty(propertyName);
+		
+		assertThat(original.isPropertyExcluded(propertyName), is(Boolean.FALSE));
+	}
+	
+	@Test
+	public void setBaseObjectNameReturnsNewInstance() {
+		final DiffConfig original = new DiffConfig();
+		final DiffConfig copy = original.setBaseObjectName("foo");
+		
+		assertThat(original, is(not(sameInstance(copy))));
+	}
+	
+	@Test
+	public void setBaseObjectNameLeavesOriginalUntouched() {
+		final String objectName = "foo";
+		final DiffConfig original = new DiffConfig();
+		original.setBaseObjectName(objectName);
+		
+		assertThat(original.getBaseObjectName(), is(not(objectName)));
+	}
+	
+	@Test
+	public void setWorkingObjectNameReturnsNewInstance() {
+		final DiffConfig original = new DiffConfig();
+		final DiffConfig copy = original.setWorkingObjectName("foo");
+		
+		assertThat(original, is(not(sameInstance(copy))));
+	}
+	
+	@Test
+	public void setWorkingObjectNameLeavesOriginalUntouched() {
+		final String objectName = "foo";
+		final DiffConfig original = new DiffConfig();
+		original.setWorkingObjectName(objectName);
+		
+		assertThat(original.getWorkingObjectName(), is(not(objectName)));
+	}
 
 	@Test
 	public void addComparatorThrowsIllegalArgumentExceptionOnNullValue() {
@@ -63,7 +165,7 @@ public class DiffConfigTest {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("propertyName must not be null.");
 		
-		new DiffConfig().excludePropery(null);
+		new DiffConfig().excludeProperty(null);
 	}
 	
 	@Test
@@ -88,7 +190,7 @@ public class DiffConfigTest {
 	@Test
 	public void allowsAddingOfAndCheckingForExluddedProperties() {
 		final String property = "property";
-		final DiffConfig config = new DiffConfig().excludePropery(property);
+		final DiffConfig config = new DiffConfig().excludeProperty(property);
 		
 		assertTrue(config.isPropertyExcluded(property));
 	}
@@ -116,5 +218,21 @@ public class DiffConfigTest {
 		final DiffConfig config = new DiffConfig().addComparable(Credential.class);
 
 		assertTrue(config.isComparable(new Credential()));
+	}
+	
+	@Test
+	public void allowsSettingAndRetrievingOfBaseObjectName() {
+		final String objectName = "foo";
+		final DiffConfig diffConfig = new DiffConfig().setBaseObjectName(objectName);
+		
+		assertThat(objectName, is(diffConfig.getBaseObjectName()));
+	}
+	
+	@Test
+	public void allowsSettingAndRetrievingOfWorkingObjectName() {
+		final String objectName = "foo";
+		final DiffConfig diffConfig = new DiffConfig().setWorkingObjectName(objectName);
+		
+		assertThat(objectName, is(diffConfig.getWorkingObjectName()));
 	}
 }
