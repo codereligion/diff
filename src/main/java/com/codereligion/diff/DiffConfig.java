@@ -16,6 +16,8 @@
 
 package com.codereligion.diff;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.collect.Sets;
 import java.util.Comparator;
 import java.util.Set;
@@ -42,6 +44,11 @@ public final class DiffConfig {
 	private final Set<ObjectComparator<?>> comparators = Sets.newHashSet();
 	
 	/**
+	 * Comparables to be used instead of a comparator.
+	 */
+	private final Set<Class<? extends Comparable<?>>> comparables = Sets.newHashSet();
+	
+	/**
 	 * Custom serializer for serialization of specific classes. 
 	 */
 	private final Set<Serializer> serializers = Sets.newHashSet();
@@ -55,49 +62,6 @@ public final class DiffConfig {
 	 * The name of the working object, which titles the diff list.
 	 */
 	private String workingObjectName = ""; 
-	
-	/**
-	 * Finds a comparator suitable for the given {@code object}.
-	 * 
-	 * @param object the {@link Object} to find a comparator for
-	 * @return a {@link Comparator} or {@code null} if none was found
-	 * @see Comparator
-	 */
-	Comparator<Object> findComparatorFor(final Object object) {
-		for (final ObjectComparator<?> comparator : comparators) {
-			if (comparator.compares(object)) {
-				return comparator;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Finds a serializer for the given {@code object}.
-	 * 
-	 * @param object the object to find the serializer for
-	 * @return a {@link Serializer} or {@code null} if none was found
-	 * @see Serializer
-	 */
-	Serializer findSerializerFor(final Object object) {
-		for(final Serializer serializer: serializers) {
-			if (serializer.serializes(object)) {
-				return serializer;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Determines whether the given {@code propertyName} is excluded from the diff
-	 * of all objects in the graph.
-	 * 
-	 * @param propertyName the name of the property
-	 * @return true if it is excluded, false otherwise
-	 */
-	boolean isPropertyExcluded(final String propertyName) {
-		return excludedProperties.contains(propertyName);
-	}
 
 	/**
 	 * Adds a property to be excluded for the diff. The property will be excluded for
@@ -108,17 +72,13 @@ public final class DiffConfig {
 	 * @throws IllegalArgumentException when the given {@code propertyName} is {@code null} 
 	 */
 	public DiffConfig excludePropery(final String propertyName) {
-		
-		if (propertyName == null) {
-			throw new IllegalArgumentException("propertyName must not be null.");
-		}
-		
+		checkArgument(propertyName != null, "propertyName must not be null.");
 		excludedProperties.add(propertyName);
 		return this;
 	}
 
 	/**
-	 * Adds a comparator to be used for sorting iterables, so that they can be ordered
+	 * Adds a {@code comparator} to be used for sorting iterables, so that they can be ordered
 	 * and compared consistently.
 	 * 
 	 * @param comparator the {@link ObjectComparator} to add
@@ -127,15 +87,28 @@ public final class DiffConfig {
 	 * @see ObjectComparator
 	 */
 	public DiffConfig addComparator(final ObjectComparator<?> comparator) {
-		
-		if (comparator == null) {
-			throw new IllegalArgumentException("comparator must not be null.");
-		}
-		
+		checkArgument(comparator != null, "comparator must not be null.");
 		comparators.add(comparator);
 		return this;
 	}
-
+	
+	/**
+	 * Adds a {@code comparable} which is used to identify objects that implement the {@link Comparable}
+	 * interface in order to use them directly and not require a {@link Comparator}.
+	 * 
+	 * <p>Comparables are prioritized over comparators.
+	 * 
+	 * @param comparable the {@link Comparable} to add
+	 * @return a reference to this instance
+	 * @throws IllegalArgumentException when the given {@code comparable} is {@code null}
+	 * @see Comparable
+	 */
+	public DiffConfig addComparable(final Class<? extends Comparable<?>> comparable) {
+		checkArgument(comparable != null, "comparable must not be null.");
+		comparables.add(comparable);
+		return this;
+	}
+	
 	/**
 	 * Adds the given serializer to be used for serializing specific objects.
 	 * 
@@ -145,11 +118,7 @@ public final class DiffConfig {
 	 * @see Serializer
 	 */
 	public DiffConfig addSerializer(final Serializer serializer) {
-		
-		if (serializer == null) {
-			throw new IllegalArgumentException("serializer must not be null.");
-		}
-		
+		checkArgument(serializer != null, "serializer must not be null.");
 		serializers.add(serializer);
 		return this;
 	}
@@ -192,5 +161,66 @@ public final class DiffConfig {
 	 */
 	String getWorkingObjectName() {
 		return workingObjectName;
+	}
+
+	/**
+	 * Finds a comparator suitable for the given {@code object}.
+	 * 
+	 * @param object the {@link Object} to find a comparator for
+	 * @return a {@link Comparator} or {@code null} if none was found
+	 * @see Comparator
+	 */
+	@SuppressWarnings("unchecked")
+	Comparator<Object> findComparatorFor(final Object object) {
+		for (final ObjectComparator<?> comparator : comparators) {
+			if (comparator.compares(object)) {
+				return (Comparator<Object>) comparator;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Checks whether the given {@code object} implements the {@link Comparable} and if
+	 * it has been defined to be used in comparisons for sorting iterables and map keys.
+	 * 
+	 * @param object the {@link Object} to check
+	 * @return true when the object implements the {@link Comparable} interface and should be used for comparison
+	 * @see Comparable
+	 */
+	boolean isComparable(final Object object) {
+		for (final Class<? extends Comparable<?>> comparable : comparables) {
+			if (comparable.isInstance(object)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Finds a serializer for the given {@code object}.
+	 * 
+	 * @param object the object to find the serializer for
+	 * @return a {@link Serializer} or {@code null} if none was found
+	 * @see Serializer
+	 */
+	Serializer findSerializerFor(final Object object) {
+		for(final Serializer serializer: serializers) {
+			if (serializer.serializes(object)) {
+				return serializer;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Determines whether the given {@code propertyName} is excluded from the diff
+	 * of all objects in the graph.
+	 * 
+	 * @param propertyName the name of the property
+	 * @return true if it is excluded, false otherwise
+	 */
+	boolean isPropertyExcluded(final String propertyName) {
+		return excludedProperties.contains(propertyName);
 	}
 }

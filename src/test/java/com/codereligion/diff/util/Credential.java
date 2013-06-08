@@ -16,7 +16,7 @@
 
 package com.codereligion.diff.util;
 
-public class Credential {
+public class Credential implements Comparable<Credential> {
 	private String password;
 
 	public String getPassword() {
@@ -25,5 +25,15 @@ public class Credential {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@Override
+	public int compareTo(final Credential credential) {
+		return -password.compareTo(credential.password);
+	}
+
+	public Credential withPassword(final String password) {
+		this.password = password;
+		return this;
 	}
 }

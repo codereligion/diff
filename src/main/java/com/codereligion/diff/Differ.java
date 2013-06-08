@@ -16,6 +16,8 @@
 
 package com.codereligion.diff;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.collect.Lists;
 import difflib.DiffUtils;
 import difflib.Patch;
@@ -53,11 +55,7 @@ public final class Differ {
 	 * @throws IllegalArgumentException when the given {@code diffConfig} is {@code null}
 	 */
 	public Differ(final DiffConfig diffConfig) {
-		
-		if (diffConfig == null) {
-			throw new IllegalArgumentException("diffConfig must not be null.");
-		}
-		
+		checkArgument(diffConfig != null, "diffConfig must not be null.");
 		this.diffConfig = diffConfig;
 	}
 	
@@ -82,9 +80,7 @@ public final class Differ {
 			final Object base,
 			final Object working) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
 		
-		if (working == null) {
-			throw new IllegalArgumentException("working object must not be null.");
-		}
+		checkArgument(working != null, "working object must not be null.");
 		
 		final List<String> serializedPropertiesOfBase = Lists.newArrayList();
 		final List<String> serializedPropertiesOfWorking = Lists.newArrayList();
@@ -145,21 +141,29 @@ public final class Differ {
 			final String path,
 			final Object value) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
 		
-		final List<Object> iterableProperty = transformToSortedList(path, (Iterable<?>) value);
+		@SuppressWarnings("unchecked")
+		final List<Object> iterableProperty = transformToSortedList(path, (Iterable<Object>) value);
 		int i = 0;
 		for (final Object nestedProperty : iterableProperty) {
 			diffObject(lines, path + "[" + i++ + "]", nestedProperty);
 		}
 	}
 
-	private List<Object> transformToSortedList(final String path, final Iterable<?> value) {
+	private List<Object> transformToSortedList(final String path, final Iterable<Object> value) {
 		final List<Object> list = Lists.newArrayList(value);
-		
+
 		if (list.isEmpty()) {
 			return list;
 		}
 		
-		final Comparator<Object> comparator = diffConfig.findComparatorFor(list.get(0));
+		final Object firstElement = list.get(0);
+		final Comparator<Object> comparator;
+		
+		if (diffConfig.isComparable(firstElement)) {
+			comparator = ComparableComparator.INSTANCE;
+		} else {
+			comparator = diffConfig.findComparatorFor(firstElement);
+		}
 		
 		if (comparator == null) {
 			throw new MissingObjectComparatorException(path, value);
@@ -168,7 +172,7 @@ public final class Differ {
 		Collections.sort(list, comparator);
 		return list;
 	}
-	
+
 	private void diffObjectProperties(
 			final List<String> lines,
 			final String path,

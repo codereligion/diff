@@ -36,4 +36,14 @@ public class Address {
 	public void setZipCode(int zipCode) {
 		this.zipCode = zipCode;
 	}
+
+	public Address withStreet(String street) {
+		this.street = street;
+		return this;
+	}
+
+	public Address withZipCode(int zipCode) {
+		this.zipCode = zipCode;
+		return this;
+	}
 }

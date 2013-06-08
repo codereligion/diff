@@ -88,7 +88,7 @@ public class DifferTest {
 	public void providesDefaultSerializationForClassProperty() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(Address.class))
-			.addComparator(StubComparator.INSTANCE);
+			.addComparator(new StubComparator(Credential.class));
 		
 		final Address base = createAddress();
 		final User working = createUser();
@@ -102,7 +102,7 @@ public class DifferTest {
 	public void customSerializerHavePrecendenceOverBuiltInIterablesSerialization() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(User.class, Address.class, Set.class))
-			.addComparator(StubComparator.INSTANCE);
+			.addComparator(new StubComparator(Credential.class));
 		
 		final User base = createUser();
 		final User working = createUser();
@@ -114,10 +114,25 @@ public class DifferTest {
 	}
 	
 	@Test
+	public void customComparablesHavePrecedenceOverCustomComparators() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.addSerializer(new IncludeSerializer(String.class))
+			// does not compare, always returns 0
+			.addComparator(new StubComparator(Credential.class))
+			// compares and negates
+			.addComparable(Credential.class);
+		
+		final List<String> result = new Differ(diffConfig).diff(null, createUser());
+		
+		assertThat(result, hasItem("+User.credentials[0].password='password2'"));
+		assertThat(result, hasItem("+User.credentials[1].password='password1'"));
+	}
+	
+	@Test
 	public void customSerializerHavePrecendenceOverBuiltInClassSerialization() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(Address.class, Class.class))
-			.addComparator(StubComparator.INSTANCE);
+			.addComparator(new StubComparator(Credential.class));
 		
 		final Address base = createAddress();
 		final User working = createUser();
@@ -133,7 +148,7 @@ public class DifferTest {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(String.class))
 			.excludePropery("class")
-			.addComparator(StubComparator.INSTANCE);
+			.addComparator(new StubComparator(Credential.class));
 		
 		expectedException.expectMessage("Could not find serializer for 'User.address.zipCode' with value: 12345");
 		
@@ -157,7 +172,7 @@ public class DifferTest {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(String.class, Integer.class))
 			.excludePropery("class")
-			.addComparator(StubComparator.INSTANCE);
+			.addComparator(new StubComparator(Credential.class));
 	
 		final Address base = createAddress();
 		final Address working = createAddress();
@@ -174,7 +189,7 @@ public class DifferTest {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(String.class, Integer.class))
 			.excludePropery("class")
-			.addComparator(StubComparator.INSTANCE);
+			.addComparator(new StubComparator(Credential.class));
 		
 		final User base = createUser();
 		final User working = createUser();
@@ -187,10 +202,10 @@ public class DifferTest {
 	}
 	
 	@Test
-	public void diffsIterableObjects() throws Exception {
+	public void diffsIterableObjectsWithCustomComparator() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(Integer.class))
-			.addComparator(StubComparator.INSTANCE);
+			.addComparator(new StubComparator(Integer.class));
 		
 		final Set<Integer> base = Sets.newHashSet(1, 2, 3);
 		final Set<Integer> working = Sets.newHashSet(2, 3, 4);
@@ -201,13 +216,26 @@ public class DifferTest {
 	}
 	
 	@Test
+	public void diffsIterableObjectsWithSpecifiedComparable() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.addSerializer(new IncludeSerializer(String.class))
+			.addComparable(Credential.class);
+		
+		final List<String> result = new Differ(diffConfig).diff(null, createUser());
+		
+		assertThat(result, hasItem("+User.credentials[0].password='password2'"));
+		assertThat(result, hasItem("+User.credentials[1].password='password1'"));
+	}
+	
+	@Test
 	public void returnsEmptyListForSameObjects() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(String.class, Integer.class))
 			.excludePropery("class")
-			.addComparator(StubComparator.INSTANCE);
+			.addComparator(new StubComparator(Credential.class));
 		
-		final List<String> result = new Differ(diffConfig).diff(createUser(), createUser());
+		final User user = createUser();
+		final List<String> result = new Differ(diffConfig).diff(user, user);
 		assertTrue(result.isEmpty());
 	}
 	
@@ -225,13 +253,13 @@ public class DifferTest {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(String.class, Integer.class))
 			.excludePropery("class")
-			.addComparator(StubComparator.INSTANCE);
+			.addComparator(new StubComparator(Credential.class));
 	
 		final List<String> result = new Differ(diffConfig).diff(null, createUser());
 		
 		assertThat(result, hasItem("+User.address.street='street'"));
 		assertThat(result, hasItem("+User.address.zipCode='12345'"));
-		assertThat(result, hasItem("+User.credentials[0].password='password'"));
+		assertThat(result, hasItem("+User.credentials[0].password='password1'"));
 	}
 	
 	@Test
@@ -239,7 +267,7 @@ public class DifferTest {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(String.class, Integer.class))
 			.excludePropery("class")
-			.addComparator(StubComparator.INSTANCE);
+			.addComparator(new StubComparator(Credential.class));
 	
 		final List<String> result = new Differ(diffConfig).diff(null, createUser());
 		
@@ -247,22 +275,16 @@ public class DifferTest {
 	}
 
 	private User createUser() {
-		final Credential credential = new Credential();
-		credential.setPassword("password");
-
-		final Address address = createAddress();
-		
-		final User user = new User();
-		user.setAddress(address);
-		user.setCredentials(Sets.newHashSet(credential));
-		return user;
+		return new User()
+			.withAddress(createAddress())
+			.withCredential(new Credential().withPassword("password1"))
+			.withCredential(new Credential().withPassword("password2"));
 	}
 
 	private Address createAddress() {
-		final Address address = new Address();
-		address.setStreet("street");
-		address.setZipCode(12345);
-		return address;
+		return new Address()
+		.withStreet("street")
+		.withZipCode(12345);
 	}
 
 	private Matcher<Iterable<? super String>> hasItem(final String item) {

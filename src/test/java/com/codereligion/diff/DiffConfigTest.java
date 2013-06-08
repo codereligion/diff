@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import com.codereligion.diff.util.Credential;
 import com.codereligion.diff.util.IncludeSerializer;
 import com.codereligion.diff.util.StubComparator;
 import java.util.Comparator;
@@ -45,6 +46,15 @@ public class DiffConfigTest {
 		expectedException.expectMessage("comparator must not be null.");
 		
 		new DiffConfig().addComparator(null);
+	}
+	
+	@Test
+	public void addComparableThrowsIllegalArgumentExceptionOnNullValue() {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("comparable must not be null.");
+		
+		new DiffConfig().addComparable(null);
 	}
 	
 	@Test
@@ -76,11 +86,11 @@ public class DiffConfigTest {
 	}
 	
 	@Test
-	public void allowsAddingAndRetrievingOfExcludedProperties() {
-		final DiffConfig config = new DiffConfig().addComparator(StubComparator.INSTANCE);
-		final Comparator<Object> expected = StubComparator.INSTANCE;
+	public void allowsAddingOfAndCheckingForExluddedProperties() {
+		final String property = "property";
+		final DiffConfig config = new DiffConfig().excludePropery(property);
 		
-		assertThat(config.findComparatorFor(new Object()), is(expected));
+		assertTrue(config.isPropertyExcluded(property));
 	}
 	
 	@Test
@@ -93,9 +103,18 @@ public class DiffConfigTest {
 	
 	@Test
 	public void allowsAddingAndRetrievingOfCompartors() {
-		final String property = "property";
-		final DiffConfig config = new DiffConfig().excludePropery(property);
+		final StubComparator comparator = new StubComparator(Object.class);
+		final DiffConfig config = new DiffConfig().addComparator(comparator);
+		final Comparator<Object> expected = comparator;
+		final Comparator<Object> actual = config.findComparatorFor(new Object());
 		
-		assertTrue(config.isPropertyExcluded(property));
+		assertThat(actual, is(expected));
+	}
+	
+	@Test
+	public void allowsAddingAndRetrievingOfComparables() {
+		final DiffConfig config = new DiffConfig().addComparable(Credential.class);
+
+		assertTrue(config.isComparable(new Credential()));
 	}
 }

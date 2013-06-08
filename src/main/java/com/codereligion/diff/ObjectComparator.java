@@ -25,7 +25,7 @@ import java.util.Comparator;
  * @since 11.05.2013
  * @param <T>
  */
-public interface ObjectComparator<T> extends Comparator<Object> {
+public interface ObjectComparator<T> extends Comparator<T> {
 	
 	/**
 	 * Determines whether this comparator compares the given {@link Object}.
@@ -37,14 +37,4 @@ public interface ObjectComparator<T> extends Comparator<Object> {
 	 * @return true if it does compare, false if not
 	 */
 	boolean compares(final Object object);
-
-	/**
-	 * Compares the given objects of type T.
-	 * 
-	 * @param o1 first object
-	 * @param o2 seconds object
-	 * @return either -1, 0 or 1
-	 * @see Comparator
-	 */
-	int internalCompare(final T o1, final T o2);
 }

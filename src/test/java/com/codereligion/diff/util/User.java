@@ -16,20 +16,17 @@
 
 package com.codereligion.diff.util;
 
-import java.util.Set;
+import com.google.common.collect.Lists;
+import java.util.List;
 
 public class User {
 	
 	private Address address;
 	
-	private Set<Credential> credentials;
+	private List<Credential> credentials = Lists.newArrayList();
 
-	public Set<Credential> getCredentials() {
+	public List<Credential> getCredentials() {
 		return credentials;
-	}
-
-	public void setCredentials(Set<Credential> credentials) {
-		this.credentials = credentials;
 	}
 
 	public Address getAddress() {
@@ -38,5 +35,15 @@ public class User {
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	public User withCredential(final Credential credential) {
+		credentials.add(credential);
+		return this;
+	}
+
+	public User withAddress(final Address address) {
+		this.address = address;
+		return this;
 	}
 }

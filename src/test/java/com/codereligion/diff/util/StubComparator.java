@@ -17,6 +17,8 @@
 package com.codereligion.diff.util;
 
 import com.codereligion.diff.ObjectComparator;
+import com.google.common.collect.Sets;
+import java.util.Set;
 
 /**
  * Compares every object, constantly returns 0 as difference.
@@ -26,21 +28,26 @@ import com.codereligion.diff.ObjectComparator;
  */
 public class StubComparator implements ObjectComparator<Object>{
 	
-	public static final ObjectComparator<Object> INSTANCE = new StubComparator();
+	private final Set<Class<?>> types;
+	
+	public StubComparator(final Class<?>... types) {
+		this.types = Sets.newHashSet(types);
+	}
 	
 	@Override
 	public int compare(Object o1, Object o2) {
-		return internalCompare(o1, o2);
+		return 0;
 	}
 
 	@Override
 	public boolean compares(Object object) {
-		return true;
+		
+		for (final Class<?> type : types) {
+			if (type.isInstance(object)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
-
-	@Override
-	public int internalCompare(Object o1, Object o2) {
-		return 0;
-	}
-
 }
