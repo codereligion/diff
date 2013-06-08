@@ -234,23 +234,10 @@ public final class DiffConfig {
 		final DiffConfig copy = new DiffConfig();
 		copy.baseObjectName = this.baseObjectName;
 		copy.workingObjectName = this.workingObjectName;
-		
-		for (final Class<? extends Comparable<?>> comparable : this.comparables) {
-			copy.comparables.add(comparable);
-		}
-		
-		for (final ObjectComparator<?> comparator : this.comparators) {
-			copy.comparators.add(comparator);
-		}
-		
-		for (final Serializer serializer : this.serializers) {
-			copy.serializers.add(serializer);
-		}
-		
-		for (final String exlcudedProperty : this.excludedProperties) {
-			copy.excludedProperties.add(exlcudedProperty);
-		}
-				
+		copy.comparables.addAll(this.comparables);
+		copy.comparators.addAll(this.comparators);
+		copy.serializers.addAll(this.serializers);
+		copy.excludedProperties.addAll(this.excludedProperties);
 		return copy;
 	}
 }
