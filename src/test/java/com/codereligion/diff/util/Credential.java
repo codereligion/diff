@@ -36,4 +36,9 @@ public class Credential implements Comparable<Credential> {
 		this.password = password;
 		return this;
 	}
+
+	@Override
+	public String toString() {
+		return "Credential [password=" + password + "]";
+	}
 }

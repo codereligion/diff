@@ -24,18 +24,37 @@ package com.codereligion.diff;
  * @since 12.05.2013
  * @see Differ
  * @see DiffConfig
+ * @see Serializer
  */
 public class MissingSerializerException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Creates a new instance for the given {@code path} and {@code object}.
+	 * Creates a new instance of {@link MissingSerializerException} in case no {@link Serializer} could be found 
+	 * to serialize an object.
 	 * 
-	 * @param path the path of the property, that caused the exception
+	 * @param path the path of the property which identifies the object
 	 * @param object the object for which no {@link Serializer} could be found
+	 * @return a new instance of {@link MissingSerializerException}
 	 */
-	public MissingSerializerException(final String path, final Object object) {
-		super("Could not find serializer for '" + path + "' with value: " + object);
+	public static MissingSerializerException missingPropertySerializer(final String path, final Object object) {
+		return new MissingSerializerException("Could not find Serializer for '" + object + "' at '" + path + "'");
+	}
+	
+	/**
+	 * Creates a new instance of {@link MissingSerializerException} in case no {@link Serializer} could be found 
+	 * to serialize keys of a map.
+	 * 
+	 * @param path the path of the property which identifies the map
+	 * @param type the type of the keys of the map
+	 * @return a new instance of {@link MissingSerializerException}
+	 */
+	public static MissingSerializerException missingMapKeySerializer(final String path, final Class<?> type) {
+		return new MissingSerializerException("Could not find Serializer for map key of type '" + type.getSimpleName() + "' at '" + path + "'");
+	}
+	
+	private MissingSerializerException(final String message) {
+		super(message);
 	}
 }
