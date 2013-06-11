@@ -25,10 +25,13 @@ import static org.junit.Assert.assertTrue;
 import com.codereligion.diff.util.Address;
 import com.codereligion.diff.util.Credential;
 import com.codereligion.diff.util.IncludeSerializer;
+import com.codereligion.diff.util.NaturalOrderComparator;
 import com.codereligion.diff.util.StubComparator;
 import com.codereligion.diff.util.User;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -114,7 +117,7 @@ public class DifferTest {
 	}
 	
 	@Test
-	public void specifiedComparablesHavePrecedenceOverCustomComparators() throws Exception {
+	public void specifiedComparablesHavePrecedenceOverCustomComparatorsForIterables() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(String.class))
 			// does not compare, always returns 0
@@ -126,6 +129,25 @@ public class DifferTest {
 		
 		assertThat(result, hasItem("+User.credentials[0].password='password2'"));
 		assertThat(result, hasItem("+User.credentials[1].password='password1'"));
+	}
+	
+	@Test
+	public void specifiedComparablesHavePrecedenceOverCustomComparatorsForMapKeys() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.addSerializer(new IncludeSerializer(Credential.class, String.class))
+			// does not compare, always returns 0
+			.addComparator(new StubComparator(Credential.class))
+			// compares and negates
+			.addComparable(Credential.class);
+		
+		final Map<Credential, String> map = Maps.newHashMap();
+		map.put(new Credential().withPassword("aaaa"), "foo");
+		map.put(new Credential().withPassword("bbbb"), "bar");
+		
+		final List<String> result = new Differ(diffConfig).diff(null, map);
+		
+		assertThat(result, hasItem("+HashMap[Credential [password=bbbb]]='bar'"));
+		assertThat(result, hasItem("+HashMap[Credential [password=aaaa]]='foo'"));
 	}
 	
 	@Test
@@ -142,7 +164,6 @@ public class DifferTest {
 		assertThat(result, not(hasItem("+User.class='com.codereligion.diff.util.User'")));
 	}
 	
-	
 	@Test
 	public void throwsMissingSerializerExceptionForUnknownPropertyType() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
@@ -150,21 +171,100 @@ public class DifferTest {
 			.excludeProperty("class")
 			.addComparator(new StubComparator(Credential.class));
 		
-		expectedException.expectMessage("Could not find serializer for 'User.address.zipCode' with value: 12345");
+		expectedException.expect(MissingSerializerException.class);
+		expectedException.expectMessage("Could not find Serializer for '12345' at 'User.address.zipCode'");
 		
 		new Differ(diffConfig).diff(null, createUser());
 	}
 	
 	@Test
-	public void throwsMissingComparatorExceptionForUncomparableIterableType() throws Exception {
+	public void throwsMissingSerializerExceptionWhenNoSerializerCanBeFoundForMapKey() throws Exception {
+		
+		final DiffConfig diffConfig = new DiffConfig().addComparator(NaturalOrderComparator.newInstance(Credential.class));
+		final Map<Credential, String> working = Maps.newHashMap();
+		working.put(new Credential().withPassword("foo"), "bar");
+
+		expectedException.expect(MissingSerializerException.class);
+		expectedException.expectMessage("Could not find Serializer for map key of type 'Credential' at 'HashMap'");
+		
+		new Differ(diffConfig).diff(null, working);
+	}
+	
+	@Test
+	public void throwsMissingObjectComparatorExceptionForUncomparableIterableType() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.excludeProperty("class")
 			.addSerializer(new IncludeSerializer(Credential.class, Address.class, String.class, Integer.class));
 		
 		expectedException.expect(MissingObjectComparatorException.class);
-		expectedException.expectMessage("Could not find object comparator for 'User.credentials' with value: [com.codereligion.diff.util.Credential");
+		expectedException.expectMessage("Could not find ObjectComparator for iterable at 'User.credentials'");
 		
 		new Differ(diffConfig).diff(null, createUser());
+	}
+	
+	@Test
+	public void throwsMissingObjectComparatorExceptionForUncomparableMapKeyType() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig();
+		final Map<Credential, String> working = Maps.newHashMap();
+		working.put(new Credential().withPassword("foo"), "bar");
+		
+		expectedException.expect(MissingObjectComparatorException.class);
+		expectedException.expectMessage("Could not find ObjectComparator for map keys of type 'Credential' at 'HashMap'");
+		new Differ(diffConfig).diff(null, working);
+	}
+	
+	@Test
+	public void diffsMaps() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.excludeProperty("class")
+			.addComparator(NaturalOrderComparator.newInstance(String.class))
+			.addSerializer(new IncludeSerializer(String.class, Integer.class));
+		
+		final Map<String, Integer> working = Maps.newHashMap();
+			working.put("aaaa", 1);
+			working.put("bbbb", 2);
+			working.put("cccc", 3);
+	
+		final List<String> result = new Differ(diffConfig).diff(null, working);
+		assertThat(result, hasItem("+HashMap[aaaa]='1'"));
+		assertThat(result, hasItem("+HashMap[bbbb]='2'"));
+		assertThat(result, hasItem("+HashMap[cccc]='3'"));
+	}
+	
+	@Test
+	public void diffsMapsWithComplexKeyObjects() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.excludeProperty("class")
+			.addComparator(NaturalOrderComparator.newInstance(Credential.class))
+			.addSerializer(new IncludeSerializer(Credential.class, Integer.class));
+		
+		final Map<Credential, Integer> working = Maps.newHashMap();
+		working.put(new Credential().withPassword("aaaa"), 1);
+		working.put(new Credential().withPassword("bbbb"), 2);
+		working.put(new Credential().withPassword("cccc"), 3);
+		
+		final List<String> result = new Differ(diffConfig).diff(null, working);
+		assertThat(result, hasItem("+HashMap[Credential [password=aaaa]]='1'"));
+		assertThat(result, hasItem("+HashMap[Credential [password=bbbb]]='2'"));
+		assertThat(result, hasItem("+HashMap[Credential [password=cccc]]='3'"));
+	}
+	
+	@Test
+	public void diffsMapsWithComplexValueObjects() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.excludeProperty("class")
+			.addComparator(NaturalOrderComparator.newInstance(Credential.class))
+			.addSerializer(new IncludeSerializer(Credential.class, String.class, Integer.class));
+		
+		final Map<Credential, Address> working = Maps.newHashMap();
+		working.put(new Credential().withPassword("aaaa"), new Address().withStreet("someStreet").withZipCode(1));
+		working.put(new Credential().withPassword("bbbb"), new Address().withStreet("someOtherStreet").withZipCode(2));
+		
+		final List<String> result = new Differ(diffConfig).diff(null, working);
+		assertThat(result, hasItem("+HashMap[Credential [password=aaaa]].street='someStreet'"));
+		assertThat(result, hasItem("+HashMap[Credential [password=aaaa]].zipCode='1'"));
+		assertThat(result, hasItem("+HashMap[Credential [password=bbbb]].street='someOtherStreet'"));
+		assertThat(result, hasItem("+HashMap[Credential [password=bbbb]].zipCode='2'"));
 	}
 	
 	@Test
@@ -216,7 +316,7 @@ public class DifferTest {
 	}
 	
 	@Test
-	public void diffsIterableObjectsWithSpecifiedComparable() throws Exception {
+	public void ordersIterablesWithSpecifiedComparable() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.addSerializer(new IncludeSerializer(String.class))
 			.addComparable(Credential.class);
@@ -225,6 +325,22 @@ public class DifferTest {
 		
 		assertThat(result, hasItem("+User.credentials[0].password='password2'"));
 		assertThat(result, hasItem("+User.credentials[1].password='password1'"));
+	}
+	
+	@Test
+	public void ordersMapKeysWithSpecifiedComparable() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.addSerializer(new IncludeSerializer(Credential.class, String.class))
+			.addComparable(Credential.class);
+		
+		final Map<Credential, String> map = Maps.newHashMap();
+		map.put(new Credential().withPassword("aaaa"), "foo");
+		map.put(new Credential().withPassword("bbbb"), "bar");
+		
+		final List<String> result = new Differ(diffConfig).diff(null, map);
+		
+		assertThat(result, hasItem("+HashMap[Credential [password=bbbb]]='bar'"));
+		assertThat(result, hasItem("+HashMap[Credential [password=aaaa]]='foo'"));
 	}
 	
 	@Test
@@ -239,6 +355,14 @@ public class DifferTest {
 		final List<String> result = new Differ(diffConfig).diff(null, user);
 		
 		assertThat(result, not(hasItem("+User.credentials")));
+	}
+	
+	@Test
+	public void doesNotDiffEmptyMaps() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig();
+		final List<String> result = new Differ(diffConfig).diff(null, Maps.newHashMap());
+		
+		assertTrue(result.isEmpty());
 	}
 	
 	@Test
