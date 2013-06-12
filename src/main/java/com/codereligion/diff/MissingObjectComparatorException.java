@@ -24,18 +24,36 @@ package com.codereligion.diff;
  * @since 12.05.2013
  * @see Differ
  * @see DiffConfig
+ * @see ObjectComparator
  */
 public class MissingObjectComparatorException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Creates a new instance for the given {@code path} and {@code iterable}.
+	 * Creates a new {@link MissingObjectComparatorException} in case that an iterable 
+	 * could not be ordered, due to a missing {@link ObjectComparator}.
 	 * 
-	 * @param path the path of the property, that caused the exception
-	 * @param iterable the iterable for which no comparator could be found
+	 * @param path the path of the property which identifies the iterable
+	 * @return a new instance of {@link MissingObjectComparatorException}
 	 */
-	public MissingObjectComparatorException(final String path, final Iterable<?> iterable) {
-		super("Could not find object comparator for '" + path + "' with value: " + iterable);
+	public static MissingObjectComparatorException missingIterableComparator(final String path) {
+		return new MissingObjectComparatorException("Could not find ObjectComparator for iterable at '" + path + "'");
+	}
+	
+	/**
+	 * Creates a new {@link MissingObjectComparatorException} in case that map keys of a specific {@code type}
+	 * could not be ordered, due to a missing {@link ObjectComparator}.
+	 * 
+	 * @param path the path of the property which identifies the map
+	 * @param type the type of the map key
+	 * @return a new instance of {@link MissingObjectComparatorException}
+	 */
+	public static MissingObjectComparatorException missingMapKeyComparator(final String path, final Class<?> type) {
+		return new MissingObjectComparatorException("Could not find ObjectComparator for map keys of type '" + type.getSimpleName() + "' at '" + path + "'");
+	}
+	
+	private MissingObjectComparatorException(final String message) {
+		super(message);
 	}
 }

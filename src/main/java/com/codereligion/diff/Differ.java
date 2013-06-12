@@ -19,6 +19,7 @@ package com.codereligion.diff;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import difflib.DiffUtils;
 import difflib.Patch;
 import java.beans.BeanInfo;
@@ -30,6 +31,8 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -92,6 +95,10 @@ public final class Differ {
 		
 		final String simpleClassNameOfWorking = getBeanName(working);
 		diffObject(serializedPropertiesOfWorking, simpleClassNameOfWorking, working);
+		
+		if (serializedPropertiesOfWorking.isEmpty()) {
+			return Collections.emptyList();
+		}
 
 		final Patch patch = DiffUtils.diff(serializedPropertiesOfBase, serializedPropertiesOfWorking);
 		final boolean objectsHaveNoDiff = patch.getDeltas().isEmpty();
@@ -128,6 +135,11 @@ public final class Differ {
 			return;
 		}
 		
+		if (value instanceof Map) {
+			diffMap(lines, path, value);
+			return;
+		}
+		
 		if (value instanceof Class) {
 			lines.add(path + "='" + ((Class<?>) value).getCanonicalName() + "'");
 			return;
@@ -135,7 +147,7 @@ public final class Differ {
 		
 		diffObjectProperties(lines, path, value);
 	}
-	
+
 	private void diffIterable(
 			final List<String> lines,
 			final String path,
@@ -148,6 +160,31 @@ public final class Differ {
 			diffObject(lines, path + "[" + i++ + "]", nestedProperty);
 		}
 	}
+	
+	private void diffMap(
+			final List<String> lines,
+			final String path,
+			final Object value) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
+		
+		@SuppressWarnings("unchecked")
+		final Map<Object, Object> mapProperty = transformToSortedMap(path, (Map<Object, Object>) value);
+		
+		for (final Map.Entry<Object, Object> entry : mapProperty.entrySet()) {
+			final Object key = entry.getKey();
+			final Serializer serializer = findMapKeySerializerOrThrowException(path, key);
+			final Object serializedKey = serializer.serialize(key);
+			diffObject(lines, path + "[" + serializedKey + "]", entry.getValue());
+		}
+	}
+
+	private Serializer findMapKeySerializerOrThrowException(final String path, final Object key) {
+		final Serializer serializer = diffConfig.findSerializerFor(key);
+		if (serializer == null) {
+			throw MissingSerializerException.missingMapKeySerializer(path, key.getClass());
+		}
+		
+		return serializer;
+	}
 
 	private List<Object> transformToSortedList(final String path, final Iterable<Object> value) {
 		final List<Object> list = Lists.newArrayList(value);
@@ -157,20 +194,41 @@ public final class Differ {
 		}
 		
 		final Object firstElement = list.get(0);
-		final Comparator<Object> comparator;
-		
-		if (diffConfig.isComparable(firstElement)) {
-			comparator = ComparableComparator.INSTANCE;
-		} else {
-			comparator = diffConfig.findComparatorFor(firstElement);
-		}
+		final Comparator<Object> comparator = findComparatorFor(firstElement);
 		
 		if (comparator == null) {
-			throw new MissingObjectComparatorException(path, value);
+			throw MissingObjectComparatorException.missingIterableComparator(path);
 		}
 		
 		Collections.sort(list, comparator);
 		return list;
+	}
+	
+	private Comparator<Object> findComparatorFor(final Object value) {
+		
+		if (diffConfig.isComparable(value)) {
+			return ComparableComparator.INSTANCE;
+		}
+		
+		return diffConfig.findComparatorFor(value);
+	}
+
+	private Map<Object, Object> transformToSortedMap(final String path, final Map<Object, Object> value) {
+		
+		if (value.isEmpty()) {
+			return Collections.emptyMap();
+		}
+		
+		final Object anyKey = value.keySet().iterator().next();
+		final Comparator<Object> comparator = findComparatorFor(anyKey);
+		
+		if (comparator == null) {
+			throw MissingObjectComparatorException.missingMapKeyComparator(path, anyKey.getClass());
+		}
+		
+		final TreeMap<Object, Object> sortedMap = Maps.newTreeMap(comparator);
+		sortedMap.putAll(value);
+		return sortedMap;
 	}
 
 	private void diffObjectProperties(
@@ -202,7 +260,7 @@ public final class Differ {
 		
 		final boolean serializationFailed = linesBefore == lines.size();
 		if (serializationFailed) {
-			throw new MissingSerializerException(path, value);
+			throw MissingSerializerException.missingPropertySerializer(path, value);
 		}
 	}
 }
