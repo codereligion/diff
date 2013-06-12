@@ -1,5 +1,5 @@
-/*
- * Copyright 2012 The Diff Authors (www.codereligion.com)
+/**
+ * Copyright 2012 www.codereligion.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.codereligion.diff;
 
 import static org.hamcrest.Matchers.containsString;
@@ -346,8 +345,8 @@ public class DifferTest {
 	@Test
 	public void doesNotDiffEmptyIterables() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
-		.addSerializer(new IncludeSerializer(String.class))
-		.addComparable(Credential.class);
+			.addSerializer(new IncludeSerializer(String.class))
+			.addComparable(Credential.class);
 		
 		final User user = createUser();
 		user.getCredentials().clear();
@@ -363,6 +362,20 @@ public class DifferTest {
 		final List<String> result = new Differ(diffConfig).diff(null, Maps.newHashMap());
 		
 		assertTrue(result.isEmpty());
+	}
+	
+	@Test
+	public void doesNotDiffWriteOnlyProperties() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.addSerializer(new IncludeSerializer(String.class))
+			.addComparable(Credential.class);
+		
+		final User user = createUser();
+		user.setNotReadableProperty("this should not be diffed");
+		
+		final List<String> result = new Differ(diffConfig).diff(null, user);
+		
+		assertThat(result, not(hasItem("+User.notReadableProperty='this should not be diffed'")));
 	}
 	
 	@Test
@@ -411,7 +424,7 @@ public class DifferTest {
 		
 		assertThat(result, hasItem(containsString(User.class.getSimpleName())));
 	}
-
+	
 	private User createUser() {
 		return new User()
 			.withAddress(createAddress())

@@ -1,5 +1,5 @@
-/*
- * Copyright 2012 The Diff Authors (www.codereligion.com)
+/**
+ * Copyright 2012 www.codereligion.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.codereligion.diff;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.codereligion.reflect.Reflector;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import difflib.DiffUtils;
 import difflib.Patch;
-import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -145,7 +143,7 @@ public final class Differ {
 			return;
 		}
 		
-		diffObjectProperties(lines, path, value);
+		diffProperties(lines, path, value);
 	}
 
 	private void diffIterable(
@@ -231,28 +229,21 @@ public final class Differ {
 		return sortedMap;
 	}
 
-	private void diffObjectProperties(
+	private void diffProperties(
 			final List<String> lines,
 			final String path,
 			final Object value) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
 		
 		final int linesBefore = lines.size();
 		final Class<?> beanClass = value.getClass();
-		final BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
 	
-		for (final PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
+		for (final PropertyDescriptor descriptor : Reflector.getReadableProperties(beanClass)) {
 			final String propertyName = descriptor.getName();
 	
 			if (diffConfig.isPropertyExcluded(propertyName)) {
 				continue;
 			}
-			
 			final Method readMethod = descriptor.getReadMethod();
-			
-			if (readMethod == null) {
-				continue;
-			}
-			
 			final Object propertyValue = readMethod.invoke(value);
 			final String fullPath = path + "." + propertyName;
 			diffObject(lines, fullPath, propertyValue);

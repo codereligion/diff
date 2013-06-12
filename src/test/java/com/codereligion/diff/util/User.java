@@ -1,5 +1,5 @@
-/*
- * Copyright 2012 The Diff Authors (www.codereligion.com)
+/**
+ * Copyright 2012 www.codereligion.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.codereligion.diff.util;
 
 import com.google.common.collect.Lists;
 import java.util.List;
 
 public class User {
+	
+	private String notReadableProperty;
 	
 	private Address address;
 	
@@ -45,5 +46,9 @@ public class User {
 	public User withAddress(final Address address) {
 		this.address = address;
 		return this;
+	}
+
+	public void setNotReadableProperty(String notReadableProperty) {
+		this.notReadableProperty = notReadableProperty;
 	}
 }
