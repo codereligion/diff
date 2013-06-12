@@ -30,7 +30,7 @@
 		<license.plugin.version>1.9.0</license.plugin.version>
 
 		<!-- dependency versions -->
-		<reflect.version>0.1.0-20130612.165429-2</reflect.version>
+		<reflect.version>0.1.0-SNAPSHOT</reflect.version>
 		<junit.version>4.11</junit.version>
 		<hamcrest.version>1.3</hamcrest.version>
 		<diffutils.version>1.2</diffutils.version>
