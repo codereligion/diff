@@ -43,6 +43,6 @@ For more details have a look at the [wiki](https://github.com/codereligion/diff/
 ```mvn clean test```
 
 ### Continuous integration
-[![Build Status](https://api.travis-ci.org/codereligion/diff.png?branch=master)](https://api.travis-ci.org/codereligion/diff)
+[![Build Status](https://api.travis-ci.org/codereligion/diff.png?branch=master)](https://travis-ci.org/codereligion/diff)
 
 We use Travis CI to run our builds.
