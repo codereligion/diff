@@ -3,4 +3,4 @@ notifications:
   email:
     on_failure: change
 jdk:
-  - openjdk6
+  - oraclejdk7
