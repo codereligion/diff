@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 www.codereligion.com
+ * Copyright 2013 www.codereligion.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,6 +128,7 @@ public final class DiffConfig {
 	
 	/**
 	 * Returns a copy of this config with the given {@code objectName} added to be used for the working object.
+	 * This property is optional.
 	 * 
 	 * @param objectName the name of the working object, may be null
 	 * @return a copy of this instance
@@ -140,6 +141,7 @@ public final class DiffConfig {
 	
 	/**
 	 * Returns a copy of this config with the given {@code objectName} added to be used for the base object.
+	 * This property is optional.
 	 * 
 	 * @param objectName the name of the base object, may be null
 	 * @return a copy of this instance

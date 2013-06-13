@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 www.codereligion.com
+ * Copyright 2013 www.codereligion.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.codereligion.diff;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
@@ -27,8 +28,11 @@ import com.codereligion.diff.util.IncludeSerializer;
 import com.codereligion.diff.util.NaturalOrderComparator;
 import com.codereligion.diff.util.StubComparator;
 import com.codereligion.diff.util.User;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import difflib.DiffUtils;
+import difflib.Patch;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,6 +52,16 @@ public class DifferTest {
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
+	
+	@Test
+	public void foo() {
+		final List<String> original = Lists.newArrayList("SomeDomainObject.someProperty='21'");
+		final List<String> revised = Lists.newArrayList("SomeDomainObject.someProperty='42'");
+		final Patch patch = DiffUtils.diff(original, revised);
+		final List<String> diff = DiffUtils.generateUnifiedDiff("Base of SomeDomainObject", "Working of SomeDomainObject", original, patch, 0);
+		
+		assertThat(diff, is(empty()));
+	}
 	
 	@Test
 	@SuppressWarnings("unused")
