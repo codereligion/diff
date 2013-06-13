@@ -64,6 +64,7 @@
 						<exclude>LICENSE.txt</exclude>
 						<exclude>README.md</exclude>
 						<exclude>.gitignore</exclude>
+						<excludes>.travis.yml</excludes>
 					</excludes>
 				</configuration>
 				<executions>
