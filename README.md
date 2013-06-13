@@ -12,7 +12,7 @@ Allows to diff two arbitrary Java objects and retrieve the diff result as a list
         .addSerializer(new SomeSerializer())
         .addComparator(new SomeComparator())
         .setBaseObjectName("BaseObject")
-        .setWorkingObjectname("WorkingObject");
+        .setWorkingObjectName("WorkingObject");
 		
     List<String> differences = new Differ(diffConfig).diff(base, working);
 
