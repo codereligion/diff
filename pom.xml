@@ -86,6 +86,24 @@
                 </executions>
 			</plugin>
 
+			<!-- to assure that maven compile the project with the desired version -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${compiler.plugin.version}</version>
+				<configuration>
+					<source>${java.source.version}</source>
+					<target>${java.target.version}</target>
+					<showWarnings>true</showWarnings>
+					<!-- this is a hack, because <proc:none /> is not a valid tag -->
+					<compilerArgument>-proc:none</compilerArgument>
+					<compilerArguments>
+						<Werror />
+						<Xlint />
+					</compilerArguments>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 	
