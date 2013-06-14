@@ -6,6 +6,6 @@ env:
   - JAVA_VERSION_ALIAS=openjdk6 JAVA_VERSION=1.6 
   - JAVA_VERSION_ALIAS=openjdk7 JAVA_VERSION=1.7
   - JAVA_VERSION_ALIAS=oraclejdk7 JAVA_VERSION=1.7
-before-install: "jdk_switcher use $JAVA_VERSION_ALIAS"
+before_install: "jdk_switcher use $JAVA_VERSION_ALIAS"
 install: mvn -Djava.target.version=$JAVA_VERSION -DskipTests=true -e install
 script: mvn -Djava.target.version=$JAVA_VERSION -e test
