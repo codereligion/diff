@@ -30,7 +30,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -224,7 +223,7 @@ public final class Differ {
 			throw MissingObjectComparatorException.missingMapKeyComparator(path, anyKey.getClass());
 		}
 		
-		final TreeMap<Object, Object> sortedMap = Maps.newTreeMap(comparator);
+		final Map<Object, Object> sortedMap = Maps.newTreeMap(comparator);
 		sortedMap.putAll(value);
 		return sortedMap;
 	}
