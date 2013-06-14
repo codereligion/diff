@@ -20,6 +20,7 @@ import java.util.List;
 
 public class User {
 	
+	@SuppressWarnings("unused")
 	private String notReadableProperty;
 	
 	private Address address;

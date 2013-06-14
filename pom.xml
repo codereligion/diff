@@ -22,6 +22,8 @@
 
 	<properties>
 		<!-- basic maven properties -->
+		<java.source.version>1.6</java.source.version>
+		<java.target.version>1.6</java.target.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compiler.plugin.version>3.0</compiler.plugin.version>
 		<release.plugin.version>2.4</release.plugin.version>
@@ -90,6 +92,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${compiler.plugin.version}</version>
 				<configuration>
+					<source>${java.source.version}</source>
+					<target>${java.target.version}</target>
 					<showWarnings>true</showWarnings>
 					<!-- this is a hack, because <proc:none /> is not a valid tag -->
 					<compilerArgument>-proc:none</compilerArgument>
