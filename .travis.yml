@@ -4,6 +4,5 @@ notifications:
     on_failure: change
 jdk:
   - openjdk6
-  - openjdk7
 install: mvn -DskipTests=true -e install
 script: mvn -e test
