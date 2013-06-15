@@ -23,7 +23,7 @@
 	<properties>
 		<!-- basic maven properties -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compiler.plugin.version>3.0</compiler.plugin.version>
+		<compiler.plugin.version>3.1</compiler.plugin.version>
 		<release.plugin.version>2.4</release.plugin.version>
 		<surefire.plugin.version>2.12.2</surefire.plugin.version>
 		<license.plugin.version>1.9.0</license.plugin.version>
@@ -93,12 +93,11 @@
 					<source>${java.specification.version}</source>
 					<target>${java.specification.version}</target>
 					<showWarnings>true</showWarnings>
-					<!-- this is a hack, because <proc:none /> is not a valid tag -->
-					<compilerArgument>-proc:none</compilerArgument>
-					<compilerArguments>
-						<Werror />
-						<Xlint />
-					</compilerArguments>
+					<compilerArgs>
+						<arg>-proc:none</arg>
+						<arg>-Werror</arg>
+						<arg>-Xlint</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 
