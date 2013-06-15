@@ -90,8 +90,11 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${compiler.plugin.version}</version>
 				<configuration>
+					<!-- try build for the currently set java specification version, e.g. 1.6 -->
 					<source>${java.specification.version}</source>
 					<target>${java.specification.version}</target>
+					
+					<!-- check for warnings, fail and show if there are any -->
 					<showWarnings>true</showWarnings>
 					<compilerArgs>
 						<arg>-proc:none</arg>
