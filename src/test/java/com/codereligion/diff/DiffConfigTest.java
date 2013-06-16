@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -42,6 +43,14 @@ public class DiffConfigTest {
 	public ExpectedException expectedException = ExpectedException.none();
 	
 	@Test
+	public void unknownComparatorCanNotBeFound() {
+		final DiffConfig config = new DiffConfig().addComparator(new StubComparator(String.class));
+		
+		assertThat(config.findComparatorFor(Integer.valueOf(1)), is(nullValue()));
+		
+	}
+	
+	@Test
 	public void addComparatorReturnsNewInstance() {
 		final DiffConfig original = new DiffConfig();
 		final DiffConfig copy = original.addComparator(new StubComparator());
@@ -58,6 +67,13 @@ public class DiffConfigTest {
 	}
 	
 	@Test
+	public void unknownComparableCanNotBeFound() {
+		
+		final DiffConfig config = new DiffConfig().addComparable(String.class);
+		assertFalse(config.isComparable(Credential.class));
+	}
+	
+	@Test
 	public void addComparableReturnsNewInstance() {
 		final DiffConfig original = new DiffConfig();
 		final DiffConfig copy = original.addComparable(Credential.class);
@@ -71,6 +87,13 @@ public class DiffConfigTest {
 		original.addComparable(Credential.class);
 		
 		assertThat(original.isComparable(new Credential()), is(Boolean.FALSE));
+	}
+	
+	@Test
+	public void unknownSerializerCanNotBeFound() {
+		final DiffConfig config = new DiffConfig().addSerializer(new IncludeSerializer(String.class));
+		
+		assertThat(config.findSerializerFor(Integer.valueOf(42)), is(nullValue()));
 	}
 	
 	@Test

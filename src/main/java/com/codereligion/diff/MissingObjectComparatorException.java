@@ -25,7 +25,7 @@ package com.codereligion.diff;
  * @see DiffConfig
  * @see ObjectComparator
  */
-public class MissingObjectComparatorException extends RuntimeException {
+public final class MissingObjectComparatorException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 	

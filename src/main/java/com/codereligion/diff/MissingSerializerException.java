@@ -25,7 +25,7 @@ package com.codereligion.diff;
  * @see DiffConfig
  * @see Serializer
  */
-public class MissingSerializerException extends RuntimeException {
+public final class MissingSerializerException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 	

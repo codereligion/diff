@@ -18,6 +18,7 @@ package com.codereligion.diff;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.codereligion.reflect.Reflector;
+
 import com.google.common.collect.Lists;
 import difflib.DiffUtils;
 import difflib.Patch;

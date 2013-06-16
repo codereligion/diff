@@ -34,22 +34,67 @@
 		<hamcrest.version>1.3</hamcrest.version>
 		<diffutils.version>1.2</diffutils.version>
 		<guava.version>11.0.1</guava.version>
-
+		
+		<!-- sonar properties -->
+		<jacoco.version>0.6.2.201302030002</jacoco.version>
+		<skip.code.coverage>true</skip.code.coverage>
+		<sonar.sourceEncoding>${project.build.sourceEncoding}</sonar.sourceEncoding>
+		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.jdbc.url>jdbc:h2:tcp://localhost:9092/sonar</sonar.jdbc.url>
+		<sonar.jdbc.username>sonar</sonar.jdbc.username>
+		<sonar.jdbc.password>sonar</sonar.jdbc.password>
 	</properties>
 
 	<build>
 		<plugins>
+		
+			<!-- to assure that maven compile the project with the desired version -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${compiler.plugin.version}</version>
+				<configuration>
+					<!-- try build for the currently set java specification version, e.g. 1.6 -->
+					<source>${java.specification.version}</source>
+					<target>${java.specification.version}</target>
+					
+					<!-- check for warnings, fail and show if there are any -->
+					<showWarnings>true</showWarnings>
+					<compilerArgs>
+						<arg>-proc:none</arg>
+						<arg>-Werror</arg>
+						<arg>-Xlint</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+				<configuration>
+					<!-- allows skipping of code coverage -->
+					<skip>${skip.code.coverage}</skip>
+
+					<!-- dump on test exit -->
+					<dumpOnExit>true</dumpOnExit>
+				</configuration>
+				<executions>
+					<execution>
+						<id>prepare-jacoco-ut</id>
+						<phase>process-test-resources</phase>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${surefire.plugin.version}</version>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>${release.plugin.version}</version>
 			</plugin>
 			
 			<plugin>
@@ -83,25 +128,11 @@
                     </execution>
                 </executions>
 			</plugin>
-
-			<!-- to assure that maven compile the project with the desired version -->
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${compiler.plugin.version}</version>
-				<configuration>
-					<!-- try build for the currently set java specification version, e.g. 1.6 -->
-					<source>${java.specification.version}</source>
-					<target>${java.specification.version}</target>
-					
-					<!-- check for warnings, fail and show if there are any -->
-					<showWarnings>true</showWarnings>
-					<compilerArgs>
-						<arg>-proc:none</arg>
-						<arg>-Werror</arg>
-						<arg>-Xlint</arg>
-					</compilerArgs>
-				</configuration>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>${release.plugin.version}</version>
 			</plugin>
 
 		</plugins>
