@@ -24,6 +24,7 @@
 		<!-- basic maven properties -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compiler.plugin.version>3.1</compiler.plugin.version>
+		<animal.sniffer.plugin.version>1.9</animal.sniffer.plugin.version>
 		<release.plugin.version>2.4</release.plugin.version>
 		<surefire.plugin.version>2.12.2</surefire.plugin.version>
 		<license.plugin.version>1.9.0</license.plugin.version>
@@ -89,6 +90,58 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${surefire.plugin.version}</version>
+			</plugin>
+			
+			<!-- check whether the code is compatible with java versions 1.5, 1.6 
+				and 1.7 -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>animal-sniffer-maven-plugin</artifactId>
+				<version>${animal.sniffer.plugin.version}</version>
+				<executions>
+					<execution>
+						<id>check-java15</id>
+						<phase>test</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<signature>
+								<groupId>org.codehaus.mojo.signature</groupId>
+								<artifactId>java15</artifactId>
+								<version>1.0</version>
+							</signature>
+						</configuration>
+					</execution>
+					<execution>
+						<id>check-java16</id>
+						<phase>test</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<signature>
+								<groupId>org.codehaus.mojo.signature</groupId>
+								<artifactId>java16</artifactId>
+								<version>1.1</version>
+							</signature>
+						</configuration>
+					</execution>
+					<execution>
+						<id>check-java17</id>
+						<phase>test</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<signature>
+								<groupId>org.codehaus.mojo.signature</groupId>
+								<artifactId>java17</artifactId>
+								<version>1.0</version>
+							</signature>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			
 			<plugin>
