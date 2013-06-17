@@ -25,7 +25,7 @@ import java.util.Set;
  * @author Sebastian Gröbler
  * @since 13.05.2013
  */
-public class IncludeSerializer implements Serializer {
+public class IncludeSerializer implements Serializer<Object> {
 	
 	private Set<Class<?>> includedTypes = Sets.newHashSet();
 

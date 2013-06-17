@@ -219,7 +219,7 @@ public class DiffConfigTest {
 	
 	@Test
 	public void allowsAddingAndRetrievingOfSerializers() {
-		final Serializer expectedSerializer = new IncludeSerializer(Object.class);
+		final Serializer<Object> expectedSerializer = new IncludeSerializer(Object.class);
 		final DiffConfig config = new DiffConfig().addSerializer(expectedSerializer);
 		
 		assertThat(config.findSerializerFor(new Object()), is(expectedSerializer));

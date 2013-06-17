@@ -18,7 +18,6 @@ package com.codereligion.diff;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.codereligion.reflect.Reflector;
-
 import com.google.common.collect.Lists;
 import difflib.DiffUtils;
 import difflib.Patch;
@@ -122,7 +121,7 @@ public final class Differ {
 			return;
 		}
 		
-		final Serializer serializer = diffConfig.findSerializerFor(value);
+		final Serializer<Object> serializer = diffConfig.findSerializerFor(value);
 		if (serializer != null) {
 			lines.add(path + "='" + serializer.serialize(value) + "'");
 			return;
@@ -169,14 +168,14 @@ public final class Differ {
 		
 		for (final Map.Entry<Object, Object> entry : mapProperty.entrySet()) {
 			final Object key = entry.getKey();
-			final Serializer serializer = findMapKeySerializerOrThrowException(path, key);
+			final Serializer<Object> serializer = findMapKeySerializerOrThrowException(path, key);
 			final Object serializedKey = serializer.serialize(key);
 			diffObject(lines, path + "[" + serializedKey + "]", entry.getValue());
 		}
 	}
 
-	private Serializer findMapKeySerializerOrThrowException(final String path, final Object key) {
-		final Serializer serializer = diffConfig.findSerializerFor(key);
+	private Serializer<Object> findMapKeySerializerOrThrowException(final String path, final Object key) {
+		final Serializer<Object> serializer = diffConfig.findSerializerFor(key);
 		if (serializer == null) {
 			throw MissingSerializerException.missingMapKeySerializer(path, key.getClass());
 		}

@@ -50,7 +50,7 @@ public final class DiffConfig {
 	/**
 	 * Custom serializer for serialization of specific classes. 
 	 */
-	private final Set<Serializer> serializers = Sets.newHashSet();
+	private final Set<Serializer<?>> serializers = Sets.newHashSet();
 	
 	/**
 	 * The name of the base object, which titles the diff list.
@@ -119,7 +119,7 @@ public final class DiffConfig {
 	 * @throws IllegalArgumentException when the given {@code serializer} is {@code null}
 	 * @see Serializer
 	 */
-	public DiffConfig addSerializer(final Serializer serializer) {
+	public DiffConfig addSerializer(final Serializer<?> serializer) {
 		checkArgument(serializer != null, "serializer must not be null.");
 		final DiffConfig copy = this.copy();
 		copy.serializers.add(serializer);
@@ -211,10 +211,11 @@ public final class DiffConfig {
 	 * @return a {@link Serializer} or {@code null} if none was found
 	 * @see Serializer
 	 */
-	Serializer findSerializerFor(final Object object) {
-		for(final Serializer serializer: serializers) {
+	@SuppressWarnings("unchecked")
+	Serializer<Object> findSerializerFor(final Object object) {
+		for(final Serializer<?> serializer: serializers) {
 			if (serializer.serializes(object)) {
-				return serializer;
+				return (Serializer<Object>) serializer;
 			}
 		}
 		return null;

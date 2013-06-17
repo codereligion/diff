@@ -21,8 +21,9 @@ package com.codereligion.diff;
  * 
  * @author Sebastian Gröbler
  * @since 11.05.2013
+ * <T> The type of the object which should be serialized.
  */
-public interface Serializer {
+public interface Serializer<T> {
 	
 	/**
 	 * Determines if this serializer can serialize the given {@code object}.
@@ -41,5 +42,5 @@ public interface Serializer {
 	 * @param object the {@link Object} to serialize
 	 * @return the serialized for of the given object as a string
 	 */
-	String serialize(final Object object);
+	String serialize(final T object);
 }

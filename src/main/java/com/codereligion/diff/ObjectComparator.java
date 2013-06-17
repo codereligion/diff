@@ -22,7 +22,7 @@ import java.util.Comparator;
  * 
  * @author Sebastian Gröbler
  * @since 11.05.2013
- * @param <T>
+ * @param <T> The of the object which should be compared.
  */
 public interface ObjectComparator<T> extends Comparator<T> {
 	

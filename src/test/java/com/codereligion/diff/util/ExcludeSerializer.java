@@ -25,7 +25,7 @@ import java.util.Set;
  * @author Sebastian Gröbler
  * @since 13.05.2013
  */
-public class ExcludeSerializer implements Serializer {
+public class ExcludeSerializer implements Serializer<Object> {
 	
 	private Set<Class<?>> excludedTypes = Sets.newHashSet();
 
