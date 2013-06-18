@@ -66,6 +66,7 @@ public class DifferTest {
 			.useSerializer(new IncludeSerializer(String.class, Integer.class));
 
 		final Address working = new Address();
+		working.setStreet(null);
 		
 		final List<String> result = new Differ(diffConfig).diff(null, working);
 		
