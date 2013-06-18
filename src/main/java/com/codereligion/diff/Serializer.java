@@ -34,7 +34,7 @@ public interface Serializer<T> {
 	 * @param object the object to check
 	 * @return true if this serializer supports the given {@code object}, false otherwise
 	 */
-	boolean serializes(final Object object);
+	boolean serializes(Object object);
 	
 	/**
 	 * Serializes a given {@code object} to a string.
@@ -42,5 +42,5 @@ public interface Serializer<T> {
 	 * @param object the {@link Object} to serialize
 	 * @return the serialized for of the given object as a string
 	 */
-	String serialize(final T object);
+	String serialize(T object);
 }

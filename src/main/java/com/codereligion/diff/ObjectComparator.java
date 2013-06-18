@@ -35,5 +35,5 @@ public interface ObjectComparator<T> extends Comparator<T> {
 	 * @param object the object to check
 	 * @return true if it does compare, false if not
 	 */
-	boolean compares(final Object object);
+	boolean compares(Object object);
 }
