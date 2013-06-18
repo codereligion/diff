@@ -62,7 +62,6 @@ public class DifferTest {
 	@Test
 	public void serilizesNullToTheWordNull() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
-			.excludeProperty("class")
 			.useSerializer(new IncludeSerializer(String.class, Integer.class));
 
 		final Address working = new Address();
@@ -70,13 +69,12 @@ public class DifferTest {
 		
 		final List<String> result = new Differ(diffConfig).diff(null, working);
 		
-		assertThat(result, hasItem(containsString("null")));
+		assertThat(result, hasItem(containsString("+Address.street=null")));
 	}
 	
 	@Test
 	public void serializesEmptyStringToTwoQuotes() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
-			.excludeProperty("class")
 			.useSerializer(new IncludeSerializer(String.class, Integer.class));
 
 		final Address working = new Address();
@@ -84,7 +82,7 @@ public class DifferTest {
 		
 		final List<String> result = new Differ(diffConfig).diff(null, working);
 		
-		assertThat(result, hasItem(containsString("''")));
+		assertThat(result, hasItem(containsString("+Address.street=''")));
 	}
 	
 	@Test
@@ -216,7 +214,6 @@ public class DifferTest {
 	@Test
 	public void diffsMaps() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
-			.excludeProperty("class")
 			.useComparator(NaturalOrderComparator.newInstance(String.class))
 			.useSerializer(new IncludeSerializer(String.class, Integer.class));
 		
@@ -234,7 +231,6 @@ public class DifferTest {
 	@Test
 	public void diffsMapsWithComplexKeyObjects() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
-			.excludeProperty("class")
 			.useComparator(NaturalOrderComparator.newInstance(Credential.class))
 			.useSerializer(new IncludeSerializer(Credential.class, Integer.class));
 		
@@ -252,7 +248,6 @@ public class DifferTest {
 	@Test
 	public void diffsMapsWithComplexValueObjects() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
-			.excludeProperty("class")
 			.useComparator(NaturalOrderComparator.newInstance(Credential.class))
 			.useSerializer(new IncludeSerializer(Credential.class, String.class, Integer.class));
 		
@@ -271,7 +266,6 @@ public class DifferTest {
 	public void diffsFlatObjects() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.useSerializer(new IncludeSerializer(String.class, Integer.class))
-			.excludeProperty("class")
 			.useComparator(new StubComparator(Credential.class));
 	
 		final Address base = createAddress();
@@ -288,7 +282,6 @@ public class DifferTest {
 	public void diffsNestedObjects() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.useSerializer(new IncludeSerializer(String.class, Integer.class))
-			.excludeProperty("class")
 			.useComparator(new StubComparator(Credential.class));
 		
 		final User base = createUser();
@@ -383,7 +376,6 @@ public class DifferTest {
 	public void returnsEmptyListForSameObjects() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.useSerializer(new IncludeSerializer(String.class, Integer.class))
-			.excludeProperty("class")
 			.useComparator(new StubComparator(Credential.class));
 		
 		final User user = createUser();
@@ -404,7 +396,6 @@ public class DifferTest {
 	public void allowsBaseToBeNull() throws Exception{
 		final DiffConfig diffConfig = new DiffConfig()
 			.useSerializer(new IncludeSerializer(String.class, Integer.class))
-			.excludeProperty("class")
 			.useComparator(new StubComparator(Credential.class));
 	
 		final List<String> result = new Differ(diffConfig).diff(null, createUser());
@@ -418,7 +409,6 @@ public class DifferTest {
 	public void addsBeanNameInTheBeginningOfEachProperty() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.useSerializer(new IncludeSerializer(String.class, Integer.class))
-			.excludeProperty("class")
 			.useComparator(new StubComparator(Credential.class));
 	
 		final List<String> result = new Differ(diffConfig).diff(null, createUser());
