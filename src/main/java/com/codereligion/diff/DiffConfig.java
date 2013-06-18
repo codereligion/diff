@@ -86,7 +86,7 @@ public final class DiffConfig {
 	 * @throws IllegalArgumentException when the given {@code comparator} is {@code null}
 	 * @see ObjectComparator
 	 */
-	public DiffConfig addComparator(final ObjectComparator<?> comparator) {
+	public DiffConfig useComparator(final ObjectComparator<?> comparator) {
 		checkArgument(comparator != null, "comparator must not be null.");
 		final DiffConfig copy = this.copy();
 		copy.comparators.add(comparator);
@@ -94,17 +94,17 @@ public final class DiffConfig {
 	}
 	
 	/**
-	 * Returns a copy of this config with the given {@code comparable} added to be used to identify objects
-	 * that implement the {@link Comparable} interface in order to use them directly and not require a {@link Comparator}.
+	 * Returns a copy of this config with the given {@code comparable} to be used to identify objects
+	 * which should be sorted by their natural ordering.
 	 * 
 	 * <p>Comparables are prioritized over custom comparators.
 	 * 
-	 * @param comparable the {@link Comparable} to add
+	 * @param comparable the {@link Comparable} to use for natural ordering
 	 * @return a copy of this instance
 	 * @throws IllegalArgumentException when the given {@code comparable} is {@code null}
 	 * @see Comparable
 	 */
-	public DiffConfig addComparable(final Class<? extends Comparable<?>> comparable) {
+	public DiffConfig useNaturalOrderingOf(final Class<? extends Comparable<?>> comparable) {
 		checkArgument(comparable != null, "comparable must not be null.");
 		final DiffConfig copy = this.copy();
 		copy.comparables.add(comparable);
@@ -119,7 +119,7 @@ public final class DiffConfig {
 	 * @throws IllegalArgumentException when the given {@code serializer} is {@code null}
 	 * @see Serializer
 	 */
-	public DiffConfig addSerializer(final Serializer<?> serializer) {
+	public DiffConfig useSerializer(final Serializer<?> serializer) {
 		checkArgument(serializer != null, "serializer must not be null.");
 		final DiffConfig copy = this.copy();
 		copy.serializers.add(serializer);
@@ -133,7 +133,7 @@ public final class DiffConfig {
 	 * @param objectName the name of the working object, may be null
 	 * @return a copy of this instance
 	 */
-	public DiffConfig setWorkingObjectName(final String objectName) {
+	public DiffConfig useWorkingObjectName(final String objectName) {
 		final DiffConfig copy = this.copy();
 		copy.workingObjectName = objectName;
 		return copy;
@@ -146,7 +146,7 @@ public final class DiffConfig {
 	 * @param objectName the name of the base object, may be null
 	 * @return a copy of this instance
 	 */
-	public DiffConfig setBaseObjectName(final String objectName) {
+	public DiffConfig useBaseObjectName(final String objectName) {
 		final DiffConfig copy = this.copy();
 		copy.baseObjectName = objectName;
 		return copy;

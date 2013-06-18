@@ -9,10 +9,10 @@ Allows to diff two arbitrary Java objects and retrieve the diff result as a list
 
     DiffConfig diffConfig = new DiffConfig()
         .excludeProperty("someUnwantedPropertyName")
-        .addSerializer(new SomeSerializer())
-        .addComparator(new SomeComparator())
-        .setBaseObjectName("BaseObject")
-        .setWorkingObjectName("WorkingObject");
+        .useSerializer(new SomeSerializer())
+        .useComparator(new SomeComparator())
+        .useBaseObjectName("BaseObject")
+        .useWorkingObjectName("WorkingObject");
 		
     List<String> differences = new Differ(diffConfig).diff(base, working);
 

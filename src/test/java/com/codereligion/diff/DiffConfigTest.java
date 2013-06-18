@@ -44,24 +44,24 @@ public class DiffConfigTest {
 	
 	@Test
 	public void unknownComparatorCanNotBeFound() {
-		final DiffConfig config = new DiffConfig().addComparator(new StubComparator(String.class));
+		final DiffConfig config = new DiffConfig().useComparator(new StubComparator(String.class));
 		
 		assertThat(config.findComparatorFor(Integer.valueOf(1)), is(nullValue()));
 		
 	}
 	
 	@Test
-	public void addComparatorReturnsNewInstance() {
+	public void useComparatorReturnsNewInstance() {
 		final DiffConfig original = new DiffConfig();
-		final DiffConfig copy = original.addComparator(new StubComparator());
+		final DiffConfig copy = original.useComparator(new StubComparator());
 		
 		assertThat(original, is(not(sameInstance(copy))));
 	}
 	
 	@Test
-	public void addComparatorLeavesOriginalUntouched() {
+	public void useComparatorLeavesOriginalUntouched() {
 		final DiffConfig original = new DiffConfig();
-		original.addComparator(new StubComparator(String.class));
+		original.useComparator(new StubComparator(String.class));
 		
 		assertThat(original.findComparatorFor(""), is(nullValue()));
 	}
@@ -69,45 +69,45 @@ public class DiffConfigTest {
 	@Test
 	public void unknownComparableCanNotBeFound() {
 		
-		final DiffConfig config = new DiffConfig().addComparable(String.class);
+		final DiffConfig config = new DiffConfig().useNaturalOrderingOf(String.class);
 		assertFalse(config.isComparable(Credential.class));
 	}
 	
 	@Test
-	public void addComparableReturnsNewInstance() {
+	public void useComparableReturnsNewInstance() {
 		final DiffConfig original = new DiffConfig();
-		final DiffConfig copy = original.addComparable(Credential.class);
+		final DiffConfig copy = original.useNaturalOrderingOf(Credential.class);
 		
 		assertThat(original, is(not(sameInstance(copy))));
 	}
 
 	@Test
-	public void addComparableLeavesOriginalUntouched() {
+	public void useComparableLeavesOriginalUntouched() {
 		final DiffConfig original = new DiffConfig();
-		original.addComparable(Credential.class);
+		original.useNaturalOrderingOf(Credential.class);
 		
 		assertThat(original.isComparable(new Credential()), is(Boolean.FALSE));
 	}
 	
 	@Test
 	public void unknownSerializerCanNotBeFound() {
-		final DiffConfig config = new DiffConfig().addSerializer(new IncludeSerializer(String.class));
+		final DiffConfig config = new DiffConfig().useSerializer(new IncludeSerializer(String.class));
 		
 		assertThat(config.findSerializerFor(Integer.valueOf(42)), is(nullValue()));
 	}
 	
 	@Test
-	public void addSerializerReturnsNewInstance() {
+	public void useSerializerReturnsNewInstance() {
 		final DiffConfig original = new DiffConfig();
-		final DiffConfig copy = original.addSerializer(new IncludeSerializer());
+		final DiffConfig copy = original.useSerializer(new IncludeSerializer());
 		
 		assertThat(original, is(not(sameInstance(copy))));
 	}
 	
 	@Test
-	public void addSerializerLeavesOriginalUntouched() {
+	public void useSerializerLeavesOriginalUntouched() {
 		final DiffConfig original = new DiffConfig();
-		original.addSerializer(new IncludeSerializer(String.class));
+		original.useSerializer(new IncludeSerializer(String.class));
 		
 		assertThat(original.findSerializerFor("foo"), is(nullValue()));
 	}
@@ -130,55 +130,55 @@ public class DiffConfigTest {
 	}
 	
 	@Test
-	public void setBaseObjectNameReturnsNewInstance() {
+	public void useBaseObjectNameReturnsNewInstance() {
 		final DiffConfig original = new DiffConfig();
-		final DiffConfig copy = original.setBaseObjectName("foo");
+		final DiffConfig copy = original.useBaseObjectName("foo");
 		
 		assertThat(original, is(not(sameInstance(copy))));
 	}
 	
 	@Test
-	public void setBaseObjectNameLeavesOriginalUntouched() {
+	public void useBaseObjectNameLeavesOriginalUntouched() {
 		final String objectName = "foo";
 		final DiffConfig original = new DiffConfig();
-		original.setBaseObjectName(objectName);
+		original.useBaseObjectName(objectName);
 		
 		assertThat(original.getBaseObjectName(), is(not(objectName)));
 	}
 	
 	@Test
-	public void setWorkingObjectNameReturnsNewInstance() {
+	public void useWorkingObjectNameReturnsNewInstance() {
 		final DiffConfig original = new DiffConfig();
-		final DiffConfig copy = original.setWorkingObjectName("foo");
+		final DiffConfig copy = original.useWorkingObjectName("foo");
 		
 		assertThat(original, is(not(sameInstance(copy))));
 	}
 	
 	@Test
-	public void setWorkingObjectNameLeavesOriginalUntouched() {
+	public void useWorkingObjectNameLeavesOriginalUntouched() {
 		final String objectName = "foo";
 		final DiffConfig original = new DiffConfig();
-		original.setWorkingObjectName(objectName);
+		original.useWorkingObjectName(objectName);
 		
 		assertThat(original.getWorkingObjectName(), is(not(objectName)));
 	}
 
 	@Test
-	public void addComparatorThrowsIllegalArgumentExceptionOnNullValue() {
+	public void useComparatorThrowsIllegalArgumentExceptionOnNullValue() {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("comparator must not be null.");
 		
-		new DiffConfig().addComparator(null);
+		new DiffConfig().useComparator(null);
 	}
 	
 	@Test
-	public void addComparableThrowsIllegalArgumentExceptionOnNullValue() {
+	public void useComparableThrowsIllegalArgumentExceptionOnNullValue() {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("comparable must not be null.");
 		
-		new DiffConfig().addComparable(null);
+		new DiffConfig().useNaturalOrderingOf(null);
 	}
 	
 	@Test
@@ -196,7 +196,7 @@ public class DiffConfigTest {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("serializer must not be null.");
 		
-		new DiffConfig().addSerializer(null);
+		new DiffConfig().useSerializer(null);
 	}
 	
 	@Test
@@ -220,7 +220,7 @@ public class DiffConfigTest {
 	@Test
 	public void allowsAddingAndRetrievingOfSerializers() {
 		final Serializer<Object> expectedSerializer = new IncludeSerializer(Object.class);
-		final DiffConfig config = new DiffConfig().addSerializer(expectedSerializer);
+		final DiffConfig config = new DiffConfig().useSerializer(expectedSerializer);
 		
 		assertThat(config.findSerializerFor(new Object()), is(expectedSerializer));
 	}
@@ -228,7 +228,7 @@ public class DiffConfigTest {
 	@Test
 	public void allowsAddingAndRetrievingOfCompartors() {
 		final StubComparator comparator = new StubComparator(Object.class);
-		final DiffConfig config = new DiffConfig().addComparator(comparator);
+		final DiffConfig config = new DiffConfig().useComparator(comparator);
 		final Comparator<Object> expected = comparator;
 		final Comparator<Object> actual = config.findComparatorFor(new Object());
 		
@@ -237,7 +237,7 @@ public class DiffConfigTest {
 	
 	@Test
 	public void allowsAddingAndRetrievingOfComparables() {
-		final DiffConfig config = new DiffConfig().addComparable(Credential.class);
+		final DiffConfig config = new DiffConfig().useNaturalOrderingOf(Credential.class);
 
 		assertTrue(config.isComparable(new Credential()));
 	}
@@ -245,7 +245,7 @@ public class DiffConfigTest {
 	@Test
 	public void allowsSettingAndRetrievingOfBaseObjectName() {
 		final String objectName = "foo";
-		final DiffConfig diffConfig = new DiffConfig().setBaseObjectName(objectName);
+		final DiffConfig diffConfig = new DiffConfig().useBaseObjectName(objectName);
 		
 		assertThat(objectName, is(diffConfig.getBaseObjectName()));
 	}
@@ -253,7 +253,7 @@ public class DiffConfigTest {
 	@Test
 	public void allowsSettingAndRetrievingOfWorkingObjectName() {
 		final String objectName = "foo";
-		final DiffConfig diffConfig = new DiffConfig().setWorkingObjectName(objectName);
+		final DiffConfig diffConfig = new DiffConfig().useWorkingObjectName(objectName);
 		
 		assertThat(objectName, is(diffConfig.getWorkingObjectName()));
 	}
