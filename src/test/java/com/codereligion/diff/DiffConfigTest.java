@@ -69,14 +69,14 @@ public class DiffConfigTest {
 	@Test
 	public void unknownComparableCanNotBeFound() {
 		
-		final DiffConfig config = new DiffConfig().useNaturalOrderingOf(String.class);
+		final DiffConfig config = new DiffConfig().useNaturalOrderingFor(String.class);
 		assertFalse(config.isComparable(Credential.class));
 	}
 	
 	@Test
 	public void useComparableReturnsNewInstance() {
 		final DiffConfig original = new DiffConfig();
-		final DiffConfig copy = original.useNaturalOrderingOf(Credential.class);
+		final DiffConfig copy = original.useNaturalOrderingFor(Credential.class);
 		
 		assertThat(original, is(not(sameInstance(copy))));
 	}
@@ -84,7 +84,7 @@ public class DiffConfigTest {
 	@Test
 	public void useComparableLeavesOriginalUntouched() {
 		final DiffConfig original = new DiffConfig();
-		original.useNaturalOrderingOf(Credential.class);
+		original.useNaturalOrderingFor(Credential.class);
 		
 		assertThat(original.isComparable(new Credential()), is(Boolean.FALSE));
 	}
@@ -178,7 +178,7 @@ public class DiffConfigTest {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("comparable must not be null.");
 		
-		new DiffConfig().useNaturalOrderingOf(null);
+		new DiffConfig().useNaturalOrderingFor(null);
 	}
 	
 	@Test
@@ -237,7 +237,7 @@ public class DiffConfigTest {
 	
 	@Test
 	public void allowsAddingAndRetrievingOfComparables() {
-		final DiffConfig config = new DiffConfig().useNaturalOrderingOf(Credential.class);
+		final DiffConfig config = new DiffConfig().useNaturalOrderingFor(Credential.class);
 
 		assertTrue(config.isComparable(new Credential()));
 	}

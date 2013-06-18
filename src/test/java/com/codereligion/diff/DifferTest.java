@@ -122,7 +122,7 @@ public class DifferTest {
 			// does not compare, always returns 0
 			.useComparator(new StubComparator(Credential.class))
 			// compares and negates
-			.useNaturalOrderingOf(Credential.class);
+			.useNaturalOrderingFor(Credential.class);
 		
 		final List<String> result = new Differ(diffConfig).diff(null, createUser());
 		
@@ -137,7 +137,7 @@ public class DifferTest {
 			// does not compare, always returns 0
 			.useComparator(new StubComparator(Credential.class))
 			// compares and negates
-			.useNaturalOrderingOf(Credential.class);
+			.useNaturalOrderingFor(Credential.class);
 		
 		final Map<Credential, String> map = Maps.newHashMap();
 		map.put(new Credential().withPassword("aaaa"), "foo");
@@ -318,7 +318,7 @@ public class DifferTest {
 	public void ordersIterablesWithSpecifiedComparable() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.useSerializer(new IncludeSerializer(String.class))
-			.useNaturalOrderingOf(Credential.class);
+			.useNaturalOrderingFor(Credential.class);
 		
 		final List<String> result = new Differ(diffConfig).diff(null, createUser());
 		
@@ -330,7 +330,7 @@ public class DifferTest {
 	public void ordersMapKeysWithSpecifiedComparable() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.useSerializer(new IncludeSerializer(Credential.class, String.class))
-			.useNaturalOrderingOf(Credential.class);
+			.useNaturalOrderingFor(Credential.class);
 		
 		final Map<Credential, String> map = Maps.newHashMap();
 		map.put(new Credential().withPassword("aaaa"), "foo");
@@ -346,7 +346,7 @@ public class DifferTest {
 	public void doesNotDiffEmptyIterables() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.useSerializer(new IncludeSerializer(String.class))
-			.useNaturalOrderingOf(Credential.class);
+			.useNaturalOrderingFor(Credential.class);
 		
 		final User user = createUser();
 		user.getCredentials().clear();
@@ -368,7 +368,7 @@ public class DifferTest {
 	public void doesNotDiffWriteOnlyProperties() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.useSerializer(new IncludeSerializer(String.class))
-			.useNaturalOrderingOf(Credential.class);
+			.useNaturalOrderingFor(Credential.class);
 		
 		final User user = createUser();
 		user.setNotReadableProperty("this should not be diffed");

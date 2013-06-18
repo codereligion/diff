@@ -104,7 +104,7 @@ public final class DiffConfig {
 	 * @throws IllegalArgumentException when the given {@code comparable} is {@code null}
 	 * @see Comparable
 	 */
-	public DiffConfig useNaturalOrderingOf(final Class<? extends Comparable<?>> comparable) {
+	public DiffConfig useNaturalOrderingFor(final Class<? extends Comparable<?>> comparable) {
 		checkArgument(comparable != null, "comparable must not be null.");
 		final DiffConfig copy = this.copy();
 		copy.comparables.add(comparable);

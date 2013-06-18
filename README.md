@@ -24,6 +24,7 @@ Allows to diff two arbitrary Java objects and retrieve the diff result as a list
         .excludeProperty("someUnwantedPropertyName")
         .useSerializer(new SomeSerializer())
         .useComparator(new SomeComparator())
+        .useNaturalOrderingFor(SomeComparable.class)
         .useBaseObjectName("BaseObject")
         .useWorkingObjectName("WorkingObject");
 		
@@ -40,8 +41,12 @@ Allows to diff two arbitrary Java objects and retrieve the diff result as a list
 --- BaseObject
 +++ WorkingObject
 @@ -1,1 +1,1 @@
--SomeDomainObject.someProperty='21'
-+SomeDomainObject.someProperty='42'
+-SomeDomainObject.someIntegerProperty='21'
++SomeDomainObject.someIntegerProperty='42'
++SomeDomainObject.someIterableProperty[0]='foo'
++SomeDomainObject.someIterableProperty[1]='bar'
++SomeDomainObject.someMapProperty['someMapKey']='someMapValue'
+...
 ```
 
 For more details have a look at the [wiki](https://github.com/codereligion/diff/wiki).
