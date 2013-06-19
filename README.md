@@ -37,7 +37,7 @@ Allows to diff two arbitrary Java objects and retrieve the diff result as a list
 ```
 
 ## Example output
-```
+```diff
 --- BaseObject
 +++ WorkingObject
 @@ -1,1 +1,1 @@
