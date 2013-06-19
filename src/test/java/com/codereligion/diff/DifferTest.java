@@ -18,16 +18,16 @@ package com.codereligion.diff;
 import static com.codereligion.matcher.IterableOfStringsMatchers.hasItem;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-
-import com.codereligion.diff.util.bean.Address;
-import com.codereligion.diff.util.bean.Credential;
-import com.codereligion.diff.util.bean.User;
 
 import com.codereligion.diff.util.IncludeSerializer;
 import com.codereligion.diff.util.NaturalOrderComparator;
 import com.codereligion.diff.util.StubComparator;
+import com.codereligion.diff.util.bean.Address;
+import com.codereligion.diff.util.bean.Credential;
+import com.codereligion.diff.util.bean.User;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.util.List;
@@ -410,9 +410,35 @@ public class DifferTest {
 			.useSerializer(new IncludeSerializer(String.class, Integer.class))
 			.useComparator(new StubComparator(Credential.class));
 	
-		final List<String> result = new Differ(diffConfig).diff(null, createUser());
+		final List<String> result = new Differ(diffConfig).diff(null, createAddress());
 		
-		assertThat(result, hasItem(containsString(User.class.getSimpleName())));
+		assertThat(result, hasItem(startsWith("+" + Address.class.getSimpleName() + ".street")));
+		assertThat(result, hasItem(startsWith("+" + Address.class.getSimpleName() + ".zipCode")));
+	}
+	
+	@Test
+	public void addsBaseObjectNameAsHeader() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig().useBaseObjectName("objectName");
+		final List<String> result = new Differ(diffConfig).diff(null, createAddress());
+		
+		assertThat(result, hasItem("--- objectName"));
+	}
+	
+	@Test
+	public void addsWorkingObjectNameAsHeader() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig().useWorkingObjectName("objectName");
+		final List<String> result = new Differ(diffConfig).diff(null, createAddress());
+		
+		assertThat(result, hasItem("+++ objectName"));
+	}
+	
+	@Test
+	public void addHunks() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig().useSerializer(new IncludeSerializer(String.class));
+		final List<String> result = new Differ(diffConfig).diff(null, "Hello world!");
+		
+		assertThat(result, hasItem("@@ -1,0 +1,1 @@"));
+		assertThat(result, hasItem("+String='Hello world!'"));
 	}
 	
 	private User createUser() {
