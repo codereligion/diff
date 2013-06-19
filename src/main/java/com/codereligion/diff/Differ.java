@@ -17,6 +17,8 @@ package com.codereligion.diff;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.codereligion.diff.internal.ComparableComparator;
+import com.codereligion.diff.internal.PathBuilder;
 import com.codereligion.reflect.Reflector;
 import com.google.common.collect.Lists;
 import difflib.DiffUtils;
@@ -33,8 +35,9 @@ import java.util.TreeMap;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * Creates a diff between two given objects applying the given {@link DiffConfig} and returning
- * a list of strings representing the detected difference between the two objects.
+ * Creates a unified diff between two given objects applying the given {@link DiffConfig} and returning
+ * a list of strings representing the detected difference between the two objects without any contextual
+ * lines added.
  * 
  * @author Sebastian Gröbler
  * @since 10.05.2013
@@ -42,6 +45,8 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public final class Differ {
+	
+	private static final int LINES_OF_CONTEXT_AROUND_OUTPUT = 0;
 	
 	/**
 	 * The configuration to use.
@@ -92,23 +97,31 @@ public final class Differ {
 		
 		final String simpleClassNameOfWorking = getBeanName(working);
 		diffObject(serializedPropertiesOfWorking, simpleClassNameOfWorking, working);
+
+		return unifiedDiff(serializedPropertiesOfBase, serializedPropertiesOfWorking);
+	}
+
+	private String getBeanName(final Object before) {
+		return before.getClass().getSimpleName();
+	}
+	
+	private List<String> unifiedDiff(final List<String> baseDocument, final List<String> workingDocument) {
 		
-		if (serializedPropertiesOfWorking.isEmpty()) {
+		if (workingDocument.isEmpty()) {
 			return Collections.emptyList();
 		}
 
-		final Patch patch = DiffUtils.diff(serializedPropertiesOfBase, serializedPropertiesOfWorking);
+		final Patch patch = DiffUtils.diff(baseDocument, workingDocument);
 		final boolean objectsHaveNoDiff = patch.getDeltas().isEmpty();
 
 		if (objectsHaveNoDiff) {
 			return Collections.emptyList();
 		}
 
-		return DiffUtils.generateUnifiedDiff(diffConfig.getBaseObjectName(), diffConfig.getWorkingObjectName(), serializedPropertiesOfBase, patch, 0);
-	}
-	
-	private String getBeanName(final Object before) {
-		return before.getClass().getSimpleName();
+		final String baseObjectName = diffConfig.getBaseObjectName();
+		final String workingObjectName = diffConfig.getWorkingObjectName();
+		return DiffUtils.generateUnifiedDiff(baseObjectName, workingObjectName, baseDocument, patch, LINES_OF_CONTEXT_AROUND_OUTPUT);
+
 	}
 
 	private void diffObject(
@@ -117,60 +130,62 @@ public final class Differ {
 			final Object value) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
 		
 		if (value == null) {
-			lines.add(path + "=null");
+			lines.add(PathBuilder.createPathWithNullValue(path));
 			return;
 		}
 		
 		final Serializer<Object> serializer = diffConfig.findSerializerFor(value);
 		if (serializer != null) {
-			lines.add(path + "='" + serializer.serialize(value) + "'");
+			lines.add(PathBuilder.createPathWithValue(path, serializer.serialize(value)));
 			return;
 		}
 		
 		if (value instanceof Iterable) {
-			diffIterable(lines, path, value);
+			@SuppressWarnings("unchecked")
+			final Iterable<Object> iterable = (Iterable<Object>) value;
+			diffIterable(lines, path, iterable);
 			return;
 		}
 		
 		if (value instanceof Map) {
-			diffMap(lines, path, value);
+			@SuppressWarnings("unchecked")
+			final Map<Object, Object> map = (Map<Object, Object>) value;
+			diffMap(lines, path, map);
 			return;
 		}
 		
 		if (value instanceof Class) {
-			lines.add(path + "='" + ((Class<?>) value).getCanonicalName() + "'");
+			lines.add(PathBuilder.createPathWithClassValue(path, (Class<?>) value));
 			return;
 		}
 		
 		diffProperties(lines, path, value);
 	}
-
+	
 	private void diffIterable(
 			final List<String> lines,
 			final String path,
-			final Object value) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
+			final Iterable<Object> value) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
 		
-		@SuppressWarnings("unchecked")
-		final List<Object> iterableProperty = transformToSortedList(path, (Iterable<Object>) value);
+		final List<Object> iterableProperty = transformToSortedList(path, value);
 		int i = 0;
 		for (final Object nestedProperty : iterableProperty) {
-			diffObject(lines, path + "[" + i++ + "]", nestedProperty);
+			diffObject(lines, PathBuilder.createPathForIterableIndex(path, i++), nestedProperty);
 		}
 	}
 	
 	private void diffMap(
 			final List<String> lines,
 			final String path,
-			final Object value) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
+			final Map<Object, Object> value) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
 		
-		@SuppressWarnings("unchecked")
-		final Map<Object, Object> mapProperty = transformToSortedMap(path, (Map<Object, Object>) value);
+		final Map<Object, Object> mapProperty = transformToSortedMap(path, value);
 		
 		for (final Map.Entry<Object, Object> entry : mapProperty.entrySet()) {
 			final Object key = entry.getKey();
 			final Serializer<Object> serializer = findMapKeySerializerOrThrowException(path, key);
 			final Object serializedKey = serializer.serialize(key);
-			diffObject(lines, path + "[" + serializedKey + "]", entry.getValue());
+			diffObject(lines, PathBuilder.createPathForMapIndex(path, serializedKey), entry.getValue());
 		}
 	}
 
@@ -244,8 +259,7 @@ public final class Differ {
 			}
 			final Method readMethod = descriptor.getReadMethod();
 			final Object propertyValue = readMethod.invoke(value);
-			final String fullPath = path + "." + propertyName;
-			diffObject(lines, fullPath, propertyValue);
+			diffObject(lines, PathBuilder.createFullPath(path, propertyName), propertyValue);
 		}
 		
 		final boolean serializationFailed = linesBefore == lines.size();

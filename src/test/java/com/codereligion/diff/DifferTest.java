@@ -15,31 +15,30 @@
  */
 package com.codereligion.diff;
 
+import static com.codereligion.matcher.IterableOfStringsMatchers.hasItem;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import com.codereligion.diff.util.Address;
-import com.codereligion.diff.util.Credential;
+import com.codereligion.diff.util.bean.Address;
+import com.codereligion.diff.util.bean.Credential;
+import com.codereligion.diff.util.bean.User;
+
 import com.codereligion.diff.util.IncludeSerializer;
 import com.codereligion.diff.util.NaturalOrderComparator;
 import com.codereligion.diff.util.StubComparator;
-import com.codereligion.diff.util.User;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 /**
- * Tests {@link Differ}.
+ * Tests {@link Differ} features.
  * 
  * @author Sebastian Gröbler
  * @since 12.05.2013
@@ -96,7 +95,7 @@ public class DifferTest {
 		
 		final List<String> result = new Differ(diffConfig).diff(base, working);
 		
-		assertThat(result, hasItem("+User.class='com.codereligion.diff.util.User'"));
+		assertThat(result, hasItem("+User.class='com.codereligion.diff.util.bean.User'"));
 	}
 	
 	@Test
@@ -427,13 +426,5 @@ public class DifferTest {
 		return new Address()
 		.withStreet("street")
 		.withZipCode(12345);
-	}
-
-	private Matcher<Iterable<? super String>> hasItem(final String item) {
-		return hasItem(is(item));
-	}
-
-	private Matcher<Iterable<? super String>> hasItem(final Matcher<String> matcher) {
-		return Matchers.hasItem(matcher);
 	}
 }

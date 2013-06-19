@@ -1,6 +1,7 @@
 # Diff [![Build Status](https://api.travis-ci.org/codereligion/diff.png?branch=master)](https://travis-ci.org/codereligion/diff)
 
-Allows to diff two arbitrary Java objects and retrieve the diff result as a list of strings.
+Allows to diff any two Java objects and retrieve the diff result as a list of strings.
+The result is a [unified diff](http://en.wikipedia.org/wiki/Diff#Unified_format) without any contextual lines.
 
 ## Requirements
 * Java 1.5 or higher
@@ -40,7 +41,7 @@ Allows to diff two arbitrary Java objects and retrieve the diff result as a list
 ```diff
 --- BaseObject
 +++ WorkingObject
-@@ -1,1 +1,1 @@
+@@ -1,1 +1,4 @@
 -SomeDomainObject.someIntegerProperty='21'
 +SomeDomainObject.someIntegerProperty='42'
 +SomeDomainObject.someIterableProperty[0]='foo'

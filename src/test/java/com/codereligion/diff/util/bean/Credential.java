@@ -13,24 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff;
+package com.codereligion.diff.util.bean;
 
-import java.util.Comparator;
+public class Credential implements Comparable<Credential> {
+	private String password;
 
-/**
- * Compares objects by casting them into {@link Comparable} instances.
- * 
- * @author sgroebler
- * @since 07.06.2013
- */
-class ComparableComparator implements Comparator<Object> {
+	public String getPassword() {
+		return password;
+	}
 
-	static final Comparator<Object> INSTANCE = new ComparableComparator();
-	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	@Override
-	public int compare(final Object first, final Object second) {
-		@SuppressWarnings("unchecked")
-		final Comparable<Object> comparable = (Comparable<Object>) first;
-		return comparable.compareTo(second);
+	public int compareTo(final Credential credential) {
+		return -password.compareTo(credential.password);
+	}
+
+	public Credential withPassword(final String password) {
+		this.password = password;
+		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "Credential [password=" + password + "]";
 	}
 }

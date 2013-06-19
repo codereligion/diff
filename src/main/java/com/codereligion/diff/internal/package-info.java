@@ -13,31 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.util;
 
-public class Credential implements Comparable<Credential> {
-	private String password;
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	@Override
-	public int compareTo(final Credential credential) {
-		return -password.compareTo(credential.password);
-	}
-
-	public Credential withPassword(final String password) {
-		this.password = password;
-		return this;
-	}
-
-	@Override
-	public String toString() {
-		return "Credential [password=" + password + "]";
-	}
-}
+package com.codereligion.diff.internal;
+/**
+ * This package contains internal classes which are not part of the public API.
+ * Usage of any of these classes is explicitly not recommended. Any class in
+ * this package may be changed or removed without notice and without a deprecation
+ * period.
+ */

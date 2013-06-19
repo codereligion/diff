@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.util;
+package com.codereligion.diff.util.bean;
 
 import com.google.common.collect.Lists;
 import java.util.List;

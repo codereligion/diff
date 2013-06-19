@@ -23,7 +23,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import com.codereligion.diff.util.Credential;
+import com.codereligion.diff.util.bean.Credential;
+
+
 import com.codereligion.diff.util.IncludeSerializer;
 import com.codereligion.diff.util.StubComparator;
 import java.util.Comparator;
@@ -32,7 +34,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 /**
- * Tests {@link DiffConfig}.
+ * Tests {@link DiffConfig} features.
  * 
  * @author Sebastian Gröbler
  * @since 12.05.2013
