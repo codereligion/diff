@@ -43,7 +43,7 @@ public class ReadMeExampleTest {
 				"SomeDomainObject.someIterableProperty[1]='bar'",
 				"SomeDomainObject.someMapProperty[someMapKey]='someMapValue'");
 		
-		final Patch patch = DiffUtils.diff(original, revised);
+		final Patch<String> patch = DiffUtils.diff(original, revised);
 		final List<String> diff = DiffUtils.generateUnifiedDiff("BaseObject", "WorkingObject", original, patch, 0);
 		
 		assertThat(diff, hasItem(containsString("--- BaseObject")));

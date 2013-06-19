@@ -106,12 +106,7 @@ public final class Differ {
 	}
 	
 	private List<String> unifiedDiff(final List<String> baseDocument, final List<String> workingDocument) {
-		
-		if (workingDocument.isEmpty()) {
-			return Collections.emptyList();
-		}
-
-		final Patch patch = DiffUtils.diff(baseDocument, workingDocument);
+		final Patch<String> patch = DiffUtils.diff(baseDocument, workingDocument);
 		final boolean objectsHaveNoDiff = patch.getDeltas().isEmpty();
 
 		if (objectsHaveNoDiff) {
