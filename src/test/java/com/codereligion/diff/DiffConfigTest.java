@@ -23,11 +23,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import com.codereligion.diff.util.bean.Credential;
-
-
 import com.codereligion.diff.util.IncludeSerializer;
 import com.codereligion.diff.util.StubComparator;
+import com.codereligion.diff.util.bean.Credential;
 import java.util.Comparator;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,7 +47,6 @@ public class DiffConfigTest {
 		final DiffConfig config = new DiffConfig().useComparator(new StubComparator(String.class));
 		
 		assertThat(config.findComparatorFor(Integer.valueOf(1)), is(nullValue()));
-		
 	}
 	
 	@Test

@@ -28,6 +28,7 @@ import com.codereligion.diff.util.StubComparator;
 import com.codereligion.diff.util.bean.Address;
 import com.codereligion.diff.util.bean.Credential;
 import com.codereligion.diff.util.bean.User;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.util.List;
@@ -56,6 +57,67 @@ public class DifferTest {
 		expectedException.expectMessage("diffConfig must not be null.");
 		
 		new Differ(null);
+	}
+	
+	@Test
+	public void throwsMissingSerializerExceptionForUnknownPropertyType() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.useSerializer(new IncludeSerializer(String.class))
+			.excludeProperty("class")
+			.useComparator(new StubComparator(Credential.class));
+		
+		expectedException.expect(MissingSerializerException.class);
+		expectedException.expectMessage("Could not find Serializer for '12345' at 'User.address.zipCode'");
+		
+		new Differ(diffConfig).diff(null, createUser());
+	}
+	
+	@Test
+	public void throwsMissingSerializerExceptionWhenNoSerializerCanBeFoundForMapKey() throws Exception {
+		
+		final DiffConfig diffConfig = new DiffConfig().useComparator(NaturalOrderComparator.newInstance(Credential.class));
+		final Map<Credential, String> working = Maps.newHashMap();
+		working.put(new Credential().withPassword("foo"), "bar");
+
+		expectedException.expect(MissingSerializerException.class);
+		expectedException.expectMessage("Could not find Serializer for map key of type 'Credential' at 'HashMap'");
+		
+		new Differ(diffConfig).diff(null, working);
+	}
+	
+	@Test
+	public void throwsMissingObjectComparatorExceptionForUncomparableIterableType() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.excludeProperty("class")
+			.useSerializer(new IncludeSerializer(Credential.class, Address.class, String.class, Integer.class));
+		
+		expectedException.expect(MissingObjectComparatorException.class);
+		expectedException.expectMessage("Could not find ObjectComparator for iterable at 'User.credentials'");
+		
+		final User working = createUser();
+		working.withCredential(new Credential().withPassword("password"));
+		
+		new Differ(diffConfig).diff(null, working);
+	}
+	
+	@Test
+	public void throwsMissingObjectComparatorExceptionForUncomparableMapKeyType() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig();
+		final Map<Credential, String> working = Maps.newHashMap();
+		working.put(new Credential().withPassword("foo"), "bar");
+		
+		expectedException.expect(MissingObjectComparatorException.class);
+		expectedException.expectMessage("Could not find ObjectComparator for map keys of type 'Credential' at 'HashMap'");
+		new Differ(diffConfig).diff(null, working);
+	}
+
+	@Test
+	public void throwsIllegalArgumentExceptionForNullWorkingObject() throws Exception {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("working object must not be null.");
+		
+		new Differ(new DiffConfig()).diff(null, null);
 	}
 	
 	@Test
@@ -101,16 +163,17 @@ public class DifferTest {
 	@Test
 	public void customSerializerHavePrecendenceOverBuiltInIterablesSerialization() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
-			.useSerializer(new IncludeSerializer(User.class, Address.class, Set.class))
+			.useSerializer(new IncludeSerializer(List.class))
 			.useComparator(new StubComparator(Credential.class));
 		
-		final User base = createUser();
-		final User working = createUser();
-		working.getAddress().setStreet("something new");
+		final List<Credential> working = Lists.newArrayList(new Credential().withPassword("password"));
+		final List<String> result = new Differ(diffConfig).diff(null, working);
 		
-		final List<String> result = new Differ(diffConfig).diff(base, working);
+		// uses the toString serialization
+		assertThat(result, hasItem("+ArrayList='[Credential [password=password]]'"));
 		
-		assertThat(result, not(hasItem(containsString("[0]"))));
+		// there are no list indices
+		assertThat(result, not(hasItem("+ArrayList.password[0]='password'")));
 	}
 	
 	@Test
@@ -122,10 +185,14 @@ public class DifferTest {
 			// compares and negates
 			.useNaturalOrderingFor(Credential.class);
 		
-		final List<String> result = new Differ(diffConfig).diff(null, createUser());
+		final List<Credential> working = Lists.newArrayList(
+				new Credential().withPassword("password1"),
+				new Credential().withPassword("password2"));
 		
-		assertThat(result, hasItem("+User.credentials[0].password='password2'"));
-		assertThat(result, hasItem("+User.credentials[1].password='password1'"));
+		final List<String> result = new Differ(diffConfig).diff(null, working);
+		
+		assertThat(result, hasItem("+ArrayList[0].password='password2'"));
+		assertThat(result, hasItem("+ArrayList[1].password='password1'"));
 	}
 	
 	@Test
@@ -150,64 +217,16 @@ public class DifferTest {
 	@Test
 	public void customSerializerHavePrecendenceOverBuiltInClassSerialization() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
-			.useSerializer(new IncludeSerializer(Address.class, Class.class))
+			.useSerializer(new IncludeSerializer(Class.class))
 			.useComparator(new StubComparator(Credential.class));
 		
-		final Address base = createAddress();
-		final User working = createUser();
+		final List<String> result = new Differ(diffConfig).diff(null, "foo");
 		
-		final List<String> result = new Differ(diffConfig).diff(base, working);
+		// uses the toString serialization
+		assertThat(result, hasItem("+String.class='class java.lang.String'"));
 		
-		assertThat(result, not(hasItem("+User.class='com.codereligion.diff.util.User'")));
-	}
-	
-	@Test
-	public void throwsMissingSerializerExceptionForUnknownPropertyType() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
-			.useSerializer(new IncludeSerializer(String.class))
-			.excludeProperty("class")
-			.useComparator(new StubComparator(Credential.class));
-		
-		expectedException.expect(MissingSerializerException.class);
-		expectedException.expectMessage("Could not find Serializer for '12345' at 'User.address.zipCode'");
-		
-		new Differ(diffConfig).diff(null, createUser());
-	}
-	
-	@Test
-	public void throwsMissingSerializerExceptionWhenNoSerializerCanBeFoundForMapKey() throws Exception {
-		
-		final DiffConfig diffConfig = new DiffConfig().useComparator(NaturalOrderComparator.newInstance(Credential.class));
-		final Map<Credential, String> working = Maps.newHashMap();
-		working.put(new Credential().withPassword("foo"), "bar");
-
-		expectedException.expect(MissingSerializerException.class);
-		expectedException.expectMessage("Could not find Serializer for map key of type 'Credential' at 'HashMap'");
-		
-		new Differ(diffConfig).diff(null, working);
-	}
-	
-	@Test
-	public void throwsMissingObjectComparatorExceptionForUncomparableIterableType() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
-			.excludeProperty("class")
-			.useSerializer(new IncludeSerializer(Credential.class, Address.class, String.class, Integer.class));
-		
-		expectedException.expect(MissingObjectComparatorException.class);
-		expectedException.expectMessage("Could not find ObjectComparator for iterable at 'User.credentials'");
-		
-		new Differ(diffConfig).diff(null, createUser());
-	}
-	
-	@Test
-	public void throwsMissingObjectComparatorExceptionForUncomparableMapKeyType() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig();
-		final Map<Credential, String> working = Maps.newHashMap();
-		working.put(new Credential().withPassword("foo"), "bar");
-		
-		expectedException.expect(MissingObjectComparatorException.class);
-		expectedException.expectMessage("Could not find ObjectComparator for map keys of type 'Credential' at 'HashMap'");
-		new Differ(diffConfig).diff(null, working);
+		// does not serialize class property with default class serialization
+		assertThat(result, not(hasItem("+String.class='java.lang.String'")));
 	}
 	
 	@Test
@@ -297,42 +316,78 @@ public class DifferTest {
 	public void diffsIterableObjectsWithCustomComparator() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
 			.useSerializer(new IncludeSerializer(Integer.class))
-			.useComparator(new StubComparator(Integer.class));
+			.useComparator(NaturalOrderComparator.newInstance(Integer.class));
 		
 		final Set<Integer> base = Sets.newHashSet(1, 2, 3);
 		final Set<Integer> working = Sets.newHashSet(2, 3, 4);
 		
 		final List<String> result = new Differ(diffConfig).diff(base, working);
 		assertThat(result, hasItem("-HashSet[0]='1'"));
-		assertThat(result, hasItem("+HashSet[0]='4'"));
+		assertThat(result, hasItem("-HashSet[1]='2'"));
+		assertThat(result, hasItem("-HashSet[2]='3'"));
+		assertThat(result, hasItem("+HashSet[0]='2'"));
+		assertThat(result, hasItem("+HashSet[1]='3'"));
+		assertThat(result, hasItem("+HashSet[2]='4'"));
+	}
+	
+	@Test
+	public void ordersIterablesWithSpecifiedComparator() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.useSerializer(new IncludeSerializer(Integer.class))
+			.useComparator(NaturalOrderComparator.newInstance(Integer.class));
+		
+		final List<Integer> working = Lists.newArrayList(3, 2, 1);
+		final List<String> result = new Differ(diffConfig).diff(null, working);
+		
+		assertThat(result, hasItem("+ArrayList[0]='1'"));
+		assertThat(result, hasItem("+ArrayList[1]='2'"));
+		assertThat(result, hasItem("+ArrayList[2]='3'"));
 	}
 	
 	@Test
 	public void ordersIterablesWithSpecifiedComparable() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
-			.useSerializer(new IncludeSerializer(String.class))
-			.useNaturalOrderingFor(Credential.class);
+			.useSerializer(new IncludeSerializer(Integer.class))
+			.useNaturalOrderingFor(Integer.class);
 		
-		final List<String> result = new Differ(diffConfig).diff(null, createUser());
+		final List<Integer> working = Lists.newArrayList(3, 2, 1);
+		final List<String> result = new Differ(diffConfig).diff(null, working);
 		
-		assertThat(result, hasItem("+User.credentials[0].password='password2'"));
-		assertThat(result, hasItem("+User.credentials[1].password='password1'"));
+		assertThat(result, hasItem("+ArrayList[0]='1'"));
+		assertThat(result, hasItem("+ArrayList[1]='2'"));
+		assertThat(result, hasItem("+ArrayList[2]='3'"));
 	}
 	
 	@Test
 	public void ordersMapKeysWithSpecifiedComparable() throws Exception {
 		final DiffConfig diffConfig = new DiffConfig()
-			.useSerializer(new IncludeSerializer(Credential.class, String.class))
-			.useNaturalOrderingFor(Credential.class);
+			.useSerializer(new IncludeSerializer(Integer.class, String.class))
+			.useNaturalOrderingFor(Integer.class);
 		
-		final Map<Credential, String> map = Maps.newHashMap();
-		map.put(new Credential().withPassword("aaaa"), "foo");
-		map.put(new Credential().withPassword("bbbb"), "bar");
+		final Map<Integer, String> map = Maps.newHashMap();
+		map.put(2, "foo");
+		map.put(1, "bar");
 		
 		final List<String> result = new Differ(diffConfig).diff(null, map);
 		
-		assertThat(result, hasItem("+HashMap[Credential [password=bbbb]]='bar'"));
-		assertThat(result, hasItem("+HashMap[Credential [password=aaaa]]='foo'"));
+		assertThat(result, hasItem("+HashMap[1]='bar'"));
+		assertThat(result, hasItem("+HashMap[2]='foo'"));
+	}
+	
+	@Test
+	public void ordersMapKeysWithSpecifiedComparator() throws Exception {
+		final DiffConfig diffConfig = new DiffConfig()
+			.useSerializer(new IncludeSerializer(Integer.class, String.class))
+			.useComparator(NaturalOrderComparator.newInstance(Integer.class));
+		
+		final Map<Integer, String> map = Maps.newHashMap();
+		map.put(2, "foo");
+		map.put(1, "bar");
+		
+		final List<String> result = new Differ(diffConfig).diff(null, map);
+		
+		assertThat(result, hasItem("+HashMap[1]='bar'"));
+		assertThat(result, hasItem("+HashMap[2]='foo'"));
 	}
 	
 	@Test
@@ -383,15 +438,6 @@ public class DifferTest {
 	}
 	
 	@Test
-	public void throwsIllegalArgumentExceptionForNullWorkingObject() throws Exception {
-		
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("working object must not be null.");
-		
-		new Differ(new DiffConfig()).diff(null, null);
-	}
-	
-	@Test
 	public void allowsBaseToBeNull() throws Exception{
 		final DiffConfig diffConfig = new DiffConfig()
 			.useSerializer(new IncludeSerializer(String.class, Integer.class))
@@ -401,7 +447,6 @@ public class DifferTest {
 		
 		assertThat(result, hasItem("+User.address.street='street'"));
 		assertThat(result, hasItem("+User.address.zipCode='12345'"));
-		assertThat(result, hasItem("+User.credentials[0].password='password1'"));
 	}
 	
 	@Test
@@ -443,9 +488,7 @@ public class DifferTest {
 	
 	private User createUser() {
 		return new User()
-			.withAddress(createAddress())
-			.withCredential(new Credential().withPassword("password1"))
-			.withCredential(new Credential().withPassword("password2"));
+			.withAddress(createAddress());
 	}
 
 	private Address createAddress() {
