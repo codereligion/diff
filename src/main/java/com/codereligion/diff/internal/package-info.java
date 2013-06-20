@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.codereligion.diff.internal;
 /**
  * This package contains internal classes which are not part of the public API.
  * Usage of any of these classes is explicitly not recommended. Any class in
  * this package may be changed or removed without notice and without a deprecation
  * period.
  */
+@javax.annotation.ParametersAreNonnullByDefault
+package com.codereligion.diff.internal;

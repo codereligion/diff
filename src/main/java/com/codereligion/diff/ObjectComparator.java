@@ -18,11 +18,12 @@ package com.codereligion.diff;
 import java.util.Comparator;
 
 /**
- * Abstract comparator that encapsulates the functionality of type conversion from object to T.
+ * Extends the {@link Comparator} by moving the responsibility to decide whether
+ * this comparator can compare certain objects into the comparator.
  * 
  * @author Sebastian Gröbler
  * @since 11.05.2013
- * @param <T> The of the object which should be compared.
+ * @param <T> The type of the object which should be compared.
  */
 public interface ObjectComparator<T> extends Comparator<T> {
 	

@@ -21,7 +21,7 @@ package com.codereligion.diff;
  * 
  * @author Sebastian Gröbler
  * @since 11.05.2013
- * <T> The type of the object which should be serialized.
+ * @param <T> The type of the object which should be serialized.
  */
 public interface Serializer<T> {
 	

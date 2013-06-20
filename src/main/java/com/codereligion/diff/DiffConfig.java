@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Sets;
 import java.util.Comparator;
 import java.util.Set;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -60,10 +61,18 @@ public final class DiffConfig {
 	/**
 	 * The name of the working object, which titles the diff list.
 	 */
-	private String workingObjectName = ""; 
+	private String workingObjectName = "";
+	
+	
+	/**
+	 * Creates a new instance.
+	 */
+	public DiffConfig() {
+		// nothing to initialize;
+	}
 
 	/**
-	 * Returns a copy of this config with the given {@code propertyName} added to be excluded for the diff.
+	 * Returns a copy of this config with the given {@code propertyName} to be excluded for the diff.
 	 * The property will be excluded for all objects in the graph of the to be diffed object.
 	 * 
 	 * @param propertyName the name of the property to be excluded
@@ -94,7 +103,7 @@ public final class DiffConfig {
 	}
 	
 	/**
-	 * Returns a copy of this config with the given {@code comparable} to be used to identify objects
+	 * Returns a copy of this config with the given {@code comparable} defined to be used to identify objects
 	 * which should be sorted by their natural ordering.
 	 * 
 	 * <p>Comparables are prioritized over custom comparators.
@@ -133,7 +142,7 @@ public final class DiffConfig {
 	 * @param objectName the name of the working object, may be null
 	 * @return a copy of this instance
 	 */
-	public DiffConfig useWorkingObjectName(final String objectName) {
+	public DiffConfig useWorkingObjectName(@Nullable final String objectName) {
 		final DiffConfig copy = this.copy();
 		copy.workingObjectName = objectName;
 		return copy;
@@ -146,7 +155,7 @@ public final class DiffConfig {
 	 * @param objectName the name of the base object, may be null
 	 * @return a copy of this instance
 	 */
-	public DiffConfig useBaseObjectName(final String objectName) {
+	public DiffConfig useBaseObjectName(@Nullable final String objectName) {
 		final DiffConfig copy = this.copy();
 		copy.baseObjectName = objectName;
 		return copy;
