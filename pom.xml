@@ -48,6 +48,7 @@
 		<animal.sniffer.plugin.version>1.9</animal.sniffer.plugin.version>
 		<surefire.plugin.version>2.15</surefire.plugin.version>
 		<license.plugin.version>1.9.0</license.plugin.version>
+		<source.plugin.version>2.1.2</source.plugin.version>
 		<javadoc.plugin.version>2.9</javadoc.plugin.version>
 		<release.plugin.version>2.4.1</release.plugin.version>
 
@@ -203,6 +204,22 @@
 				</executions>
 			</plugin>
 			
+			<!-- sources -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${source.plugin.version}</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<!-- java doc -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -211,6 +228,15 @@
 				<configuration>
 					<excludePackageNames>com.codereligion.diff.internal</excludePackageNames>
 				</configuration>
+				<executions>
+					<execution>
+						<id>attach-docs</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<!-- releasing -->
