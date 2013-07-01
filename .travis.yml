@@ -1,9 +1,9 @@
 language: java
 env:
   global:
-    - secure: "B3I3eSAL+YfucWw7VDyDiP6Rq7A90m96RrgZ4+xXjwZ9RSut5wwwnn7Eptlu\nHOnXk6qySKyToouFLyrihUtEWsIj/blVADhL8FjdFf/qtFqZ2uF0rK0vOCkl\n7esiNiz/gDkwrr4y2PcfxUMCrtUSWRXFM2RE9i0WYRn2Bx0sOhc="
-    - secure: "P9Uqv5U+udvNLXo8iBiWu4R7HrGSWSGZTrLg5PKac/r9Tbsh06MgWUX2hPHN\nAEXkSpR/SCpz+QNK09TYbAc1SOxy0b2o+Ccmk4+JMvU+v5QNKh9qDiCcppfC\nikIaGyQ7PHNCXUSg0MErgp28vjN2qU4BzK0jBiUgtt6hWYprCi8="
-    - secure: "KUXRaIN+qbeNIO1vg3auGWvnO/9hHvpitJkz3twqgsk1wlsIjpQRLvvkmDlF\nVInSZjupyPkHZstASuogd3IiIwZqdeyUZ0M2S94owo04iq1/EaYiv+fFLEi8\nECr/SPHrp2KtsaaSdc4ixgGuWM/GuGIc+b7N/7VVZYnoKvGO31U="
+    - secure: "JjzrgDBwGLPwSG6Ua8mvHc6JoLkwOs6mPlhvTd001WjDDpA+ylaUS4neQoaT\nhUBBhLYlm9Uaa2iMGZPdbTrsiWdhKzT0XOvyhZqo64Rt7skwnGyIe6MK9zZm\niumvDBVTk+spuI3ZxSEZFUA/7FFJEFwDgbjy9/9ceZo4LpFZG4U="
+    - secure: "MoBPl4y2tbTvHi/QIcEZg9jxyGyfumzxOLKVK3c+JieFFYJF9AZuGuSidfiO\nwdRsE26IXWvyy7aUDhOZwlUOSOt7SXBx4QAUG6VHKsu2ncqZD5cEl0Ht3Va1\nbl4q8ovyd1dznMlz+nICrI6Omka1KTaLR9d+xyUAIm/b3P2yi/0="
+    - secure: "YUc7JIZz6b1bpEyJ3VbG1fNqGvu4Zp4twI8xn1+4M14f/KwzxtYgq+/26HZ0\nO9nHrUIfQemj14Wtb1Jj4XzgMHT/i43Tn2vq96Xti1YpRG6OLDT0eZq3ci/U\nymjaMnKGDqi3t2wsnPDu3zTrykZIoXxqiA5SuHnBgVhx07cYZS4="
 notifications:
   email:
     on_failure: change
