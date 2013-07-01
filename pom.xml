@@ -48,8 +48,8 @@
 		<animal.sniffer.plugin.version>1.9</animal.sniffer.plugin.version>
 		<surefire.plugin.version>2.15</surefire.plugin.version>
 		<license.plugin.version>1.9.0</license.plugin.version>
-		<source.plugin.version>2.1.2</source.plugin.version>
-		<javadoc.plugin.version>2.9</javadoc.plugin.version>
+		<source.plugin.version>2.2.1</source.plugin.version>
+		<javadoc.plugin.version>2.9.1</javadoc.plugin.version>
 		<release.plugin.version>2.4.1</release.plugin.version>
 
 		<!-- dependency versions -->
@@ -60,7 +60,7 @@
 		<junit.version>4.11</junit.version>
 		<hamcrest.version>1.3</hamcrest.version>
 
-		<!-- code coverage properties -->
+		<!-- ci properties -->
 		<jacoco.version>0.6.2.201302030002</jacoco.version>
 		<skip.code.coverage>true</skip.code.coverage>
 	</properties>

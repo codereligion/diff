@@ -1,10 +1,14 @@
 language: java
+env:
+  global:
+    - secure: "B3I3eSAL+YfucWw7VDyDiP6Rq7A90m96RrgZ4+xXjwZ9RSut5wwwnn7Eptlu\nHOnXk6qySKyToouFLyrihUtEWsIj/blVADhL8FjdFf/qtFqZ2uF0rK0vOCkl\n7esiNiz/gDkwrr4y2PcfxUMCrtUSWRXFM2RE9i0WYRn2Bx0sOhc="
+    - secure: "P9Uqv5U+udvNLXo8iBiWu4R7HrGSWSGZTrLg5PKac/r9Tbsh06MgWUX2hPHN\nAEXkSpR/SCpz+QNK09TYbAc1SOxy0b2o+Ccmk4+JMvU+v5QNKh9qDiCcppfC\nikIaGyQ7PHNCXUSg0MErgp28vjN2qU4BzK0jBiUgtt6hWYprCi8="
+    - secure: "KUXRaIN+qbeNIO1vg3auGWvnO/9hHvpitJkz3twqgsk1wlsIjpQRLvvkmDlF\nVInSZjupyPkHZstASuogd3IiIwZqdeyUZ0M2S94owo04iq1/EaYiv+fFLEi8\nECr/SPHrp2KtsaaSdc4ixgGuWM/GuGIc+b7N/7VVZYnoKvGO31U="
 notifications:
   email:
     on_failure: change
 jdk:
   - openjdk6
-  - openjdk7
-  - oraclejdk7
 install: mvn -DskipTests=true -e install
-script: mvn -e test
+script: mvn -e -Dskip.code.coverage=false -Dmaven.javadoc.skip=true -Dsource.skip=true verify
+after_success: mvn sonar:sonar -Dsonar.sourceEncoding=UTF-8 -Dsonar.core.codeCoveragePlugin=jacoco -Dsonar.dynamicAnalysis=reuseReports -Dsonar.host.url=http://sonar.codereligion.com -Dsonar.jdbc.url=$SONAR_DB_URL -Dsonar.jdbc.username=$SONAR_DB_USER -Dsonar.jdbc.password=$SONAR_DB_PASSWORD
