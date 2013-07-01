@@ -1,7 +1,7 @@
 language: java
 env:
   global:
-    - secure: "JjzrgDBwGLPwSG6Ua8mvHc6JoLkwOs6mPlhvTd001WjDDpA+ylaUS4neQoaT\nhUBBhLYlm9Uaa2iMGZPdbTrsiWdhKzT0XOvyhZqo64Rt7skwnGyIe6MK9zZm\niumvDBVTk+spuI3ZxSEZFUA/7FFJEFwDgbjy9/9ceZo4LpFZG4U="
+    - secure: "jLtWio6aaD/AcXxJP13K0I1+HM7V4BG7J4+KxfRqDEkFRYWA9bbTFuURbkIJ\nhy/n3i++37U+4297yaht5LVTO4LABVD6TSflQwxVzWbrgPwPnF3CJw/9V8LG\nrlc3oEjlhzHIIB7clXHmImCKOBrA2UbeRMqOEd8tVQD2Lq2vTVk="
     - secure: "MoBPl4y2tbTvHi/QIcEZg9jxyGyfumzxOLKVK3c+JieFFYJF9AZuGuSidfiO\nwdRsE26IXWvyy7aUDhOZwlUOSOt7SXBx4QAUG6VHKsu2ncqZD5cEl0Ht3Va1\nbl4q8ovyd1dznMlz+nICrI6Omka1KTaLR9d+xyUAIm/b3P2yi/0="
     - secure: "YUc7JIZz6b1bpEyJ3VbG1fNqGvu4Zp4twI8xn1+4M14f/KwzxtYgq+/26HZ0\nO9nHrUIfQemj14Wtb1Jj4XzgMHT/i43Tn2vq96Xti1YpRG6OLDT0eZq3ci/U\nymjaMnKGDqi3t2wsnPDu3zTrykZIoXxqiA5SuHnBgVhx07cYZS4="
 notifications:
