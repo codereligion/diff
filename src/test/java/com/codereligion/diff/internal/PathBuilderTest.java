@@ -24,7 +24,7 @@ import org.junit.Test;
  * This is a kind of esoteric test to bring coverage into a utility class with a
  * private constructor.
  * 
- * @author sgroebler
+ * @author Sebastian Gröbler
  * @since 19.06.2013
  */
 public class PathBuilderTest {

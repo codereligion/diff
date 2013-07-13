@@ -18,7 +18,7 @@ package com.codereligion.diff.internal;
 /**
  * Builder to create paths or parts of paths, which represent lines of the diffed document.
  * 
- * @author sgroebler
+ * @author Sebastian Gröbler
  * @since 19.06.2013
  */
 public final class PathBuilder {

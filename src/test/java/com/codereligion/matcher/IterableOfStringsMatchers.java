@@ -24,7 +24,7 @@ import org.hamcrest.Matchers;
  * Convenience wrapper around hamcrest matcher which solves compiling issues
  * with generics.
  * 
- * @author sgroebler
+ * @author Sebastian Gröbler
  * @since 19.06.2013
  */
 public final class IterableOfStringsMatchers {

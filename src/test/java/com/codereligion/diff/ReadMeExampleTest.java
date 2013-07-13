@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * Proves that the code example from the read me is working.
  * 
- * @author sgroebler
+ * @author Sebastian Gröbler
  * @since 19.06.2013
  */
 public class ReadMeExampleTest {

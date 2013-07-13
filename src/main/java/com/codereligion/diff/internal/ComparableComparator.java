@@ -20,7 +20,7 @@ import java.util.Comparator;
 /**
  * Compares objects by casting them into {@link Comparable} instances.
  * 
- * @author sgroebler
+ * @author Sebastian Gröbler
  * @since 07.06.2013
  */
 public final class ComparableComparator implements Comparator<Object> {

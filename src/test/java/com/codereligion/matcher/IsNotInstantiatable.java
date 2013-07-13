@@ -27,7 +27,7 @@ import org.hamcrest.TypeSafeMatcher;
  * class is particularly useful to cover otherwise dead code of private
  * constructors in static utility methods
  * 
- * @author sgroebler
+ * @author Sebastian Gröbler
  * @since 19.06.2013
  */
 public final class IsNotInstantiatable extends TypeSafeMatcher<Class<?>> {
