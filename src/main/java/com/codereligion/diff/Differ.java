@@ -21,6 +21,7 @@ import com.codereligion.diff.internal.ComparableComparator;
 import com.codereligion.diff.internal.PathBuilder;
 import com.codereligion.reflect.Reflector;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import difflib.DiffUtils;
 import difflib.Patch;
 import java.beans.IntrospectionException;
@@ -31,7 +32,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -233,7 +233,7 @@ public final class Differ {
 			throw MissingObjectComparatorException.missingMapKeyComparator(path, anyKey.getClass());
 		}
 		
-		final Map<Object, Object> sortedMap = new TreeMap<Object, Object>(comparator);
+		final Map<Object, Object> sortedMap = Maps.newTreeMap(comparator);
 		sortedMap.putAll(value);
 		return sortedMap;
 	}
