@@ -27,7 +27,8 @@ The result is a [unified diff](http://en.wikipedia.org/wiki/Diff#Unified_format)
         .useComparator(new SomeComparator())
         .useNaturalOrderingFor(SomeComparable.class)
         .useBaseObjectName("BaseObject")
-        .useWorkingObjectName("WorkingObject");
+        .useWorkingObjectName("WorkingObject")
+        .build();
 		
     List<String> differences = new Differ(diffConfig).diff(base, working);
 

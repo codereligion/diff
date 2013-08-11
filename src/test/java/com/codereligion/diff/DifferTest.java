@@ -61,10 +61,11 @@ public class DifferTest {
 	
 	@Test
 	public void throwsMissingSerializerExceptionForUnknownPropertyType() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(String.class))
 			.excludeProperty("class")
-			.useComparator(new StubComparator(Credential.class));
+			.useComparator(new StubComparator(Credential.class))
+				.build();
 		
 		expectedException.expect(MissingSerializerException.class);
 		expectedException.expectMessage("Could not find Serializer for '12345' at 'User.address.zipCode'");
@@ -75,7 +76,7 @@ public class DifferTest {
 	@Test
 	public void throwsMissingSerializerExceptionWhenNoSerializerCanBeFoundForMapKey() throws Exception {
 		
-		final DiffConfig diffConfig = new DiffConfig().useComparator(NaturalOrderComparator.newInstance(Credential.class));
+		final DiffConfig diffConfig = new DiffConfigBuilder().useComparator(NaturalOrderComparator.newInstance(Credential.class)).build();
 		final Map<Credential, String> working = Maps.newHashMap();
 		working.put(new Credential().withPassword("foo"), "bar");
 
@@ -87,9 +88,9 @@ public class DifferTest {
 	
 	@Test
 	public void throwsMissingObjectComparatorExceptionForUncomparableIterableType() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.excludeProperty("class")
-			.useSerializer(new IncludeSerializer(Credential.class, Address.class, String.class, Integer.class));
+			.useSerializer(new IncludeSerializer(Credential.class, Address.class, String.class, Integer.class)).build();
 		
 		expectedException.expect(MissingObjectComparatorException.class);
 		expectedException.expectMessage("Could not find ObjectComparator for iterable at 'User.credentials'");
@@ -102,7 +103,7 @@ public class DifferTest {
 	
 	@Test
 	public void throwsMissingObjectComparatorExceptionForUncomparableMapKeyType() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig();
+		final DiffConfig diffConfig = new DiffConfigBuilder().build();
 		final Map<Credential, String> working = Maps.newHashMap();
 		working.put(new Credential().withPassword("foo"), "bar");
 		
@@ -117,13 +118,13 @@ public class DifferTest {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("working object must not be null.");
 		
-		new Differ(new DiffConfig()).diff(null, null);
+		new Differ(new DiffConfigBuilder().build()).diff(null, null);
 	}
 	
 	@Test
 	public void serilizesNullToTheWordNull() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
-			.useSerializer(new IncludeSerializer(String.class, Integer.class));
+		final DiffConfig diffConfig = new DiffConfigBuilder()
+			.useSerializer(new IncludeSerializer(String.class, Integer.class)).build();
 
 		final Address working = new Address();
 		working.setStreet(null);
@@ -135,8 +136,8 @@ public class DifferTest {
 	
 	@Test
 	public void serializesEmptyStringToTwoQuotes() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
-			.useSerializer(new IncludeSerializer(String.class, Integer.class));
+		final DiffConfig diffConfig = new DiffConfigBuilder()
+			.useSerializer(new IncludeSerializer(String.class, Integer.class)).build();
 
 		final Address working = new Address();
 		working.setStreet("");
@@ -148,9 +149,9 @@ public class DifferTest {
 	
 	@Test
 	public void providesDefaultSerializationForClassProperty() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(Address.class))
-			.useComparator(new StubComparator(Credential.class));
+			.useComparator(new StubComparator(Credential.class)).build();
 		
 		final Address base = createAddress();
 		final User working = createUser();
@@ -162,9 +163,9 @@ public class DifferTest {
 	
 	@Test
 	public void customSerializerHavePrecendenceOverBuiltInIterablesSerialization() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(List.class))
-			.useComparator(new StubComparator(Credential.class));
+			.useComparator(new StubComparator(Credential.class)).build();
 		
 		final List<Credential> working = Lists.newArrayList(new Credential().withPassword("password"));
 		final List<String> result = new Differ(diffConfig).diff(null, working);
@@ -178,12 +179,13 @@ public class DifferTest {
 	
 	@Test
 	public void specifiedComparablesHavePrecedenceOverCustomComparatorsForIterables() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(String.class))
 			// does not compare, always returns 0
 			.useComparator(new StubComparator(Credential.class))
 			// compares and negates
-			.useNaturalOrderingFor(Credential.class);
+			.useNaturalOrderingFor(Credential.class)
+				.build();
 		
 		final List<Credential> working = Lists.newArrayList(
 				new Credential().withPassword("password1"),
@@ -197,12 +199,13 @@ public class DifferTest {
 	
 	@Test
 	public void specifiedComparablesHavePrecedenceOverCustomComparatorsForMapKeys() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(Credential.class, String.class))
 			// does not compare, always returns 0
 			.useComparator(new StubComparator(Credential.class))
 			// compares and negates
-			.useNaturalOrderingFor(Credential.class);
+			.useNaturalOrderingFor(Credential.class)
+				.build();
 		
 		final Map<Credential, String> map = Maps.newHashMap();
 		map.put(new Credential().withPassword("aaaa"), "foo");
@@ -216,9 +219,9 @@ public class DifferTest {
 	
 	@Test
 	public void customSerializerHavePrecendenceOverBuiltInClassSerialization() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(Class.class))
-			.useComparator(new StubComparator(Credential.class));
+			.useComparator(new StubComparator(Credential.class)).build();
 		
 		final List<String> result = new Differ(diffConfig).diff(null, "foo");
 		
@@ -231,9 +234,9 @@ public class DifferTest {
 	
 	@Test
 	public void diffsMaps() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useComparator(NaturalOrderComparator.newInstance(String.class))
-			.useSerializer(new IncludeSerializer(String.class, Integer.class));
+			.useSerializer(new IncludeSerializer(String.class, Integer.class)).build();
 		
 		final Map<String, Integer> working = Maps.newHashMap();
 			working.put("aaaa", 1);
@@ -248,9 +251,9 @@ public class DifferTest {
 	
 	@Test
 	public void diffsMapsWithComplexKeyObjects() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useComparator(NaturalOrderComparator.newInstance(Credential.class))
-			.useSerializer(new IncludeSerializer(Credential.class, Integer.class));
+			.useSerializer(new IncludeSerializer(Credential.class, Integer.class)).build();
 		
 		final Map<Credential, Integer> working = Maps.newHashMap();
 		working.put(new Credential().withPassword("aaaa"), 1);
@@ -265,9 +268,9 @@ public class DifferTest {
 	
 	@Test
 	public void diffsMapsWithComplexValueObjects() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useComparator(NaturalOrderComparator.newInstance(Credential.class))
-			.useSerializer(new IncludeSerializer(Credential.class, String.class, Integer.class));
+			.useSerializer(new IncludeSerializer(Credential.class, String.class, Integer.class)).build();
 		
 		final Map<Credential, Address> working = Maps.newHashMap();
 		working.put(new Credential().withPassword("aaaa"), new Address().withStreet("someStreet").withZipCode(1));
@@ -282,9 +285,9 @@ public class DifferTest {
 	
 	@Test
 	public void diffsFlatObjects() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(String.class, Integer.class))
-			.useComparator(new StubComparator(Credential.class));
+			.useComparator(new StubComparator(Credential.class)).build();
 	
 		final Address base = createAddress();
 		final Address working = createAddress();
@@ -298,9 +301,9 @@ public class DifferTest {
 	
 	@Test
 	public void diffsNestedObjects() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(String.class, Integer.class))
-			.useComparator(new StubComparator(Credential.class));
+			.useComparator(new StubComparator(Credential.class)).build();
 		
 		final User base = createUser();
 		final User working = createUser();
@@ -314,9 +317,9 @@ public class DifferTest {
 	
 	@Test
 	public void diffsIterableObjectsWithCustomComparator() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(Integer.class))
-			.useComparator(NaturalOrderComparator.newInstance(Integer.class));
+			.useComparator(NaturalOrderComparator.newInstance(Integer.class)).build();
 		
 		final Set<Integer> base = Sets.newHashSet(1, 2, 3);
 		final Set<Integer> working = Sets.newHashSet(2, 3, 4);
@@ -332,9 +335,9 @@ public class DifferTest {
 	
 	@Test
 	public void ordersIterablesWithSpecifiedComparator() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(Integer.class))
-			.useComparator(NaturalOrderComparator.newInstance(Integer.class));
+			.useComparator(NaturalOrderComparator.newInstance(Integer.class)).build();
 		
 		final List<Integer> working = Lists.newArrayList(3, 2, 1);
 		final List<String> result = new Differ(diffConfig).diff(null, working);
@@ -346,9 +349,9 @@ public class DifferTest {
 	
 	@Test
 	public void ordersIterablesWithSpecifiedComparable() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(Integer.class))
-			.useNaturalOrderingFor(Integer.class);
+			.useNaturalOrderingFor(Integer.class).build();
 		
 		final List<Integer> working = Lists.newArrayList(3, 2, 1);
 		final List<String> result = new Differ(diffConfig).diff(null, working);
@@ -360,9 +363,9 @@ public class DifferTest {
 	
 	@Test
 	public void ordersMapKeysWithSpecifiedComparable() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(Integer.class, String.class))
-			.useNaturalOrderingFor(Integer.class);
+			.useNaturalOrderingFor(Integer.class).build();
 		
 		final Map<Integer, String> map = Maps.newHashMap();
 		map.put(2, "foo");
@@ -376,9 +379,9 @@ public class DifferTest {
 	
 	@Test
 	public void ordersMapKeysWithSpecifiedComparator() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(Integer.class, String.class))
-			.useComparator(NaturalOrderComparator.newInstance(Integer.class));
+			.useComparator(NaturalOrderComparator.newInstance(Integer.class)).build();
 		
 		final Map<Integer, String> map = Maps.newHashMap();
 		map.put(2, "foo");
@@ -392,9 +395,9 @@ public class DifferTest {
 	
 	@Test
 	public void doesNotDiffEmptyIterables() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(String.class))
-			.useNaturalOrderingFor(Credential.class);
+			.useNaturalOrderingFor(Credential.class).build();
 		
 		final User user = createUser();
 		user.getCredentials().clear();
@@ -406,7 +409,7 @@ public class DifferTest {
 	
 	@Test
 	public void doesNotDiffEmptyMaps() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig();
+		final DiffConfig diffConfig = new DiffConfigBuilder().build();
 		final List<String> result = new Differ(diffConfig).diff(null, Maps.newHashMap());
 		
 		assertTrue(result.isEmpty());
@@ -414,9 +417,9 @@ public class DifferTest {
 	
 	@Test
 	public void doesNotDiffWriteOnlyProperties() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(String.class))
-			.useNaturalOrderingFor(Credential.class);
+			.useNaturalOrderingFor(Credential.class).build();
 		
 		final User user = createUser();
 		user.setNotReadableProperty("this should not be diffed");
@@ -428,9 +431,9 @@ public class DifferTest {
 	
 	@Test
 	public void returnsEmptyListForSameObjects() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(String.class, Integer.class))
-			.useComparator(new StubComparator(Credential.class));
+			.useComparator(new StubComparator(Credential.class)).build();
 		
 		final User user = createUser();
 		final List<String> result = new Differ(diffConfig).diff(user, user);
@@ -439,9 +442,9 @@ public class DifferTest {
 	
 	@Test
 	public void allowsBaseToBeNull() throws Exception{
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(String.class, Integer.class))
-			.useComparator(new StubComparator(Credential.class));
+			.useComparator(new StubComparator(Credential.class)).build();
 	
 		final List<String> result = new Differ(diffConfig).diff(null, createUser());
 		
@@ -451,9 +454,9 @@ public class DifferTest {
 	
 	@Test
 	public void addsBeanNameInTheBeginningOfEachProperty() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig()
+		final DiffConfig diffConfig = new DiffConfigBuilder()
 			.useSerializer(new IncludeSerializer(String.class, Integer.class))
-			.useComparator(new StubComparator(Credential.class));
+			.useComparator(new StubComparator(Credential.class)).build();
 	
 		final List<String> result = new Differ(diffConfig).diff(null, createAddress());
 		
@@ -463,7 +466,7 @@ public class DifferTest {
 	
 	@Test
 	public void addsBaseObjectNameAsHeader() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig().useBaseObjectName("objectName");
+		final DiffConfig diffConfig = new DiffConfigBuilder().useBaseObjectName("objectName").build();
 		final List<String> result = new Differ(diffConfig).diff(null, createAddress());
 		
 		assertThat(result, hasItem("--- objectName"));
@@ -471,7 +474,7 @@ public class DifferTest {
 	
 	@Test
 	public void addsWorkingObjectNameAsHeader() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig().useWorkingObjectName("objectName");
+		final DiffConfig diffConfig = new DiffConfigBuilder().useWorkingObjectName("objectName").build();
 		final List<String> result = new Differ(diffConfig).diff(null, createAddress());
 		
 		assertThat(result, hasItem("+++ objectName"));
@@ -479,7 +482,7 @@ public class DifferTest {
 	
 	@Test
 	public void addHunks() throws Exception {
-		final DiffConfig diffConfig = new DiffConfig().useSerializer(new IncludeSerializer(String.class));
+		final DiffConfig diffConfig = new DiffConfigBuilder().useSerializer(new IncludeSerializer(String.class)).build();
 		final List<String> result = new Differ(diffConfig).diff(null, "Hello world!");
 		
 		assertThat(result, hasItem("@@ -1,0 +1,1 @@"));
