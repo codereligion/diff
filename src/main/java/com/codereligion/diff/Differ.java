@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.codereligion.diff.internal.ComparableComparator;
 import com.codereligion.diff.internal.PathBuilder;
-import com.codereligion.reflect.Reflector;
+import com.codereligion.reflect.BeanIntrospections;
 import com.google.common.collect.Lists;
 import difflib.DiffUtils;
 import difflib.Patch;
@@ -246,7 +246,7 @@ public final class Differ {
 		final int linesBefore = lines.size();
 		final Class<?> beanClass = value.getClass();
 	
-		for (final PropertyDescriptor descriptor : Reflector.getReadableProperties(beanClass)) {
+		for (final PropertyDescriptor descriptor : BeanIntrospections.getReadableProperties(beanClass)) {
 			final String propertyName = descriptor.getName();
 	
 			if (diffConfig.isPropertyExcluded(propertyName)) {
