@@ -1,4 +1,4 @@
-# Diff [![Build Status](https://api.travis-ci.org/codereligion/diff.png?branch=master)](https://travis-ci.org/codereligion/diff)
+# Diff [![Build Status](https://ssl.webpack.de/secure-jenkins.codereligion.com/buildStatus/icon?job=codereligion-diff-master-build-flow)](http://jenkins.codereligion.com/view/codereligion-diff/job/codereligion-diff-master-build-flow/)
 
 Allows to diff any two Java objects and retrieve the diff result as a list of strings.
 The result is a [unified diff](http://en.wikipedia.org/wiki/Diff#Unified_format) without any contextual lines.
