@@ -100,7 +100,7 @@
 				<version>${gmaven.plugin.version}</version>
 				<configuration>
 					<properties>
-						<examplePath>${project.basedir}/src/example/java/com/codereligion/example/Example.java</examplePath>
+						<examplePath>${project.basedir}/src/example/java/com/codereligion/example/ExampleTest.java</examplePath>
 					</properties>
 					<source>
 						project.properties.example = new

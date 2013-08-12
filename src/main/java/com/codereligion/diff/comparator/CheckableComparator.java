@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.internal;
+package com.codereligion.diff.comparator;
 
+import com.codereligion.diff.Checkable;
 import java.util.Comparator;
 
 /**
- * Compares objects by casting them into {@link Comparable} instances.
+ * Extends the {@link Comparator} by moving the responsibility to decide whether
+ * this comparator can compare certain objects into the comparator.
  * 
  * @author Sebastian Gröbler
- * @since 07.06.2013
+ * @since 11.05.2013
+ * @param <T> The type of the object which should be compared.
  */
-public final class ComparableComparator implements Comparator<Object> {
+public interface CheckableComparator<T> extends Comparator<T>, Checkable {
 
-	public static final Comparator<Object> INSTANCE = new ComparableComparator();
-	
-	@Override
-	public int compare(final Object first, final Object second) {
-		@SuppressWarnings("unchecked")
-		final Comparable<Object> comparable = (Comparable<Object>) first;
-		return comparable.compareTo(second);
-	}
 }

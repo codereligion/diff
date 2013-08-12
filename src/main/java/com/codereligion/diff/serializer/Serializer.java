@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff;
-
+package com.codereligion.diff.serializer;
 
 /**
  * Serializes a given object to a string, if supported.
@@ -24,23 +23,12 @@ package com.codereligion.diff;
  * @param <T> The type of the object which should be serialized.
  */
 public interface Serializer<T> {
-	
-	/**
-	 * Determines if this serializer can serialize the given {@code object}.
-	 * 
-	 * <p>An object is considered serializable by this class, when it is an
-	 * "instance of" one of the {@code supportedTypes}.
-	 * 
-	 * @param object the object to check
-	 * @return true if this serializer supports the given {@code object}, false otherwise
-	 */
-	boolean serializes(Object object);
-	
-	/**
-	 * Serializes a given {@code object} to a string.
-	 * 
-	 * @param object the {@link Object} to serialize
-	 * @return the serialized for of the given object as a string
-	 */
-	String serialize(T object);
+
+    /**
+     * Serializes a given {@code object} to a string.
+     * 
+     * @param object the {@link Object} to serialize
+     * @return the serialized for of the given object as a string
+     */
+    String serialize(T object);
 }

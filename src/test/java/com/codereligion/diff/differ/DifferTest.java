@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff;
+package com.codereligion.diff.differ;
 
 import static com.codereligion.matcher.IterableOfStringsMatchers.hasItem;
 import static org.hamcrest.Matchers.containsString;
@@ -22,6 +22,8 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import com.codereligion.diff.exception.MissingObjectComparatorException;
+import com.codereligion.diff.exception.MissingSerializerException;
 import com.codereligion.diff.util.IncludeSerializer;
 import com.codereligion.diff.util.NaturalOrderComparator;
 import com.codereligion.diff.util.StubComparator;
@@ -67,7 +69,7 @@ public class DifferTest {
 			.useComparator(new StubComparator(Credential.class));
 		
 		expectedException.expect(MissingSerializerException.class);
-		expectedException.expectMessage("Could not find Serializer for '12345' at 'User.address.zipCode'");
+		expectedException.expectMessage("Could not find CheckableSerializer for '12345' at 'User.address.zipCode'");
 		
 		new Differ(diffConfig).diff(null, createUser());
 	}
@@ -80,7 +82,7 @@ public class DifferTest {
 		working.put(new Credential().withPassword("foo"), "bar");
 
 		expectedException.expect(MissingSerializerException.class);
-		expectedException.expectMessage("Could not find Serializer for map key of type 'Credential' at 'HashMap'");
+		expectedException.expectMessage("Could not find CheckableSerializer for map key of type 'Credential' at 'HashMap'");
 		
 		new Differ(diffConfig).diff(null, working);
 	}
@@ -92,7 +94,7 @@ public class DifferTest {
 			.useSerializer(new IncludeSerializer(Credential.class, Address.class, String.class, Integer.class));
 		
 		expectedException.expect(MissingObjectComparatorException.class);
-		expectedException.expectMessage("Could not find ObjectComparator for iterable at 'User.credentials'");
+		expectedException.expectMessage("Could not find CheckableComparator for iterable at 'User.credentials'");
 		
 		final User working = createUser();
 		working.withCredential(new Credential().withPassword("password"));
@@ -107,7 +109,7 @@ public class DifferTest {
 		working.put(new Credential().withPassword("foo"), "bar");
 		
 		expectedException.expect(MissingObjectComparatorException.class);
-		expectedException.expectMessage("Could not find ObjectComparator for map keys of type 'Credential' at 'HashMap'");
+		expectedException.expectMessage("Could not find CheckableComparator for map keys of type 'Credential' at 'HashMap'");
 		new Differ(diffConfig).diff(null, working);
 	}
 
@@ -210,8 +212,8 @@ public class DifferTest {
 		
 		final List<String> result = new Differ(diffConfig).diff(null, map);
 		
-		assertThat(result, hasItem("+HashMap[Credential [password=bbbb]]='bar'"));
-		assertThat(result, hasItem("+HashMap[Credential [password=aaaa]]='foo'"));
+		assertThat(result, hasItem("+HashMap['Credential [password=bbbb]']='bar'"));
+		assertThat(result, hasItem("+HashMap['Credential [password=aaaa]']='foo'"));
 	}
 	
 	@Test
@@ -241,9 +243,9 @@ public class DifferTest {
 			working.put("cccc", 3);
 	
 		final List<String> result = new Differ(diffConfig).diff(null, working);
-		assertThat(result, hasItem("+HashMap[aaaa]='1'"));
-		assertThat(result, hasItem("+HashMap[bbbb]='2'"));
-		assertThat(result, hasItem("+HashMap[cccc]='3'"));
+		assertThat(result, hasItem("+HashMap['aaaa']='1'"));
+		assertThat(result, hasItem("+HashMap['bbbb']='2'"));
+		assertThat(result, hasItem("+HashMap['cccc']='3'"));
 	}
 	
 	@Test
@@ -258,9 +260,9 @@ public class DifferTest {
 		working.put(new Credential().withPassword("cccc"), 3);
 		
 		final List<String> result = new Differ(diffConfig).diff(null, working);
-		assertThat(result, hasItem("+HashMap[Credential [password=aaaa]]='1'"));
-		assertThat(result, hasItem("+HashMap[Credential [password=bbbb]]='2'"));
-		assertThat(result, hasItem("+HashMap[Credential [password=cccc]]='3'"));
+		assertThat(result, hasItem("+HashMap['Credential [password=aaaa]']='1'"));
+		assertThat(result, hasItem("+HashMap['Credential [password=bbbb]']='2'"));
+		assertThat(result, hasItem("+HashMap['Credential [password=cccc]']='3'"));
 	}
 	
 	@Test
@@ -274,10 +276,10 @@ public class DifferTest {
 		working.put(new Credential().withPassword("bbbb"), new Address().withStreet("someOtherStreet").withZipCode(2));
 		
 		final List<String> result = new Differ(diffConfig).diff(null, working);
-		assertThat(result, hasItem("+HashMap[Credential [password=aaaa]].street='someStreet'"));
-		assertThat(result, hasItem("+HashMap[Credential [password=aaaa]].zipCode='1'"));
-		assertThat(result, hasItem("+HashMap[Credential [password=bbbb]].street='someOtherStreet'"));
-		assertThat(result, hasItem("+HashMap[Credential [password=bbbb]].zipCode='2'"));
+		assertThat(result, hasItem("+HashMap['Credential [password=aaaa]'].street='someStreet'"));
+		assertThat(result, hasItem("+HashMap['Credential [password=aaaa]'].zipCode='1'"));
+		assertThat(result, hasItem("+HashMap['Credential [password=bbbb]'].street='someOtherStreet'"));
+		assertThat(result, hasItem("+HashMap['Credential [password=bbbb]'].zipCode='2'"));
 	}
 	
 	@Test
@@ -370,8 +372,8 @@ public class DifferTest {
 		
 		final List<String> result = new Differ(diffConfig).diff(null, map);
 		
-		assertThat(result, hasItem("+HashMap[1]='bar'"));
-		assertThat(result, hasItem("+HashMap[2]='foo'"));
+		assertThat(result, hasItem("+HashMap['1']='bar'"));
+		assertThat(result, hasItem("+HashMap['2']='foo'"));
 	}
 	
 	@Test
@@ -386,8 +388,8 @@ public class DifferTest {
 		
 		final List<String> result = new Differ(diffConfig).diff(null, map);
 		
-		assertThat(result, hasItem("+HashMap[1]='bar'"));
-		assertThat(result, hasItem("+HashMap[2]='foo'"));
+		assertThat(result, hasItem("+HashMap['1']='bar'"));
+		assertThat(result, hasItem("+HashMap['2']='foo'"));
 	}
 	
 	@Test

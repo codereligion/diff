@@ -13,28 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff;
+package com.codereligion.diff.differ;
 
 import java.util.Comparator;
 
 /**
- * Extends the {@link Comparator} by moving the responsibility to decide whether
- * this comparator can compare certain objects into the comparator.
+ * Compares objects by casting them into {@link Comparable} instances.
  * 
  * @author Sebastian Gröbler
- * @since 11.05.2013
- * @param <T> The type of the object which should be compared.
+ * @since 07.06.2013
  */
-public interface ObjectComparator<T> extends Comparator<T> {
-	
-	/**
-	 * Determines whether this comparator compares the given {@link Object}.
-	 * 
-	 * <p>An {@code object} is considered comparable by this class,
-	 * when it is an "instance of" the {@code type}.
-	 * 
-	 * @param object the object to check
-	 * @return true if it does compare, false if not
-	 */
-	boolean compares(Object object);
+final class ComparableComparator implements Comparator<Object> {
+
+    public static final Comparator<Object> INSTANCE = new ComparableComparator();
+
+    @Override
+    public int compare(final Object first, final Object second) {
+        @SuppressWarnings("unchecked")
+        final Comparable<Object> comparable = (Comparable<Object>) first;
+        return comparable.compareTo(second);
+    }
 }

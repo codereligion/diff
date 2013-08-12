@@ -15,7 +15,8 @@
  */
 package com.codereligion.diff.util;
 
-import com.codereligion.diff.ObjectComparator;
+import com.codereligion.diff.comparator.CheckableComparator;
+
 import com.google.common.collect.Sets;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ import java.util.Set;
  * @author Sebastian Gröbler
  * @since 13.05.2013
  */
-public class StubComparator implements ObjectComparator<Object>{
+public class StubComparator implements CheckableComparator<Object>{
 	
 	private final Set<Class<?>> types;
 	
@@ -39,7 +40,7 @@ public class StubComparator implements ObjectComparator<Object>{
 	}
 
 	@Override
-	public boolean compares(Object object) {
+	public boolean applies(Object object) {
 		
 		for (final Class<?> type : types) {
 			if (type.isInstance(object)) {

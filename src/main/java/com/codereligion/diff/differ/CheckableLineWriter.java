@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.codereligion.diff.differ;
+
+import com.codereligion.diff.Checkable;
+
 
 /**
- * This package contains internal classes which are not part of the public API.
- * Usage of any of these classes is explicitly not recommended. Any class in
- * this package may be changed or removed without notice and without a deprecation
- * period.
+ * TODO
+ * 
+ * @author Sebastian Gröbler
+ * @since 12.08.2013
  */
-@javax.annotation.ParametersAreNonnullByDefault
-package com.codereligion.diff.internal;
+interface CheckableLineWriter extends LineWriter, Checkable {
+    
+}
