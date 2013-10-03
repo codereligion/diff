@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.differ;
+package com.codereligion.diff.internal;
 
 import com.codereligion.diff.comparator.CheckableComparator;
 
 import java.util.Comparator;
 import java.util.Set;
 
-class CheckableComparatorFinder {
+public class CheckableComparatorFinder {
     
     private final Set<CheckableComparator<?>> comparators;
     private final Set<Class<? extends Comparable<?>>> comparables;

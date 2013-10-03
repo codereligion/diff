@@ -200,17 +200,6 @@ public final class DiffConfig {
         return workingObjectName;
     }
 
-    /**
-     * Determines whether the given {@code propertyName} is excluded from the
-     * diff of all objects in the graph.
-     * 
-     * @param propertyName the name of the property
-     * @return true if it is excluded, false otherwise
-     */
-    boolean isPropertyExcluded(final String propertyName) {
-        return excludedProperties.contains(propertyName);
-    }
-    
     Set<CheckableSerializer<?>> getCheckableSerializer() {
         return checkableSerializers;
     }
@@ -222,5 +211,8 @@ public final class DiffConfig {
     Set<Class<? extends Comparable<?>>> getComparables() {
         return comparables;
     }
-    
+
+    Set<String> getExcludedProperties() {
+        return excludedProperties;
+    }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.differ;
+package com.codereligion.diff.internal;
 
 import com.codereligion.diff.exception.MissingObjectComparatorException;
 import com.codereligion.diff.exception.MissingSerializerException;

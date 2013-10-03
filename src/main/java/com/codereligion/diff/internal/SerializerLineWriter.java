@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.differ;
+package com.codereligion.diff.internal;
 
 import com.codereligion.diff.serializer.Serializer;
 
@@ -30,13 +30,14 @@ class SerializerLineWriter implements CheckableLineWriter {
     }
 
     @Override
-    public List<String> write(final String path, final Object value) {
-        final Serializer<Object> serializer = finder.findFor(value);
-        return Collections.singletonList(PathBuilder.extendPathWithValue(path, serializer.serialize(value)));
+    public boolean applies(Object value) {
+        return finder.findFor(value) != null;
     }
 
     @Override
-    public boolean applies(Object value) {
-        return finder.findFor(value) != null;
+    public List<String> write(final String path, final Object value) {
+        final Serializer<Object> serializer = finder.findFor(value);
+        final String serializedValue = PathBuilder.extendPathWithValue(path, serializer.serialize(value));
+        return Collections.singletonList(serializedValue);
     }
 }

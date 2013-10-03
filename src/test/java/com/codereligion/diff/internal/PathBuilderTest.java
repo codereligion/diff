@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.differ;
+package com.codereligion.diff.internal;
 
-import com.codereligion.diff.Checkable;
+import org.junit.Test;
 
+import static com.codereligion.matcher.IsNotInstantiatable.isNotInstantiatable;
+import static org.junit.Assert.assertThat;
 
 /**
- * TODO
+ * This is a kind of esoteric test to bring coverage into a utility class with a
+ * private constructor.
  * 
  * @author Sebastian Gröbler
- * @since 12.08.2013
+ * @since 19.06.2013
  */
-interface CheckableLineWriter extends LineWriter, Checkable {
-    
+public class PathBuilderTest {
+	
+	@Test
+	public void mustNotBeInstantiatable() throws Exception {
+		assertThat(PathBuilder.class, isNotInstantiatable());
+	}
 }

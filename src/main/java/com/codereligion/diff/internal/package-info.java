@@ -13,19 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.differ;
-
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-
 /**
  * TODO
- * 
- * @author Sebastian Gröbler
- * @since 12.08.2013
  */
-interface LineWriter {
-    
-    List<String> write(String path, Object value) throws IntrospectionException, IllegalAccessException, InvocationTargetException;
-}
+@javax.annotation.ParametersAreNonnullByDefault
+package com.codereligion.diff.internal;

@@ -15,6 +15,11 @@
  */
 package com.codereligion.diff.differ;
 
+import com.codereligion.diff.internal.CheckableComparatorFinder;
+import com.codereligion.diff.internal.CheckableSerializerFinder;
+import com.codereligion.diff.internal.LineWriter;
+import com.codereligion.diff.internal.PropertyInclusionChecker;
+import com.codereligion.diff.internal.RootLineWriter;
 import com.google.common.collect.Lists;
 import difflib.DiffUtils;
 import difflib.Patch;
@@ -62,7 +67,17 @@ public final class Differ {
     public Differ(final DiffConfig diffConfig) {
         checkArgument(diffConfig != null, "diffConfig must not be null.");
         this.diffConfig = diffConfig;
-        this.lineWriter = new RootLineWriter(this.diffConfig);
+        this.lineWriter = createRootLineWriter();
+    }
+
+    /**
+     * TODO
+     */
+    private LineWriter createRootLineWriter() {
+        return new RootLineWriter(
+                new PropertyInclusionChecker(diffConfig.getExcludedProperties()),
+                new CheckableSerializerFinder(diffConfig.getCheckableSerializer()),
+                new CheckableComparatorFinder(diffConfig.getComparators(), diffConfig.getComparables()));
     }
 
     /**
@@ -125,6 +140,5 @@ public final class Differ {
         final String baseObjectName = diffConfig.getBaseObjectName();
         final String workingObjectName = diffConfig.getWorkingObjectName();
         return DiffUtils.generateUnifiedDiff(baseObjectName, workingObjectName, baseDocument, patch, LINES_OF_CONTEXT_AROUND_OUTPUT);
-
     }
 }

@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.differ;
+package com.codereligion.diff.internal;
 
-import java.util.Comparator;
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
- * Compares objects by casting them into {@link Comparable} instances.
+ * TODO
  * 
  * @author Sebastian Gröbler
- * @since 07.06.2013
+ * @since 12.08.2013
  */
-final class ComparableComparator implements Comparator<Object> {
-
-    public static final Comparator<Object> INSTANCE = new ComparableComparator();
-
-    @Override
-    public int compare(final Object first, final Object second) {
-        @SuppressWarnings("unchecked")
-        final Comparable<Object> comparable = (Comparable<Object>) first;
-        return comparable.compareTo(second);
-    }
+public interface LineWriter {
+    
+    List<String> write(String path, Object value) throws IntrospectionException, IllegalAccessException, InvocationTargetException;
 }

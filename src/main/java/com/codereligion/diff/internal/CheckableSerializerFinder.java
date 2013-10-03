@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.differ;
+package com.codereligion.diff.internal;
 
 import com.codereligion.diff.serializer.CheckableSerializer;
 import com.codereligion.diff.serializer.ClassSerializer;
@@ -22,14 +22,15 @@ import com.codereligion.diff.serializer.NullSerializer;
 import com.google.common.collect.Sets;
 import java.util.Set;
 
-final class CheckableSerializerFinder {
+public final class CheckableSerializerFinder {
 
     private final Set<CheckableSerializer<?>> customSerializer;
-    private final Set<CheckableSerializer<?>> defaultSerializer;
+
+    @SuppressWarnings("unchecked")
+    private final Set<CheckableSerializer<?>> defaultSerializer = Sets.newHashSet(wrap(ClassSerializer.INSTANCE), NullSerializer.INSTANCE);
 
     public CheckableSerializerFinder(final Set<CheckableSerializer<?>> checkableSerializers) {
         this.customSerializer = wrapAll(checkableSerializers);
-        this.defaultSerializer = Sets.newHashSet(wrap(ClassSerializer.INSTANCE), NullSerializer.INSTANCE);
     }
     
     private CheckableSerializer<?> wrap(final CheckableSerializer<?> checkableSerializer) {

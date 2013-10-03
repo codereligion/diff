@@ -13,31 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.differ;
+package com.codereligion.diff.internal;
 
 import com.codereligion.diff.exception.MissingSerializerException;
 import com.codereligion.reflect.BeanIntrospections;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Set;
 
-class RootLineWriter implements LineWriter {
+public class RootLineWriter implements LineWriter {
 
-    private final DiffConfig diffConfig;
     private final List<CheckableLineWriter> lineWriters;
+    private PropertyInclusionChecker propertyInclusionChecker;
 
-    public RootLineWriter(final DiffConfig diffConfig) {
-        this.diffConfig = diffConfig;
+    public RootLineWriter(final PropertyInclusionChecker propertyInclusionChecker,
+                          final CheckableSerializerFinder serializerFinder,
+                          final CheckableComparatorFinder comparatorFinder) {
 
-        final CheckableSerializerFinder serializerFinder = new CheckableSerializerFinder(
-                diffConfig.getCheckableSerializer());
-        final CheckableComparatorFinder comparatorFinder = new CheckableComparatorFinder(diffConfig.getComparators(),
-                diffConfig.getComparables());
-
-        this.lineWriters = Lists.newArrayList(new SerializerLineWriter(serializerFinder), 
+        this.propertyInclusionChecker = propertyInclusionChecker;
+        this.lineWriters = Lists.newArrayList(new SerializerLineWriter(serializerFinder),
                                               new IterableLineWriter(this, comparatorFinder),
                                               new MapLineWriter(this, serializerFinder, comparatorFinder));
     }
@@ -61,12 +60,9 @@ class RootLineWriter implements LineWriter {
         final List<String> lines = Lists.newArrayList();
         final Class<?> beanClass = value.getClass();
 
-        for (final PropertyDescriptor descriptor : BeanIntrospections.getReadableProperties(beanClass)) {
+        final Set<PropertyDescriptor> readableProperties = BeanIntrospections.getReadableProperties(beanClass);
+        for (final PropertyDescriptor descriptor : Iterables.filter(readableProperties, propertyInclusionChecker)) {
             final String propertyName = descriptor.getName();
-
-            if (diffConfig.isPropertyExcluded(propertyName)) {
-                continue;
-            }
             final Method readMethod = descriptor.getReadMethod();
             final Object propertyValue = readMethod.invoke(value);
             final String extendedPath = PathBuilder.extendPathWithProperty(path, propertyName);
