@@ -55,7 +55,7 @@ public class DifferTest {
 	public void throwsIllegalArgumentExceptionForNullDiffConfig() throws Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("diffConfig must not be null.");
+		expectedException.expectMessage("configuration must not be null.");
 		
 		new Differ(null);
 	}

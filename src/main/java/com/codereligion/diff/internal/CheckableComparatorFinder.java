@@ -25,7 +25,7 @@ public class CheckableComparatorFinder {
     private final Set<CheckableComparator<?>> comparators;
     private final Set<Class<? extends Comparable<?>>> comparables;
 
-    public CheckableComparatorFinder(Set<CheckableComparator<?>> comparators, Set<Class<? extends Comparable<?>>> comparables) {
+    public CheckableComparatorFinder(final Set<CheckableComparator<?>> comparators, final Set<Class<? extends Comparable<?>>> comparables) {
         this.comparators = comparators;
         this.comparables = comparables;
     }

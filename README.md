@@ -21,7 +21,7 @@ The result is a [unified diff](http://en.wikipedia.org/wiki/Diff#Unified_format)
     SomeDomainObject base = getPersistedObject();
     SomeDomainObject working = getManipulatedObject();
 
-    DiffConfig configuration = new DiffConfig()
+    DiffConfig diffConfig = new DiffConfig()
         .excludeProperty("someUnwantedPropertyName")
         .useSerializer(new SomeSerializer())
         .useComparator(new SomeComparator())
@@ -29,7 +29,7 @@ The result is a [unified diff](http://en.wikipedia.org/wiki/Diff#Unified_format)
         .useBaseObjectName("BaseObject")
         .useWorkingObjectName("WorkingObject");
 		
-    List<String> differences = new Differ(configuration).diff(base, working);
+    List<String> differences = new Differ(diffConfig).diff(base, working);
 
     for (String diff : differences) {
         System.out.println(diff);
