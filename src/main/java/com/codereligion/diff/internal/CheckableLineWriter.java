@@ -19,10 +19,13 @@ import com.codereligion.diff.Checkable;
 
 
 /**
- * TODO
- * 
+ * Combines the {@link LineWriter} and {@link Checkable} to provide an interface
+ * for implementations which can write lines and determine if the can write specific objects
+ * to lines.
+ *
  * @author Sebastian Gröbler
- * @since 12.08.2013
+ * @since 10.11.2013
+ * @param <T> The type of the object which should be written to a line.
  */
 interface CheckableLineWriter extends LineWriter, Checkable {
     

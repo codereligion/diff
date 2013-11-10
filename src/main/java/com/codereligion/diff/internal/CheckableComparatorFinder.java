@@ -22,6 +22,9 @@ import java.util.Set;
 
 /**
  * Allows the internals to easily lookup a matching comparator for a given object.
+ *
+ * @author Sebastian Gröbler
+ * @since 10.11.2013
  */
 public class CheckableComparatorFinder {
 
