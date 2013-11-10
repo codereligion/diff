@@ -36,7 +36,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class Configuration {
 
     /**
-     * Simple property names that will be excluded from the diff of all object
+     * Simple property names that will be excluded from the diff of all objects
      * in the graph.
      */
     private final Set<String> excludedProperties = Sets.newHashSet();
@@ -73,7 +73,7 @@ public final class Configuration {
     }
 
     /**
-     * Returns a copy of this config with the given {@code propertyName} to be
+     * Returns a copy of this configuration with the given {@code propertyName} to be
      * excluded for the diff. The property will be excluded for all objects in
      * the graph of the to be diffed object.
      * 
@@ -90,7 +90,7 @@ public final class Configuration {
     }
 
     /**
-     * Returns a copy of this config with the given {@code comparator} added to
+     * Returns a copy of this configuration with the given {@code comparator} added to
      * be used for sorting iterables, so that they can be ordered and compared
      * consistently.
      * 
@@ -108,12 +108,12 @@ public final class Configuration {
     }
 
     /**
-     * Returns a copy of this config with the given {@code comparable} defined
+     * Returns a copy of this configuration with the given {@code comparable} defined
      * to be used to identify objects which should be sorted by their natural
      * ordering.
      * 
      * <p>
-     * Comparables are prioritized over custom comparators.
+     * Comparables have a higher priority than custom comparators.
      * 
      * @param comparable the {@link Comparable} to use for natural ordering
      * @return a copy of this instance
@@ -129,7 +129,7 @@ public final class Configuration {
     }
 
     /**
-     * Returns a copy of this config with the given {@code serializer} added to
+     * Returns a copy of this configuration with the given {@code serializer} added to
      * be used for serializing objects.
      * 
      * @param serializer the {@link CheckableSerializer} to add
@@ -146,7 +146,7 @@ public final class Configuration {
     }
 
     /**
-     * Returns a copy of this config with the given {@code objectName} added to
+     * Returns a copy of this configuration with the given {@code objectName} added to
      * be used for the working object. This property is optional.
      * 
      * @param objectName the name of the working object, may be null
@@ -171,6 +171,12 @@ public final class Configuration {
         return copy;
     }
 
+    /**
+     * Creates semi-deep copy of this object. Items of the collection based members
+     * will not be deep copied.
+     *
+     * @return a new instance in which every member variable is a copy of this object
+     */
     private Configuration copy() {
         final Configuration copy = new Configuration();
         copy.baseObjectName = this.baseObjectName;

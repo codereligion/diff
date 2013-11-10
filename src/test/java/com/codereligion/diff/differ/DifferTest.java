@@ -15,13 +15,6 @@
  */
 package com.codereligion.diff.differ;
 
-import static com.codereligion.matcher.IterableOfStringsMatchers.hasItem;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.startsWith;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import com.codereligion.diff.exception.MissingObjectComparatorException;
 import com.codereligion.diff.exception.MissingSerializerException;
 import com.codereligion.diff.util.IncludeSerializer;
@@ -39,6 +32,12 @@ import java.util.Set;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import static com.codereligion.matcher.IterableOfStringsMatchers.hasItem;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests {@link Differ} features.

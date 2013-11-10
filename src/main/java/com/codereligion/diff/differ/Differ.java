@@ -45,6 +45,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 @ThreadSafe
 public final class Differ {
 
+    /**
+     * The contextual lines added around the output
+     */
     private static final int LINES_OF_CONTEXT_AROUND_OUTPUT = 0;
 
     /**
@@ -60,7 +63,7 @@ public final class Differ {
     /**
      * Constructs a new instance for the given {@link Configuration}.
      * 
-     * @param configuration the config to use
+     * @param configuration the configuration to use
      * @throws IllegalArgumentException when the given {@code configuration} is
      *             {@code null}
      */
@@ -71,7 +74,9 @@ public final class Differ {
     }
 
     /**
-     * TODO
+     * Creates a new instance of the root line writer.
+     *
+     * @return a new instance of the root line writer.
      */
     private LineWriter createRootLineWriter() {
         return new RootLineWriter(
@@ -82,8 +87,8 @@ public final class Differ {
 
     /**
      * Creates a diff for the given {@code base} and {@code working} objects by
-     * putting every readable property of the given objects on a single line and
-     * comparing the lines with the common diff algorithm.
+     * putting every readable and not excluded property of the given objects on
+     * a single line and comparing the lines with the common diff algorithm.
      * 
      * <p>
      * The returned list of strings represents the detected differences between
@@ -125,10 +130,26 @@ public final class Differ {
         return unifiedDiff(serializedPropertiesOfBase, serializedPropertiesOfWorking);
     }
 
-    private String getBeanName(final Object before) {
-        return before.getClass().getSimpleName();
+    /**
+     * Retrieves the simple name of the given {@code object}'s class.
+     *
+     * <p>
+     * For example the simple class name for {@link java.lang.String} would be "String".
+     *
+     * @param object
+     * @return the simple name of the class of the given object
+     */
+    private String getBeanName(final Object object) {
+        return object.getClass().getSimpleName();
     }
 
+    /**
+     * Creates the actual diff from the "documents" representing the serialized objects.
+     *
+     * @param baseDocument the document representing the base object
+     * @param workingDocument the document representing the working object
+     * @return a list of strings representing the diff between the given documents
+     */
     private List<String> unifiedDiff(final List<String> baseDocument, final List<String> workingDocument) {
         final Patch<String> patch = DiffUtils.diff(baseDocument, workingDocument);
         final boolean objectsHaveNoDiff = patch.getDeltas().isEmpty();
