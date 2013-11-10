@@ -20,23 +20,53 @@ import com.codereligion.diff.comparator.CheckableComparator;
 import java.util.Comparator;
 import java.util.Set;
 
+/**
+ * Allows the internals to easily lookup a matching comparator for a given object.
+ */
 public class CheckableComparatorFinder {
-    
-    private final Set<CheckableComparator<?>> comparators;
+
+    /**
+     * The set of possible checkableComparators.
+     */
+    private final Set<CheckableComparator<?>> checkableComparators;
+
+    /**
+     * The set of possible comparables.
+     */
     private final Set<Class<? extends Comparable<?>>> comparables;
 
-    public CheckableComparatorFinder(final Set<CheckableComparator<?>> comparators, final Set<Class<? extends Comparable<?>>> comparables) {
-        this.comparators = comparators;
+    /**
+     * Creates a new instance for the given {@code checkableComparators} and
+     * {@code comparable}.
+     *
+     * @param checkableComparators the checkable comparators to use
+     * @param comparables the comparables to use
+     */
+    public CheckableComparatorFinder(
+            final Set<CheckableComparator<?>> checkableComparators,
+            final Set<Class<? extends Comparable<?>>> comparables) {
+
+        this.checkableComparators = checkableComparators;
         this.comparables = comparables;
     }
-    
-    public Comparator<Object> findFor(final Object value) {
+
+    /**
+     * Checks whether this object's class has been configured to be a comparable and if so
+     * returns a comparator which applies the natural ordering according to the object {@link Comparable}
+     * implementation. In case the no comparable has been registered for the given object's type the logic will
+     * try to find a configured comparator for the given object or return {@code null} in case no comparator could
+     * be found
+     *
+     * @param object the objec to find a comparator for
+     * @return a matching {@link Comparator} or {@code null} if non was found
+     */
+    public Comparator<Object> findFor(final Object object) {
         
-        if (isComparable(value)) {
+        if (isComparable(object)) {
             return ComparableComparator.INSTANCE;
         }
         
-        return findCustomComparatorFor(value);
+        return findComparatorFor(object);
     }
 
     /**
@@ -47,8 +77,8 @@ public class CheckableComparatorFinder {
      * @see Comparator
      */
     @SuppressWarnings("unchecked")
-    private Comparator<Object> findCustomComparatorFor(final Object object) {
-        for (final CheckableComparator<?> comparator : comparators) {
+    private Comparator<Object> findComparatorFor(final Object object) {
+        for (final CheckableComparator<?> comparator : checkableComparators) {
             if (comparator.applies(object)) {
                 return (Comparator<Object>) comparator;
             }

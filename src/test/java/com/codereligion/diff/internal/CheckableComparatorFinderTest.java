@@ -16,74 +16,69 @@
 package com.codereligion.diff.internal;
 
 
+import com.codereligion.diff.comparator.CheckableComparator;
+import com.codereligion.diff.util.StubComparator;
+import com.codereligion.diff.util.bean.Credential;
+import com.codereligion.diff.util.bean.User;
+import com.google.common.collect.Sets;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Set;
+import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.core.Is.is;
+
 /**
  * TODO
  */
 public class CheckableComparatorFinderTest {
-	
-//	@Rule
-//	public ExpectedException expectedException = ExpectedException.none();
-//
-//	@Test
-//	public void unknownComparatorCanNotBeFound() {
-//		final Configuration config = new Configuration().useComparator(new StubComparator(String.class));
-//
-//		assertThat(config.findFor(Integer.valueOf(1)), is(nullValue()));
-//	}
-//
-//	@Test
-//	public void useComparatorReturnsNewInstance() {
-//		final Configuration original = new Configuration();
-//		final Configuration copy = original.useComparator(new StubComparator());
-//
-//		assertThat(original, is(not(sameInstance(copy))));
-//	}
-//
-//	@Test
-//	public void useComparatorLeavesOriginalUntouched() {
-//		final Configuration original = new Configuration();
-//		original.useComparator(new StubComparator(String.class));
-//
-//		assertThat(original.findFor(""), is(nullValue()));
-//	}
-//
-//	@Test
-//	public void unknownComparableCanNotBeFound() {
-//
-//		final Configuration config = new Configuration().useNaturalOrderingFor(String.class);
-//		assertFalse(config.isComparable(Credential.class));
-//	}
-//
-//	@Test
-//	public void useComparableReturnsNewInstance() {
-//		final Configuration original = new Configuration();
-//		final Configuration copy = original.useNaturalOrderingFor(Credential.class);
-//
-//		assertThat(original, is(not(sameInstance(copy))));
-//	}
-//
-//	@Test
-//	public void useComparableLeavesOriginalUntouched() {
-//		final Configuration original = new Configuration();
-//		original.useNaturalOrderingFor(Credential.class);
-//
-//		assertThat(original.isComparable(new Credential()), is(Boolean.FALSE));
-//	}
-//
-//	@Test
-//	public void allowsAddingAndRetrievingOfCompartors() {
-//		final StubComparator comparator = new StubComparator(Object.class);
-//		final Configuration config = new Configuration().useComparator(comparator);
-//		final Comparator<Object> expected = comparator;
-//		final Comparator<Object> actual = config.findFor(new Object());
-//
-//		assertThat(actual, is(expected));
-//	}
-//
-//	@Test
-//	public void allowsAddingAndRetrievingOfComparables() {
-//		final Configuration config = new Configuration().useNaturalOrderingFor(Credential.class);
-//
-//		assertTrue(config.isComparable(new Credential()));
-//	}
+
+
+    @Test
+    public void shouldPrioritizeComparablesOverComparators() {
+        final Set<CheckableComparator<?>> checkableComparators = Sets.<CheckableComparator<?>>newHashSet(new StubComparator(Credential.class));
+        final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
+
+        final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
+        final Comparator<Object> comparator = finder.findFor(new Credential());
+
+        assertThat(comparator, is(ComparableComparator.INSTANCE));
+    }
+
+    @Test
+    public void shouldFindComparatorForRegisteredComparable() {
+        final Set<CheckableComparator<?>> checkableComparators = Collections.emptySet();
+        final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
+
+        final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
+        final Comparator<Object> comparator = finder.findFor(new Credential());
+
+        assertThat(comparator, is(ComparableComparator.INSTANCE));
+    }
+
+    @Test
+    public void shouldFindRegisteredComparator() {
+        final CheckableComparator<Object> stubComparator = new StubComparator(Credential.class);
+        final Comparator<Object> expected = stubComparator;
+
+        final Set<CheckableComparator<?>> checkableComparators = Sets.<CheckableComparator<?>>newHashSet(stubComparator);
+        final Set<Class<? extends Comparable<?>>> comparables = Collections.emptySet();
+
+        final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
+        final Comparator<Object> comparator = finder.findFor(new Credential());
+
+        assertThat(comparator, is(expected));
+    }
+
+    @Test
+    public void shouldReturnNullWhenNoComparatorCouldBeFound() {
+        final Set<CheckableComparator<?>> checkableComparators = Sets.<CheckableComparator<?>>newHashSet(new StubComparator(Credential.class));
+        final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
+
+        final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
+        final Comparator<Object> comparator = finder.findFor(new User());
+
+        assertThat(comparator, is(nullValue()));
+    }
 }

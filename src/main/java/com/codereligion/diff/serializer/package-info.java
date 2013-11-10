@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * This package contains classes to implement custom serializers to allow for flexible serialization strategies.
+ * This package contains classes to implement custom serializers to allow flexible serialization strategies.
  */
 @javax.annotation.ParametersAreNonnullByDefault
 package com.codereligion.diff.serializer;

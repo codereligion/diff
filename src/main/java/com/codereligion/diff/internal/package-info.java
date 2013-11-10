@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 /**
- * TODO
+ * This package contains internal classes, which should not be used or overridden
+ * They are subject to change without any notice.
  */
 @javax.annotation.ParametersAreNonnullByDefault
 package com.codereligion.diff.internal;

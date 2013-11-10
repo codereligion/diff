@@ -53,6 +53,11 @@ public final class MissingObjectComparatorException extends RuntimeException {
         return new MissingObjectComparatorException("Could not find CheckableComparator for map keys of type '" + type.getSimpleName() + "' at '" + path + "'");
     }
 
+    /**
+     * Disallows public instantiation.
+     *
+     * @param message the message to use
+     */
     private MissingObjectComparatorException(final String message) {
         super(message);
     }

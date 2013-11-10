@@ -21,7 +21,8 @@ import com.google.common.collect.Sets;
 import java.util.Set;
 
 /**
- * Compares every object, constantly returns 0 as difference.
+ * Compares those objects which are instances of the given {@code types} and
+ * constantly returns 0 as difference.
  * 
  * @author Sebastian Gröbler
  * @since 13.05.2013

@@ -54,6 +54,11 @@ public final class MissingSerializerException extends RuntimeException {
         return new MissingSerializerException("Could not find CheckableSerializer for map key of type '" + type.getSimpleName() + "' at '" + path + "'");
     }
 
+    /**
+     * Disallows public instantiation.
+     *
+     * @param message the message to use
+     */
     private MissingSerializerException(final String message) {
         super(message);
     }
