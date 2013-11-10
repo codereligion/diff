@@ -23,7 +23,7 @@ package com.codereligion.diff.exception;
  * @author Sebastian Gröbler
  * @since 12.05.2013
  * @see com.codereligion.diff.differ.Differ
- * @see com.codereligion.diff.differ.DiffConfig
+ * @see com.codereligion.diff.differ.Configuration
  * @see com.codereligion.diff.serializer.CheckableSerializer
  */
 public final class MissingSerializerException extends RuntimeException {

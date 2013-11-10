@@ -35,12 +35,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Creates a unified diff between two given objects applying the given
- * {@link DiffConfig} and returning a list of strings representing the detected
+ * {@link Configuration} and returning a list of strings representing the detected
  * difference between the two objects without any contextual lines added.
  * 
  * @author Sebastian Gröbler
  * @since 10.05.2013
- * @see DiffConfig
+ * @see Configuration
  */
 @ThreadSafe
 public final class Differ {
@@ -50,7 +50,7 @@ public final class Differ {
     /**
      * The configuration to use.
      */
-    private final DiffConfig diffConfig;
+    private final Configuration configuration;
 
     /**
      * The root differ which starts traversing the object graph.
@@ -58,15 +58,15 @@ public final class Differ {
     private final LineWriter lineWriter;
     
     /**
-     * Constructs a new instance for the given {@link DiffConfig}.
+     * Constructs a new instance for the given {@link Configuration}.
      * 
-     * @param diffConfig the config to use
-     * @throws IllegalArgumentException when the given {@code diffConfig} is
+     * @param configuration the config to use
+     * @throws IllegalArgumentException when the given {@code configuration} is
      *             {@code null}
      */
-    public Differ(final DiffConfig diffConfig) {
-        checkArgument(diffConfig != null, "diffConfig must not be null.");
-        this.diffConfig = diffConfig;
+    public Differ(final Configuration configuration) {
+        checkArgument(configuration != null, "configuration must not be null.");
+        this.configuration = configuration;
         this.lineWriter = createRootLineWriter();
     }
 
@@ -75,9 +75,9 @@ public final class Differ {
      */
     private LineWriter createRootLineWriter() {
         return new RootLineWriter(
-                new PropertyInclusionChecker(diffConfig.getExcludedProperties()),
-                new CheckableSerializerFinder(diffConfig.getCheckableSerializer()),
-                new CheckableComparatorFinder(diffConfig.getCheckableComparators(), diffConfig.getComparables()));
+                new PropertyInclusionChecker(configuration.getExcludedProperties()),
+                new CheckableSerializerFinder(configuration.getCheckableSerializer()),
+                new CheckableComparatorFinder(configuration.getCheckableComparators(), configuration.getComparables()));
     }
 
     /**
@@ -97,9 +97,9 @@ public final class Differ {
      * @param working the object which represents the state after a change
      * @throws IllegalArgumentException when the given {@code working} object is
      *             {@code null}
-     * @throws com.codereligion.diff.exception.MissingSerializerException when the {@link DiffConfig} is missing
+     * @throws com.codereligion.diff.exception.MissingSerializerException when the {@link Configuration} is missing
      *             a {@link com.codereligion.diff.serializer.CheckableSerializer} to perform the diff
-     * @throws com.codereligion.diff.exception.MissingObjectComparatorException when the {@link DiffConfig} is
+     * @throws com.codereligion.diff.exception.MissingObjectComparatorException when the {@link Configuration} is
      *             missing an {@link com.codereligion.diff.comparator.CheckableComparator} to perform the diff
      * @throws InvocationTargetException when a getter of one of the given
      *             objects threw an exception
@@ -137,8 +137,8 @@ public final class Differ {
             return Collections.emptyList();
         }
 
-        final String baseObjectName = diffConfig.getBaseObjectName();
-        final String workingObjectName = diffConfig.getWorkingObjectName();
+        final String baseObjectName = configuration.getBaseObjectName();
+        final String workingObjectName = configuration.getWorkingObjectName();
         return DiffUtils.generateUnifiedDiff(baseObjectName, workingObjectName, baseDocument, patch, LINES_OF_CONTEXT_AROUND_OUTPUT);
     }
 }

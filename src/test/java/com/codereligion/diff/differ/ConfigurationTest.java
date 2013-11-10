@@ -17,34 +17,34 @@ package com.codereligion.diff.differ;
 
 
 /**
- * Tests {@link DiffConfig} features.
+ * Tests {@link Configuration} features.
  * 
  * @author Sebastian Gröbler
  * @since 12.05.2013
  */
-public class DiffConfigTest {
+public class ConfigurationTest {
 	
 //	@Rule
 //	public ExpectedException expectedException = ExpectedException.none();
 //	
 //	@Test
 //	public void unknownComparatorCanNotBeFound() {
-//		final DiffConfig config = new DiffConfig().useComparator(new StubComparator(String.class));
+//		final Configuration config = new Configuration().useComparator(new StubComparator(String.class));
 //		
 //		assertThat(config.findFor(Integer.valueOf(1)), is(nullValue()));
 //	}
 //	
 //	@Test
 //	public void useComparatorReturnsNewInstance() {
-//		final DiffConfig original = new DiffConfig();
-//		final DiffConfig copy = original.useComparator(new StubComparator());
+//		final Configuration original = new Configuration();
+//		final Configuration copy = original.useComparator(new StubComparator());
 //		
 //		assertThat(original, is(not(sameInstance(copy))));
 //	}
 //	
 //	@Test
 //	public void useComparatorLeavesOriginalUntouched() {
-//		final DiffConfig original = new DiffConfig();
+//		final Configuration original = new Configuration();
 //		original.useComparator(new StubComparator(String.class));
 //		
 //		assertThat(original.findFor(""), is(nullValue()));
@@ -53,21 +53,21 @@ public class DiffConfigTest {
 //	@Test
 //	public void unknownComparableCanNotBeFound() {
 //		
-//		final DiffConfig config = new DiffConfig().useNaturalOrderingFor(String.class);
+//		final Configuration config = new Configuration().useNaturalOrderingFor(String.class);
 //		assertFalse(config.isComparable(Credential.class));
 //	}
 //	
 //	@Test
 //	public void useComparableReturnsNewInstance() {
-//		final DiffConfig original = new DiffConfig();
-//		final DiffConfig copy = original.useNaturalOrderingFor(Credential.class);
+//		final Configuration original = new Configuration();
+//		final Configuration copy = original.useNaturalOrderingFor(Credential.class);
 //		
 //		assertThat(original, is(not(sameInstance(copy))));
 //	}
 //
 //	@Test
 //	public void useComparableLeavesOriginalUntouched() {
-//		final DiffConfig original = new DiffConfig();
+//		final Configuration original = new Configuration();
 //		original.useNaturalOrderingFor(Credential.class);
 //		
 //		assertThat(original.isComparable(new Credential()), is(Boolean.FALSE));
@@ -75,22 +75,22 @@ public class DiffConfigTest {
 //	
 //	@Test
 //	public void unknownSerializerCanNotBeFound() {
-//		final DiffConfig config = new DiffConfig().useSerializer(new IncludeSerializer(String.class));
+//		final Configuration config = new Configuration().useSerializer(new IncludeSerializer(String.class));
 //		
 //		assertThat(config.findFor(Integer.valueOf(42)), is(nullValue()));
 //	}
 //	
 //	@Test
 //	public void useSerializerReturnsNewInstance() {
-//		final DiffConfig original = new DiffConfig();
-//		final DiffConfig copy = original.useSerializer(new IncludeSerializer());
+//		final Configuration original = new Configuration();
+//		final Configuration copy = original.useSerializer(new IncludeSerializer());
 //		
 //		assertThat(original, is(not(sameInstance(copy))));
 //	}
 //	
 //	@Test
 //	public void useSerializerLeavesOriginalUntouched() {
-//		final DiffConfig original = new DiffConfig();
+//		final Configuration original = new Configuration();
 //		original.useSerializer(new IncludeSerializer(String.class));
 //		
 //		assertThat(original.findFor("foo"), is(nullValue()));
@@ -98,8 +98,8 @@ public class DiffConfigTest {
 //	
 //	@Test
 //	public void excludePropertyReturnsNewInstance() {
-//		final DiffConfig original = new DiffConfig();
-//		final DiffConfig copy = original.excludeProperty("foo");
+//		final Configuration original = new Configuration();
+//		final Configuration copy = original.excludeProperty("foo");
 //		
 //		assertThat(original, is(not(sameInstance(copy))));
 //	}
@@ -107,7 +107,7 @@ public class DiffConfigTest {
 //	@Test
 //	public void excludePropertyLeavesOriginalUntouched() {
 //		final String propertyName = "foo";
-//		final DiffConfig original = new DiffConfig();
+//		final Configuration original = new Configuration();
 //		original.excludeProperty(propertyName);
 //		
 //		assertThat(original.isPropertyExcluded(propertyName), is(Boolean.FALSE));
@@ -115,8 +115,8 @@ public class DiffConfigTest {
 //	
 //	@Test
 //	public void useBaseObjectNameReturnsNewInstance() {
-//		final DiffConfig original = new DiffConfig();
-//		final DiffConfig copy = original.useBaseObjectName("foo");
+//		final Configuration original = new Configuration();
+//		final Configuration copy = original.useBaseObjectName("foo");
 //		
 //		assertThat(original, is(not(sameInstance(copy))));
 //	}
@@ -124,7 +124,7 @@ public class DiffConfigTest {
 //	@Test
 //	public void useBaseObjectNameLeavesOriginalUntouched() {
 //		final String objectName = "foo";
-//		final DiffConfig original = new DiffConfig();
+//		final Configuration original = new Configuration();
 //		original.useBaseObjectName(objectName);
 //		
 //		assertThat(original.getBaseObjectName(), is(not(objectName)));
@@ -132,8 +132,8 @@ public class DiffConfigTest {
 //	
 //	@Test
 //	public void useWorkingObjectNameReturnsNewInstance() {
-//		final DiffConfig original = new DiffConfig();
-//		final DiffConfig copy = original.useWorkingObjectName("foo");
+//		final Configuration original = new Configuration();
+//		final Configuration copy = original.useWorkingObjectName("foo");
 //		
 //		assertThat(original, is(not(sameInstance(copy))));
 //	}
@@ -141,7 +141,7 @@ public class DiffConfigTest {
 //	@Test
 //	public void useWorkingObjectNameLeavesOriginalUntouched() {
 //		final String objectName = "foo";
-//		final DiffConfig original = new DiffConfig();
+//		final Configuration original = new Configuration();
 //		original.useWorkingObjectName(objectName);
 //		
 //		assertThat(original.getWorkingObjectName(), is(not(objectName)));
@@ -153,7 +153,7 @@ public class DiffConfigTest {
 //		expectedException.expect(IllegalArgumentException.class);
 //		expectedException.expectMessage("comparator must not be null.");
 //		
-//		new DiffConfig().useComparator(null);
+//		new Configuration().useComparator(null);
 //	}
 //	
 //	@Test
@@ -162,7 +162,7 @@ public class DiffConfigTest {
 //		expectedException.expect(IllegalArgumentException.class);
 //		expectedException.expectMessage("comparable must not be null.");
 //		
-//		new DiffConfig().useNaturalOrderingFor(null);
+//		new Configuration().useNaturalOrderingFor(null);
 //	}
 //	
 //	@Test
@@ -171,7 +171,7 @@ public class DiffConfigTest {
 //		expectedException.expect(IllegalArgumentException.class);
 //		expectedException.expectMessage("propertyName must not be null.");
 //		
-//		new DiffConfig().excludeProperty(null);
+//		new Configuration().excludeProperty(null);
 //	}
 //	
 //	@Test
@@ -180,23 +180,23 @@ public class DiffConfigTest {
 //		expectedException.expect(IllegalArgumentException.class);
 //		expectedException.expectMessage("serializer must not be null.");
 //		
-//		new DiffConfig().useSerializer(null);
+//		new Configuration().useSerializer(null);
 //	}
 //	
 //	@Test
 //	public void hasDefaultEmptyStringForBaseObjectName() {
-//		assertThat(new DiffConfig().getBaseObjectName(), is(""));
+//		assertThat(new Configuration().getBaseObjectName(), is(""));
 //	}
 //	
 //	@Test
 //	public void hasDefaultEmptyStringForWorkingObjectName() {
-//		assertThat(new DiffConfig().getWorkingObjectName(), is(""));
+//		assertThat(new Configuration().getWorkingObjectName(), is(""));
 //	}
 //	
 //	@Test
 //	public void allowsAddingOfAndCheckingForExluddedProperties() {
 //		final String property = "property";
-//		final DiffConfig config = new DiffConfig().excludeProperty(property);
+//		final Configuration config = new Configuration().excludeProperty(property);
 //		
 //		assertTrue(config.isPropertyExcluded(property));
 //	}
@@ -204,7 +204,7 @@ public class DiffConfigTest {
 //	@Test
 //	public void allowsAddingAndRetrievingOfSerializers() {
 //		final CheckableSerializer<Object> expectedSerializer = new IncludeSerializer(Object.class);
-//		final DiffConfig config = new DiffConfig().useSerializer(expectedSerializer);
+//		final Configuration config = new Configuration().useSerializer(expectedSerializer);
 //		
 //		assertThat(config.findFor(new Object()), is(expectedSerializer));
 //	}
@@ -212,7 +212,7 @@ public class DiffConfigTest {
 //	@Test
 //	public void allowsAddingAndRetrievingOfCompartors() {
 //		final StubComparator comparator = new StubComparator(Object.class);
-//		final DiffConfig config = new DiffConfig().useComparator(comparator);
+//		final Configuration config = new Configuration().useComparator(comparator);
 //		final Comparator<Object> expected = comparator;
 //		final Comparator<Object> actual = config.findFor(new Object());
 //		
@@ -221,7 +221,7 @@ public class DiffConfigTest {
 //	
 //	@Test
 //	public void allowsAddingAndRetrievingOfComparables() {
-//		final DiffConfig config = new DiffConfig().useNaturalOrderingFor(Credential.class);
+//		final Configuration config = new Configuration().useNaturalOrderingFor(Credential.class);
 //
 //		assertTrue(config.isComparable(new Credential()));
 //	}
@@ -229,7 +229,7 @@ public class DiffConfigTest {
 //	@Test
 //	public void allowsSettingAndRetrievingOfBaseObjectName() {
 //		final String objectName = "foo";
-//		final DiffConfig diffConfig = new DiffConfig().useBaseObjectName(objectName);
+//		final Configuration diffConfig = new Configuration().useBaseObjectName(objectName);
 //		
 //		assertThat(objectName, is(diffConfig.getBaseObjectName()));
 //	}
@@ -237,7 +237,7 @@ public class DiffConfigTest {
 //	@Test
 //	public void allowsSettingAndRetrievingOfWorkingObjectName() {
 //		final String objectName = "foo";
-//		final DiffConfig diffConfig = new DiffConfig().useWorkingObjectName(objectName);
+//		final Configuration diffConfig = new Configuration().useWorkingObjectName(objectName);
 //		
 //		assertThat(objectName, is(diffConfig.getWorkingObjectName()));
 //	}

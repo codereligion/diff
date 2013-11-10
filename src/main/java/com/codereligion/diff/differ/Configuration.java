@@ -33,7 +33,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @see Differ
  */
 @ThreadSafe
-public final class DiffConfig {
+public final class Configuration {
 
     /**
      * Simple property names that will be excluded from the diff of all object
@@ -69,7 +69,7 @@ public final class DiffConfig {
     /**
      * Creates a new instance.
      */
-    public DiffConfig() {
+    public Configuration() {
     }
 
     /**
@@ -82,9 +82,9 @@ public final class DiffConfig {
      * @throws IllegalArgumentException when the given {@code propertyName} is
      *             {@code null}
      */
-    public DiffConfig excludeProperty(final String propertyName) {
+    public Configuration excludeProperty(final String propertyName) {
         checkArgument(propertyName != null, "propertyName must not be null.");
-        final DiffConfig copy = this.copy();
+        final Configuration copy = this.copy();
         copy.excludedProperties.add(propertyName);
         return copy;
     }
@@ -100,9 +100,9 @@ public final class DiffConfig {
      *             {@code null}
      * @see CheckableComparator
      */
-    public DiffConfig useComparator(final CheckableComparator<?> comparator) {
+    public Configuration useComparator(final CheckableComparator<?> comparator) {
         checkArgument(comparator != null, "comparator must not be null.");
-        final DiffConfig copy = this.copy();
+        final Configuration copy = this.copy();
         copy.comparators.add(comparator);
         return copy;
     }
@@ -121,9 +121,9 @@ public final class DiffConfig {
      *             {@code null}
      * @see Comparable
      */
-    public DiffConfig useNaturalOrderingFor(final Class<? extends Comparable<?>> comparable) {
+    public Configuration useNaturalOrderingFor(final Class<? extends Comparable<?>> comparable) {
         checkArgument(comparable != null, "comparable must not be null.");
-        final DiffConfig copy = this.copy();
+        final Configuration copy = this.copy();
         copy.comparables.add(comparable);
         return copy;
     }
@@ -138,9 +138,9 @@ public final class DiffConfig {
      *             {@code null}
      * @see CheckableSerializer
      */
-    public DiffConfig useSerializer(final CheckableSerializer<?> serializer) {
+    public Configuration useSerializer(final CheckableSerializer<?> serializer) {
         checkArgument(serializer != null, "serializer must not be null.");
-        final DiffConfig copy = this.copy();
+        final Configuration copy = this.copy();
         copy.checkableSerializers.add(serializer);
         return copy;
     }
@@ -152,8 +152,8 @@ public final class DiffConfig {
      * @param objectName the name of the working object, may be null
      * @return a copy of this instance
      */
-    public DiffConfig useWorkingObjectName(@Nullable final String objectName) {
-        final DiffConfig copy = this.copy();
+    public Configuration useWorkingObjectName(@Nullable final String objectName) {
+        final Configuration copy = this.copy();
         copy.workingObjectName = objectName;
         return copy;
     }
@@ -165,14 +165,14 @@ public final class DiffConfig {
      * @param objectName the name of the base object, may be null
      * @return a copy of this instance
      */
-    public DiffConfig useBaseObjectName(@Nullable final String objectName) {
-        final DiffConfig copy = this.copy();
+    public Configuration useBaseObjectName(@Nullable final String objectName) {
+        final Configuration copy = this.copy();
         copy.baseObjectName = objectName;
         return copy;
     }
 
-    private DiffConfig copy() {
-        final DiffConfig copy = new DiffConfig();
+    private Configuration copy() {
+        final Configuration copy = new Configuration();
         copy.baseObjectName = this.baseObjectName;
         copy.workingObjectName = this.workingObjectName;
         copy.comparables.addAll(this.comparables);
