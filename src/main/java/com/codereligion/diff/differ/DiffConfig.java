@@ -200,18 +200,40 @@ public final class DiffConfig {
         return workingObjectName;
     }
 
+    /**
+     * Retrieves the checkable serializers.
+     * 
+     * @return a set of checkable serializers
+     * @see CheckableSerializer
+     */
     Set<CheckableSerializer<?>> getCheckableSerializer() {
         return checkableSerializers;
     }
 
-    Set<CheckableComparator<?>> getComparators() {
+    /**
+     * Retrieves the checkable comparators.
+     * 
+     * @return a set of checkable comparators
+     * @see CheckableComparator
+     */
+    Set<CheckableComparator<?>> getCheckableComparators() {
         return comparators;
     }
 
+    /**
+     * Retrieves the comparables.
+     *
+     * @return a set of comparables
+     */
     Set<Class<? extends Comparable<?>>> getComparables() {
         return comparables;
     }
 
+    /**
+     * Retrieves the excluded properties.
+     *
+     * @return a set of excluded properties
+     */
     Set<String> getExcludedProperties() {
         return excludedProperties;
     }

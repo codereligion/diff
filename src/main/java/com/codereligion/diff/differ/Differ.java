@@ -77,7 +77,7 @@ public final class Differ {
         return new RootLineWriter(
                 new PropertyInclusionChecker(diffConfig.getExcludedProperties()),
                 new CheckableSerializerFinder(diffConfig.getCheckableSerializer()),
-                new CheckableComparatorFinder(diffConfig.getComparators(), diffConfig.getComparables()));
+                new CheckableComparatorFinder(diffConfig.getCheckableComparators(), diffConfig.getComparables()));
     }
 
     /**
