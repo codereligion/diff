@@ -15,7 +15,16 @@
  */
 package com.codereligion.diff;
 
+/**
+ * Defines whether an instance of an implementation of this interface can be applied to a given object.
+ */
 public interface Checkable {
 
+    /**
+     * Defines whether this instance can be applied to the given {@code object}.
+     *
+     * @param object the object to check
+     * @return true if this object can be applied to the given one
+     */
     boolean applies(Object object);
 }
