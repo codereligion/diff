@@ -17,10 +17,10 @@ package com.codereligion.diff.internal;
 
 import com.codereligion.diff.serializer.CheckableSerializer;
 import com.codereligion.diff.serializer.ClassSerializer;
-import com.codereligion.diff.serializer.InQuotesSerializer;
 import com.codereligion.diff.serializer.NullSerializer;
 import com.google.common.collect.Sets;
 import java.util.Set;
+import static com.codereligion.diff.serializer.InQuotesSerializer.wrapInQuotes;
 
 public final class CheckableSerializerFinder {
 
@@ -30,23 +30,9 @@ public final class CheckableSerializerFinder {
     private final Set<CheckableSerializer<?>> defaultSerializer = Sets.newHashSet(wrapInQuotes(ClassSerializer.INSTANCE), NullSerializer.INSTANCE);
 
     public CheckableSerializerFinder(final Set<CheckableSerializer<?>> checkableSerializers) {
-        this.customSerializer = wrapAllInQuotes(checkableSerializers);
+        this.customSerializer = wrapInQuotes(checkableSerializers);
     }
     
-    private CheckableSerializer<?> wrapInQuotes(final CheckableSerializer<?> checkableSerializer) {
-        return InQuotesSerializer.wrap(checkableSerializer);
-    }
-
-    private Set<CheckableSerializer<?>> wrapAllInQuotes(final Set<CheckableSerializer<?>> checkableSerializers) {
-        
-        final Set<CheckableSerializer<?>> wrapped = Sets.newHashSet();
-        for (CheckableSerializer<?> checkableSerializer : checkableSerializers) {
-            wrapped.add(wrapInQuotes(checkableSerializer));
-        }
-        return wrapped;
-    }
-    
-
     @SuppressWarnings("unchecked")
     public CheckableSerializer<Object> findFor(final Object object) {
         for (final CheckableSerializer<?> serializer : customSerializer) {

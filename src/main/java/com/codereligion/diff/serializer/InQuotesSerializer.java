@@ -15,17 +15,57 @@
  */
 package com.codereligion.diff.serializer;
 
+import com.google.common.collect.Sets;
+import java.util.Set;
 
-public final class  InQuotesSerializer implements CheckableSerializer<Object> {
-    
+/**
+ * Decorates a given {@link CheckableSerializer} so that each serialized value is enclosed by single quotes.
+ *
+ * @author Sebastian Gröbler
+ * @since 12.11.2013
+ */
+public final class InQuotesSerializer implements CheckableSerializer<Object> {
+
+    /**
+     * The enclosing quotes.
+     */
     private static final String VALUE_ENCLOSER = "'";
-    
+
+    /**
+     * The decorated checkable serializer.
+     */
     private final CheckableSerializer<Object> checkableSerializer;
-    
-    public static CheckableSerializer<Object> wrap(final CheckableSerializer<?> checkableSerializer) {
+
+    /**
+     * Decorates the given serializer so that it's serialized value will be enclosed in single quotes.
+     *
+     * @param checkableSerializer the instance to decorate
+     * @return a decorated instance of the given one
+     */
+    public static CheckableSerializer<?> wrapInQuotes(final CheckableSerializer<?> checkableSerializer) {
         return new InQuotesSerializer(checkableSerializer);
     }
-    
+
+    /**
+     * Decorates the given serializers so that it's serialized values will be enclosed in single quotes.
+     *
+     * @param checkableSerializers the instances to decorate
+     * @return decorated instances of the given ones
+     */
+    public static Set<CheckableSerializer<?>> wrapInQuotes(final Set<CheckableSerializer<?>> checkableSerializers) {
+
+        final Set<CheckableSerializer<?>> wrapped = Sets.newHashSet();
+        for (CheckableSerializer<?> checkableSerializer : checkableSerializers) {
+            wrapped.add(wrapInQuotes(checkableSerializer));
+        }
+        return wrapped;
+    }
+
+    /**
+     * Hides public instantiation.
+     *
+     * @param checkableSerializer the {@link CheckableSerializer} to decorate
+     */
     @SuppressWarnings("unchecked")
     private InQuotesSerializer(final CheckableSerializer<?> checkableSerializer) {
         this.checkableSerializer = (CheckableSerializer<Object>) checkableSerializer;
