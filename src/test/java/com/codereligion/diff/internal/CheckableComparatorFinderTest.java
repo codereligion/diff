@@ -47,7 +47,8 @@ public class CheckableComparatorFinderTest {
         final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
         final Comparator<Object> comparator = finder.findFor(new Credential());
 
-        assertThat(comparator, is(ComparableComparator.INSTANCE));
+        final Comparator<Object> expected = ComparableComparator.INSTANCE;
+        assertThat(comparator, is(expected));
     }
 
     @Test
@@ -59,7 +60,8 @@ public class CheckableComparatorFinderTest {
         final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
         final Comparator<Object> comparator = finder.findFor(new Credential());
 
-        assertThat(comparator, is(ComparableComparator.INSTANCE));
+        final Comparator<Object> expected = ComparableComparator.INSTANCE;
+        assertThat(comparator, is(expected));
     }
 
     @Test

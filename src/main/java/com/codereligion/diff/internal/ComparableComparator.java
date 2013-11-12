@@ -23,12 +23,12 @@ import java.util.Comparator;
  * @author Sebastian Gröbler
  * @since 07.06.2013
  */
-final class ComparableComparator implements Comparator<Object> {
+enum ComparableComparator implements Comparator<Object> {
 
     /**
      * Singleton instance of this class.
      */
-    public static final Comparator<Object> INSTANCE = new ComparableComparator();
+    INSTANCE;
 
     @Override
     public int compare(final Object first, final Object second) {

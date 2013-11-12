@@ -15,6 +15,7 @@
  */
 package com.codereligion.diff.serializer;
 
+
 public final class  InQuotesSerializer implements CheckableSerializer<Object> {
     
     private static final String VALUE_ENCLOSER = "'";

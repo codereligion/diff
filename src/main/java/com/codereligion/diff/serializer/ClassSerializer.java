@@ -15,12 +15,21 @@
  */
 package com.codereligion.diff.serializer;
 
+/**
+ * Serializes classes into their canonical name.
+ *
+ * @author Sebastian Gröbler
+ * @since 12.11.2013
+ */
 public enum ClassSerializer implements CheckableSerializer<Class<?>> {
-    
+
+    /**
+     * Singleton instance of this class.
+     */
     INSTANCE; 
 
     @Override
-    public boolean applies(Object object) {
+    public boolean applies(final Object object) {
         return object instanceof Class;
     }
 

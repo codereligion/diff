@@ -27,21 +27,21 @@ public final class CheckableSerializerFinder {
     private final Set<CheckableSerializer<?>> customSerializer;
 
     @SuppressWarnings("unchecked")
-    private final Set<CheckableSerializer<?>> defaultSerializer = Sets.newHashSet(wrap(ClassSerializer.INSTANCE), NullSerializer.INSTANCE);
+    private final Set<CheckableSerializer<?>> defaultSerializer = Sets.newHashSet(wrapInQuotes(ClassSerializer.INSTANCE), NullSerializer.INSTANCE);
 
     public CheckableSerializerFinder(final Set<CheckableSerializer<?>> checkableSerializers) {
-        this.customSerializer = wrapAll(checkableSerializers);
+        this.customSerializer = wrapAllInQuotes(checkableSerializers);
     }
     
-    private CheckableSerializer<?> wrap(final CheckableSerializer<?> checkableSerializer) {
+    private CheckableSerializer<?> wrapInQuotes(final CheckableSerializer<?> checkableSerializer) {
         return InQuotesSerializer.wrap(checkableSerializer);
     }
 
-    private Set<CheckableSerializer<?>> wrapAll(final Set<CheckableSerializer<?>> checkableSerializers) {
+    private Set<CheckableSerializer<?>> wrapAllInQuotes(final Set<CheckableSerializer<?>> checkableSerializers) {
         
         final Set<CheckableSerializer<?>> wrapped = Sets.newHashSet();
         for (CheckableSerializer<?> checkableSerializer : checkableSerializers) {
-            wrapped.add(wrap(checkableSerializer));
+            wrapped.add(wrapInQuotes(checkableSerializer));
         }
         return wrapped;
     }
