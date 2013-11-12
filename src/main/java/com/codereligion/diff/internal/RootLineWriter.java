@@ -71,7 +71,7 @@ public class RootLineWriter implements LineWriter {
 
         final boolean serializationFailed = lines.isEmpty();
         if (serializationFailed) {
-            throw MissingSerializerException.missingPropertySerializer(path, value);
+            throw MissingSerializerException.missingPropertySerializer(path, beanClass);
         }
 
         return lines;

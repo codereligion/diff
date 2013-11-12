@@ -25,7 +25,6 @@ import com.codereligion.diff.Checkable;
  *
  * @author Sebastian Gröbler
  * @since 10.11.2013
- * @param <T> The type of the object which should be written to a line.
  */
 interface CheckableLineWriter extends LineWriter, Checkable {
     

@@ -35,11 +35,11 @@ public final class MissingSerializerException extends RuntimeException {
      * {@link com.codereligion.diff.serializer.CheckableSerializer} could be found to serialize an object.
      * 
      * @param path the path of the property which identifies the object
-     * @param object the object for which no {@link com.codereligion.diff.serializer.CheckableSerializer} could be found
+     * @param type of the object for which no {@link com.codereligion.diff.serializer.CheckableSerializer} could be found
      * @return a new instance of {@link MissingSerializerException}
      */
-    public static MissingSerializerException missingPropertySerializer(final String path, final Object object) {
-        return new MissingSerializerException("Could not find CheckableSerializer for '" + object + "' at '" + path + "'");
+    public static MissingSerializerException missingPropertySerializer(final String path, final Class<?> type) {
+        return new MissingSerializerException("Could not find CheckableSerializer for '" + type.getSimpleName() + "' at '" + path + "'");
     }
 
     /**

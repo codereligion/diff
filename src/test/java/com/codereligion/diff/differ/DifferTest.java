@@ -68,7 +68,7 @@ public class DifferTest {
 			.useComparator(new StubComparator(Credential.class));
 		
 		expectedException.expect(MissingSerializerException.class);
-		expectedException.expectMessage("Could not find CheckableSerializer for '12345' at 'User.address.zipCode'");
+		expectedException.expectMessage("Could not find CheckableSerializer for 'Integer' at 'User.address.zipCode'");
 		
 		new Differ(configuration).diff(null, createUser());
 	}

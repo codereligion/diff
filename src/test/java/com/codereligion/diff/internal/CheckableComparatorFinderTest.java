@@ -30,14 +30,18 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 
 /**
- * TODO
+ * Tests the {@link CheckableComparatorFinder}.
+ *
+ * @author Sebastian Gröbler
+ * @since 12.11.2013
  */
 public class CheckableComparatorFinderTest {
 
-
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldPrioritizeComparablesOverComparators() {
         final Set<CheckableComparator<?>> checkableComparators = Sets.<CheckableComparator<?>>newHashSet(new StubComparator(Credential.class));
+
         final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
 
         final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
@@ -47,6 +51,7 @@ public class CheckableComparatorFinderTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldFindComparatorForRegisteredComparable() {
         final Set<CheckableComparator<?>> checkableComparators = Collections.emptySet();
         final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
@@ -72,6 +77,7 @@ public class CheckableComparatorFinderTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldReturnNullWhenNoComparatorCouldBeFound() {
         final Set<CheckableComparator<?>> checkableComparators = Sets.<CheckableComparator<?>>newHashSet(new StubComparator(Credential.class));
         final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);

@@ -25,6 +25,9 @@ import java.util.Comparator;
  */
 final class ComparableComparator implements Comparator<Object> {
 
+    /**
+     * Singleton instance of this class.
+     */
     public static final Comparator<Object> INSTANCE = new ComparableComparator();
 
     @Override
