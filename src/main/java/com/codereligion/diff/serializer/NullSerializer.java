@@ -15,8 +15,17 @@
  */
 package com.codereligion.diff.serializer;
 
+/**
+ * Serializes objects which are null to the string "null".
+ *
+ * @author Sebastian Gröbler
+ * @since 12.11.2013
+ */
 public enum NullSerializer implements CheckableSerializer<Object> {
-    
+
+    /**
+     * Singleton instance of this class.
+     */
     INSTANCE; 
     
     private static final String NULL_VALUE = "null";
