@@ -30,7 +30,7 @@ import static org.junit.Assert.assertThat;
 public class PathBuilderTest {
 	
 	@Test
-	public void mustNotBeInstantiatable() throws Exception {
+	public void isNotPublicInstantiatable() throws Exception {
 		assertThat(PathBuilder.class, isNotInstantiatable());
 	}
 }

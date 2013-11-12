@@ -36,7 +36,7 @@ import static org.mockito.Mockito.verify;
 public class InQuotesSerializerTest {
 
     @Test
-    public void wrapInQuotesShouldDecorateGivenObject() throws Exception {
+    public void wrapInQuotesDecoratesGivenObject() throws Exception {
         final CheckableSerializer<?> checkableSerializer = InQuotesSerializer.wrapInQuotes(mock(CheckableSerializer.class));
 
         assertThat(checkableSerializer, is(instanceOf(InQuotesSerializer.class)));
@@ -44,7 +44,7 @@ public class InQuotesSerializerTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void wrapInQuotesShouldDecorateGivenObjects() throws Exception {
+    public void wrapInQuotesDecoratesGivenObjects() throws Exception {
         final CheckableSerializer<?> first = mock(CheckableSerializer.class);
         final CheckableSerializer<?> second = mock(CheckableSerializer.class);
         final Set<CheckableSerializer<?>> mocks = Sets.newHashSet(first, second);
@@ -54,7 +54,7 @@ public class InQuotesSerializerTest {
     }
 
     @Test
-    public void appliesShouldDelegateToDecoratedObject() throws Exception {
+    public void appliesDelegatesToDecoratedObject() throws Exception {
         final CheckableSerializer<?> mock = mock(CheckableSerializer.class);
         final CheckableSerializer<?> checkableSerializer = InQuotesSerializer.wrapInQuotes(mock);
 
@@ -67,7 +67,7 @@ public class InQuotesSerializerTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void serializeShouldEncloseWithSingleQuotesAndDelegateActualSerializationToDecoratedObject() throws Exception {
+    public void serializeEnclosesWithSingleQuotesAndDelegateActualSerializationToDecoratedObject() throws Exception {
         final CheckableSerializer<Object> mock = mock(CheckableSerializer.class);
         final CheckableSerializer<Object> checkableSerializer = (CheckableSerializer<Object>) InQuotesSerializer.wrapInQuotes(mock);
 

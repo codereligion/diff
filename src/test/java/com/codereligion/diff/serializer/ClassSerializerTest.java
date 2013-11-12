@@ -29,19 +29,19 @@ import static org.hamcrest.Matchers.is;
 public class ClassSerializerTest {
 
     @Test
-    public void appliesMustApplyToAnyClass() throws Exception {
+    public void appliesToAnyClass() throws Exception {
         final boolean result = ClassSerializer.INSTANCE.applies(User.class);
         assertThat(result, is(true));
     }
 
     @Test
-    public void appliesMustNotApplyToAnyObject() throws Exception {
+    public void doesNotApplyToAnyObject() throws Exception {
         final boolean result = ClassSerializer.INSTANCE.applies(new User());
         assertThat(result, is(false));
     }
 
     @Test
-    public void serializeMustSerializeIntoTheCanonicalName() throws Exception {
+    public void serializesIntoTheCanonicalName() throws Exception {
         final String result = ClassSerializer.INSTANCE.serialize(User.class);
         assertThat(result, is("com.codereligion.diff.util.bean.User"));
 

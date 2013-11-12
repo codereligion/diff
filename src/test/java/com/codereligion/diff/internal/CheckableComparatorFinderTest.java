@@ -39,7 +39,7 @@ public class CheckableComparatorFinderTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void shouldPrioritizeComparablesOverComparators() {
+    public void prioritizesComparablesOverComparators() {
         final Set<CheckableComparator<?>> checkableComparators = Sets.<CheckableComparator<?>>newHashSet(new StubComparator(Credential.class));
 
         final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
@@ -53,7 +53,7 @@ public class CheckableComparatorFinderTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void shouldFindComparatorForRegisteredComparable() {
+    public void findsComparatorForRegisteredComparable() {
         final Set<CheckableComparator<?>> checkableComparators = Collections.emptySet();
         final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
 
@@ -65,7 +65,7 @@ public class CheckableComparatorFinderTest {
     }
 
     @Test
-    public void shouldFindRegisteredComparator() {
+    public void findsRegisteredComparator() {
         final CheckableComparator<Object> stubComparator = new StubComparator(Credential.class);
         final Comparator<Object> expected = stubComparator;
 
@@ -80,7 +80,7 @@ public class CheckableComparatorFinderTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void shouldReturnNullWhenNoComparatorCouldBeFound() {
+    public void returnsNullWhenNoComparatorCouldBeFound() {
         final Set<CheckableComparator<?>> checkableComparators = Sets.<CheckableComparator<?>>newHashSet(new StubComparator(Credential.class));
         final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
 
