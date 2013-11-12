@@ -20,7 +20,7 @@ import com.codereligion.diff.Checkable;
 
 /**
  * Combines the {@link LineWriter} and {@link Checkable} to provide an interface
- * for implementations which can write lines and determine if the can write specific objects
+ * for implementations which can write lines and determine if they can write specific objects
  * to lines.
  *
  * @author Sebastian Gröbler

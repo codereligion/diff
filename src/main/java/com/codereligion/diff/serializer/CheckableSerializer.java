@@ -18,9 +18,9 @@ package com.codereligion.diff.serializer;
 import com.codereligion.diff.Checkable;
 
 /**
- * TODO
- * Serializes a given object to a string, if supported.
- * 
+ * Combines the {@link Serializer} and {@link Checkable} to provide an interface
+ * for implementations which can serialize objects and determine if they can serialize specific objects.
+ *
  * @author Sebastian Gröbler
  * @since 11.05.2013
  * @param <T> The type of the object which should be serialized.
