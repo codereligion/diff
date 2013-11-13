@@ -30,12 +30,12 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 
 /**
- * Tests the {@link CheckableComparatorFinder}.
+ * Tests the {@link ComparatorRepository}.
  *
  * @author Sebastian Gröbler
  * @since 12.11.2013
  */
-public class CheckableComparatorFinderTest {
+public class ComparatorRepositoryTest {
 
     @Test
     @SuppressWarnings("unchecked")
@@ -43,7 +43,7 @@ public class CheckableComparatorFinderTest {
         given: {
             final Set<CheckableComparator<?>> checkableComparators = Sets.<CheckableComparator<?>>newHashSet(new StubComparator(Credential.class));
             final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
-            final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
+            final ComparatorRepository finder = new ComparatorRepository(checkableComparators, comparables);
 
             when: {
                 final Comparator<Object> comparator = finder.findFor(new Credential());
@@ -62,7 +62,7 @@ public class CheckableComparatorFinderTest {
         given: {
             final Set<CheckableComparator<?>> checkableComparators = Collections.emptySet();
             final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
-            final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
+            final ComparatorRepository finder = new ComparatorRepository(checkableComparators, comparables);
 
             when: {
                 final Comparator<Object> comparator = finder.findFor(new Credential());
@@ -84,7 +84,7 @@ public class CheckableComparatorFinderTest {
             final Set<Class<? extends Comparable<?>>> comparables = Collections.emptySet();
 
             when: {
-                final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
+                final ComparatorRepository finder = new ComparatorRepository(checkableComparators, comparables);
                 final Comparator<Object> comparator = finder.findFor(new Credential());
 
                 then: {
@@ -102,7 +102,7 @@ public class CheckableComparatorFinderTest {
             final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
 
             when: {
-                final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
+                final ComparatorRepository finder = new ComparatorRepository(checkableComparators, comparables);
                 final Comparator<Object> comparator = finder.findFor(new User());
 
                 then: {

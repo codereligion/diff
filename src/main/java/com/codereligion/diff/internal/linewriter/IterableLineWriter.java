@@ -16,26 +16,39 @@
 package com.codereligion.diff.internal.linewriter;
 
 import com.codereligion.diff.exception.MissingComparatorException;
-import com.codereligion.diff.internal.CheckableComparatorFinder;
+import com.codereligion.diff.internal.ComparatorRepository;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 /**
- * Writes iterables to lines.
+ * Serializes {@link Iterable}s to lines after sorting them.
  *
  * @author Sebastian Gröbler
  * @since 13.11.2013
  */
 class IterableLineWriter extends TypeSafeCheckableLineWriter<Iterable<Object>> {
-    
+
+    /**
+     * Line writer to delegate actual line writing to.
+     */
     private final LineWriter lineWriter;
-    private final CheckableComparatorFinder comparatorFinder;
-    
-    public IterableLineWriter(final LineWriter lineWriter, final CheckableComparatorFinder comparatorFinder) {
+
+    /**
+     * Repository for comparators to use for sorting the given iterables.
+     */
+    private final ComparatorRepository comparatorRepository;
+
+    /**
+     * Creates a new instance for the given {@code lineWriter} and {@code comparatorRepository}.
+     *
+     * @param lineWriter the {@link LineWriter} to delegate actual line writing to
+     * @param comparatorRepository the repository to look up comparators
+     */
+    public IterableLineWriter(final LineWriter lineWriter, final ComparatorRepository comparatorRepository) {
         this.lineWriter = lineWriter;
-        this.comparatorFinder = comparatorFinder;
+        this.comparatorRepository = comparatorRepository;
     }
 
     @Override
@@ -56,7 +69,14 @@ class IterableLineWriter extends TypeSafeCheckableLineWriter<Iterable<Object>> {
     public boolean applies(final Object value) {
         return value instanceof Iterable;
     }
-    
+
+    /**
+     * Transforms the given iterable value into a sorted list.
+     *
+     * @param path the path pointing to the property value which is about to get sorted into a list
+     * @param value the property value to sort into a list
+     * @return a sorted list of the given iterable
+     */
     private List<Object> transformToSortedList(final String path, final Iterable<Object> value) {
         final List<Object> list = Lists.newArrayList(value);
 
@@ -64,8 +84,13 @@ class IterableLineWriter extends TypeSafeCheckableLineWriter<Iterable<Object>> {
             return list;
         }
         
-        final Object firstElement = list.get(0);
-        final Comparator<Object> comparator = comparatorFinder.findFor(firstElement);
+        final Object firstElement = tryFindFirstNonNullItem(list);
+
+        if (firstElement == null) {
+            return list;
+        }
+
+        final Comparator<Object> comparator = comparatorRepository.findFor(firstElement);
         
         if (comparator == null) {
             throw MissingComparatorException.missingIterableComparator(path);
@@ -73,5 +98,21 @@ class IterableLineWriter extends TypeSafeCheckableLineWriter<Iterable<Object>> {
         
         Collections.sort(list, comparator);
         return list;
+    }
+
+    /**
+     * Tries to find the first item in the given list which is not {@code null}.
+     *
+     * @param list the list to scan for the first non {@code null} item
+     * @return either the first non {@code null} item or {@code null} if there was none
+     */
+    private Object tryFindFirstNonNullItem(final Iterable<Object> list) {
+        for (final Object candidate : list) {
+            if (candidate != null) {
+                return candidate;
+            }
+        }
+
+        return null;
     }
 }

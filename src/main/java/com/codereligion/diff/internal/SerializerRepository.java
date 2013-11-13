@@ -28,7 +28,7 @@ import static com.codereligion.diff.serializer.InQuotesSerializer.wrapInQuotes;
  * @author Sebastian Gröbler
  * @since 13.11.2013
  */
-public final class CheckableSerializerFinder {
+public final class SerializerRepository {
 
     /**
      * Custom checkable serializers.
@@ -47,7 +47,7 @@ public final class CheckableSerializerFinder {
      *
      * @param checkableSerializers the set of {@link CheckableSerializer} to store
      */
-    public CheckableSerializerFinder(final Set<CheckableSerializer<?>> checkableSerializers) {
+    public SerializerRepository(final Set<CheckableSerializer<?>> checkableSerializers) {
         this.customSerializer = wrapInQuotes(checkableSerializers);
     }
 

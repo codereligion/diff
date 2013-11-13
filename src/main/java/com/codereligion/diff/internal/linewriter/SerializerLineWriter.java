@@ -15,7 +15,7 @@
  */
 package com.codereligion.diff.internal.linewriter;
 
-import com.codereligion.diff.internal.CheckableSerializerFinder;
+import com.codereligion.diff.internal.SerializerRepository;
 import com.codereligion.diff.serializer.Serializer;
 
 import java.util.Collections;
@@ -23,9 +23,9 @@ import java.util.List;
 
 class SerializerLineWriter implements CheckableLineWriter {
 
-    private final CheckableSerializerFinder finder;
+    private final SerializerRepository finder;
 
-    public SerializerLineWriter(final CheckableSerializerFinder customFinder) {
+    public SerializerLineWriter(final SerializerRepository customFinder) {
         this.finder = customFinder;
     }
 

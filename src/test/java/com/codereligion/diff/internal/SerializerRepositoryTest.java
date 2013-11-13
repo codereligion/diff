@@ -29,19 +29,19 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 /**
- * Tests the {@link CheckableSerializerFinder}.
+ * Tests the {@link SerializerRepository}.
  *
  * @author Sebastian Gröbler
  * @since 13.11.2013
  */
-public class CheckableSerializerFinderTest {
+public class SerializerRepositoryTest {
 
     @Test
     public void findsExistingSerializer() {
         given: {
             final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
             final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
-            final CheckableSerializerFinder finder = new CheckableSerializerFinder(checkableSerializers);
+            final SerializerRepository finder = new SerializerRepository(checkableSerializers);
             final User user = new User();
 
             when: {
@@ -61,7 +61,7 @@ public class CheckableSerializerFinderTest {
         given: {
             final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
             final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
-            final CheckableSerializerFinder finder = new CheckableSerializerFinder(checkableSerializers);
+            final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
             when: {
                 final CheckableSerializer<Object> actual = finder.findFor(new Credential());
@@ -78,7 +78,7 @@ public class CheckableSerializerFinderTest {
         given: {
             final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
             final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
-            final CheckableSerializerFinder finder = new CheckableSerializerFinder(checkableSerializers);
+            final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
             when: {
                 final CheckableSerializer<Object> actual = finder.findFor(new Credential());
@@ -95,7 +95,7 @@ public class CheckableSerializerFinderTest {
         given: {
             final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
             final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
-            final CheckableSerializerFinder finder = new CheckableSerializerFinder(checkableSerializers);
+            final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
             when: {
                 final CheckableSerializer<Object> actual = finder.findFor(Credential.class);
@@ -112,7 +112,7 @@ public class CheckableSerializerFinderTest {
         given: {
             final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
             final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
-            final CheckableSerializerFinder finder = new CheckableSerializerFinder(checkableSerializers);
+            final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
             when: {
                 final CheckableSerializer<Object> actual = finder.findFor(null);
@@ -129,7 +129,7 @@ public class CheckableSerializerFinderTest {
         given: {
             final CheckableSerializer<Object> serializer = new IncludeSerializer(Class.class);
             final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
-            final CheckableSerializerFinder finder = new CheckableSerializerFinder(checkableSerializers);
+            final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
             when: {
                 final CheckableSerializer<Object> actual = finder.findFor(User.class);
@@ -146,7 +146,7 @@ public class CheckableSerializerFinderTest {
         given: {
             final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
             final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
-            final CheckableSerializerFinder finder = new CheckableSerializerFinder(checkableSerializers);
+            final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
             when: {
                 final CheckableSerializer<Object> actual = finder.findFor(new Credential());

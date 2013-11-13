@@ -17,8 +17,8 @@ package com.codereligion.diff.internal.linewriter;
 
 import com.codereligion.diff.exception.MissingSerializerException;
 import com.codereligion.diff.exception.UnreadablePropertyException;
-import com.codereligion.diff.internal.CheckableComparatorFinder;
-import com.codereligion.diff.internal.CheckableSerializerFinder;
+import com.codereligion.diff.internal.ComparatorRepository;
+import com.codereligion.diff.internal.SerializerRepository;
 import com.codereligion.diff.internal.PropertyInclusionChecker;
 import com.codereligion.reflect.BeanIntrospections;
 import com.google.common.collect.Iterables;
@@ -35,8 +35,8 @@ public class RootLineWriter implements LineWriter {
     private PropertyInclusionChecker propertyInclusionChecker;
 
     public RootLineWriter(final PropertyInclusionChecker propertyInclusionChecker,
-                          final CheckableSerializerFinder serializerFinder,
-                          final CheckableComparatorFinder comparatorFinder) {
+                          final SerializerRepository serializerFinder,
+                          final ComparatorRepository comparatorFinder) {
 
         this.propertyInclusionChecker = propertyInclusionChecker;
         this.lineWriters = Lists.newArrayList(new SerializerLineWriter(serializerFinder),

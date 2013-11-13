@@ -17,8 +17,8 @@ package com.codereligion.diff.internal.linewriter;
 
 import com.codereligion.diff.exception.MissingComparatorException;
 import com.codereligion.diff.exception.MissingSerializerException;
-import com.codereligion.diff.internal.CheckableComparatorFinder;
-import com.codereligion.diff.internal.CheckableSerializerFinder;
+import com.codereligion.diff.internal.ComparatorRepository;
+import com.codereligion.diff.internal.SerializerRepository;
 import com.codereligion.diff.serializer.CheckableSerializer;
 import com.google.common.collect.Lists;
 import java.util.Collections;
@@ -30,10 +30,10 @@ import java.util.TreeMap;
 class MapLineWriter extends TypeSafeCheckableLineWriter<Map<Object, Object>> {
     
     private final LineWriter lineWriter;
-    private final CheckableSerializerFinder serializerFinder;
-    private final CheckableComparatorFinder comparatorFinder;
+    private final SerializerRepository serializerFinder;
+    private final ComparatorRepository comparatorFinder;
     
-    public MapLineWriter(final LineWriter lineWriter, final CheckableSerializerFinder serializerFinder, final CheckableComparatorFinder comparatorFinder) {
+    public MapLineWriter(final LineWriter lineWriter, final SerializerRepository serializerFinder, final ComparatorRepository comparatorFinder) {
         this.lineWriter = lineWriter;
         this.serializerFinder = serializerFinder;
         this.comparatorFinder = comparatorFinder;
@@ -66,7 +66,13 @@ class MapLineWriter extends TypeSafeCheckableLineWriter<Map<Object, Object>> {
             return Collections.emptyMap();
         }
         
-        final Object anyKey = value.keySet().iterator().next();
+        final Object anyKey = tryFindFirstNonNullItem(value.keySet());
+
+        final boolean thereIsJustOneKeyAndItIsNull = anyKey == null;
+        if (thereIsJustOneKeyAndItIsNull) {
+            return value;
+        }
+
         final Comparator<Object> comparator = comparatorFinder.findFor(anyKey);
         
         if (comparator == null) {
@@ -77,7 +83,23 @@ class MapLineWriter extends TypeSafeCheckableLineWriter<Map<Object, Object>> {
         sortedMap.putAll(value);
         return sortedMap;
     }
-    
+
+    /**
+     * Tries to find the first item in the given list which is not {@code null}.
+     *
+     * @param list the list to scan for the first non {@code null} item
+     * @return either the first non {@code null} item or {@code null} if there was none
+     */
+    private Object tryFindFirstNonNullItem(final Iterable<Object> list) {
+        for (final Object candidate : list) {
+            if (candidate != null) {
+                return candidate;
+            }
+        }
+
+        return null;
+    }
+
     private CheckableSerializer<Object> findMapKeySerializerOrThrowException(final String path, final Object key) {
         final CheckableSerializer<Object> serializer = serializerFinder.findFor(key);
         if (serializer == null) {

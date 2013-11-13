@@ -15,8 +15,8 @@
  */
 package com.codereligion.diff.differ;
 
-import com.codereligion.diff.internal.CheckableComparatorFinder;
-import com.codereligion.diff.internal.CheckableSerializerFinder;
+import com.codereligion.diff.internal.ComparatorRepository;
+import com.codereligion.diff.internal.SerializerRepository;
 import com.codereligion.diff.internal.PropertyInclusionChecker;
 import com.codereligion.diff.internal.linewriter.LineWriter;
 import com.codereligion.diff.internal.linewriter.RootLineWriter;
@@ -77,8 +77,8 @@ public final class Differ {
     private LineWriter createRootLineWriter() {
         return new RootLineWriter(
                 new PropertyInclusionChecker(configuration.getExcludedProperties()),
-                new CheckableSerializerFinder(configuration.getCheckableSerializer()),
-                new CheckableComparatorFinder(configuration.getCheckableComparators(), configuration.getComparables()));
+                new SerializerRepository(configuration.getCheckableSerializer()),
+                new ComparatorRepository(configuration.getCheckableComparators(), configuration.getComparables()));
     }
 
     /**

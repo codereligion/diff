@@ -26,7 +26,7 @@ import java.util.Set;
  * @author Sebastian Gröbler
  * @since 10.11.2013
  */
-public class CheckableComparatorFinder {
+public class ComparatorRepository {
 
     /**
      * The set of possible checkableComparators.
@@ -45,7 +45,7 @@ public class CheckableComparatorFinder {
      * @param checkableComparators the checkable comparators to use
      * @param comparables the comparables to use
      */
-    public CheckableComparatorFinder(
+    public ComparatorRepository(
             final Set<CheckableComparator<?>> checkableComparators,
             final Set<Class<? extends Comparable<?>>> comparables) {
 
