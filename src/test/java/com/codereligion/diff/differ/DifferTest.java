@@ -477,7 +477,7 @@ public class DifferTest {
 	}
 	
 	@Test
-	public void addHunks() throws Exception {
+	public void addsHunks() throws Exception {
 		final Configuration configuration = new Configuration().useSerializer(new IncludeSerializer(String.class));
 		final List<String> result = new Differ(configuration).diff(null, "Hello world!");
 		

@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.internal;
+package com.codereligion.diff.internal.linewriter;
 
 import com.codereligion.diff.exception.MissingSerializerException;
+import com.codereligion.diff.internal.CheckableComparatorFinder;
+import com.codereligion.diff.internal.CheckableSerializerFinder;
+import com.codereligion.diff.internal.PropertyInclusionChecker;
 import com.codereligion.reflect.BeanIntrospections;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;

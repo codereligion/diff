@@ -17,9 +17,9 @@ package com.codereligion.diff.differ;
 
 import com.codereligion.diff.internal.CheckableComparatorFinder;
 import com.codereligion.diff.internal.CheckableSerializerFinder;
-import com.codereligion.diff.internal.LineWriter;
+import com.codereligion.diff.internal.linewriter.LineWriter;
 import com.codereligion.diff.internal.PropertyInclusionChecker;
-import com.codereligion.diff.internal.RootLineWriter;
+import com.codereligion.diff.internal.linewriter.RootLineWriter;
 import com.google.common.collect.Lists;
 import difflib.DiffUtils;
 import difflib.Patch;
