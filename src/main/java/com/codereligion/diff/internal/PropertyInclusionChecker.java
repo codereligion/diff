@@ -21,10 +21,24 @@ import javax.annotation.Nullable;
 import java.beans.PropertyDescriptor;
 import java.util.Set;
 
+/**
+ * Allows the internals to easily lookup if a property is included for the diff or not.
+ *
+ * @author Sebastian Gröbler
+ * @since 13.11.2013
+ */
 public final class PropertyInclusionChecker implements Predicate<PropertyDescriptor> {
 
+    /**
+     * The simple names of the properties which are excluded from the diff.
+     */
     private final Set<String> excludedProperties;
 
+    /**
+     * Creates a new instance for the given {@code excludedProperties}.
+     *
+     * @param excludedProperties the set of excluded properties, by name
+     */
     public PropertyInclusionChecker(final Set<String> excludedProperties) {
         this.excludedProperties = excludedProperties;
     }

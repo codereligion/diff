@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * This package contains internal classes, which should not be used or overridden
+ * This package contains internal classes, which should not be used or overridden.
  * They are subject to change without any notice.
  */
 @javax.annotation.ParametersAreNonnullByDefault

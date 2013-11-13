@@ -27,6 +27,12 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * Tests the {@link PropertyInclusionChecker}.
+ *
+ * @author Sebastian Gröbler
+ * @since 13.11.2013
+ */
 public class PropertyInclusionCheckerTest {
 
     @Test
