@@ -16,43 +16,145 @@
 package com.codereligion.diff.internal;
 
 
+import com.codereligion.diff.serializer.CheckableSerializer;
+import com.codereligion.diff.util.IncludeSerializer;
+import com.codereligion.diff.util.bean.Credential;
+import com.codereligion.diff.util.bean.User;
+import com.google.common.collect.Sets;
+import java.util.Set;
+import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+
 /**
- * TODO
+ * Tests the {@link CheckableSerializerFinder}.
+ *
+ * @author Sebastian Gröbler
+ * @since 13.11.2013
  */
 public class CheckableSerializerFinderTest {
-	
-//	@Rule
-//	public ExpectedException expectedException = ExpectedException.none();
-//
-//	@Test
-//	public void unknownSerializerCanNotBeFound() {
-//		final Configuration config = new Configuration().useSerializer(new IncludeSerializer(String.class));
-//
-//		assertThat(config.findFor(Integer.valueOf(42)), is(nullValue()));
-//	}
-//
-//	@Test
-//	public void useSerializerReturnsNewInstance() {
-//		final Configuration original = new Configuration();
-//		final Configuration copy = original.useSerializer(new IncludeSerializer());
-//
-//		assertThat(original, is(not(sameInstance(copy))));
-//	}
-//
-//	@Test
-//	public void useSerializerLeavesOriginalUntouched() {
-//		final Configuration original = new Configuration();
-//		original.useSerializer(new IncludeSerializer(String.class));
-//
-//		assertThat(original.findFor("foo"), is(nullValue()));
-//	}
-//
-//
-//	@Test
-//	public void allowsAddingAndRetrievingOfSerializers() {
-//		final CheckableSerializer<Object> expectedSerializer = new IncludeSerializer(Object.class);
-//		final Configuration config = new Configuration().useSerializer(expectedSerializer);
-//
-//		assertThat(config.findFor(new Object()), is(expectedSerializer));
-//	}
+
+    @Test
+    public void findsExistingSerializer() {
+        given: {
+            final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
+            final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
+            final CheckableSerializerFinder finder = new CheckableSerializerFinder(checkableSerializers);
+            final User user = new User();
+
+            when: {
+                final CheckableSerializer<Object> actual = finder.findFor(user);
+                final String expectedSerializedValue = serializer.serialize(user);
+                final String actualSerializedValue = actual.serialize(user);
+
+                then: {
+                    assertThat(actualSerializedValue, containsString(expectedSerializedValue));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void doesNotFindNonExistingSerializer() {
+        given: {
+            final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
+            final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
+            final CheckableSerializerFinder finder = new CheckableSerializerFinder(checkableSerializers);
+
+            when: {
+                final CheckableSerializer<Object> actual = finder.findFor(new Credential());
+
+                then: {
+                    assertThat(actual, is(nullValue()));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void wrapsGivenSerializerResultsInQuotes() {
+        given: {
+            final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
+            final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
+            final CheckableSerializerFinder finder = new CheckableSerializerFinder(checkableSerializers);
+
+            when: {
+                final CheckableSerializer<Object> actual = finder.findFor(new Credential());
+
+                then: {
+                    assertThat(actual, is(nullValue()));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void providesDefaultSerializerForClass() {
+        given: {
+            final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
+            final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
+            final CheckableSerializerFinder finder = new CheckableSerializerFinder(checkableSerializers);
+
+            when: {
+                final CheckableSerializer<Object> actual = finder.findFor(Credential.class);
+
+                then: {
+                    assertThat(actual.serialize(Credential.class), containsString("com.codereligion.diff.util.bean.Credential"));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void providesDefaultSerializerForNullValue() {
+        given: {
+            final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
+            final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
+            final CheckableSerializerFinder finder = new CheckableSerializerFinder(checkableSerializers);
+
+            when: {
+                final CheckableSerializer<Object> actual = finder.findFor(null);
+
+                then: {
+                    assertThat(actual.serialize(null), is("null"));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void prioritizesCustomSerializersOverDefaultSerializers() {
+        given: {
+            final CheckableSerializer<Object> serializer = new IncludeSerializer(Class.class);
+            final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
+            final CheckableSerializerFinder finder = new CheckableSerializerFinder(checkableSerializers);
+
+            when: {
+                final CheckableSerializer<Object> actual = finder.findFor(User.class);
+
+                then: {
+                    assertThat(actual.serialize(User.class), containsString("class com.codereligion.diff.util.bean.User"));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void returnNullInCaseNoMatchWasFound() {
+        given: {
+            final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
+            final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
+            final CheckableSerializerFinder finder = new CheckableSerializerFinder(checkableSerializers);
+
+            when: {
+                final CheckableSerializer<Object> actual = finder.findFor(new Credential());
+
+                then: {
+                    assertThat(actual, is(nullValue()));
+                }
+            }
+        }
+    }
 }
