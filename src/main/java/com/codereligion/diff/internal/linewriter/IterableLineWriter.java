@@ -17,6 +17,9 @@ package com.codereligion.diff.internal.linewriter;
 
 import com.codereligion.diff.exception.MissingComparatorException;
 import com.codereligion.diff.internal.ComparatorRepository;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.Comparator;
@@ -84,13 +87,13 @@ class IterableLineWriter extends TypeSafeCheckableLineWriter<Iterable<Object>> {
             return list;
         }
         
-        final Object firstElement = tryFindFirstNonNullItem(list);
+        final Optional<Object> firstElement = Iterables.tryFind(list, Predicates.notNull());
 
-        if (firstElement == null) {
+        if (!firstElement.isPresent()) {
             return list;
         }
 
-        final Comparator<Object> comparator = comparatorRepository.findFor(firstElement);
+        final Comparator<Object> comparator = comparatorRepository.findFor(firstElement.get());
         
         if (comparator == null) {
             throw MissingComparatorException.missingIterableComparator(path);
@@ -98,21 +101,5 @@ class IterableLineWriter extends TypeSafeCheckableLineWriter<Iterable<Object>> {
         
         Collections.sort(list, comparator);
         return list;
-    }
-
-    /**
-     * Tries to find the first item in the given list which is not {@code null}.
-     *
-     * @param list the list to scan for the first non {@code null} item
-     * @return either the first non {@code null} item or {@code null} if there was none
-     */
-    private Object tryFindFirstNonNullItem(final Iterable<Object> list) {
-        for (final Object candidate : list) {
-            if (candidate != null) {
-                return candidate;
-            }
-        }
-
-        return null;
     }
 }

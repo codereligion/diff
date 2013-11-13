@@ -20,6 +20,9 @@ import com.codereligion.diff.exception.MissingSerializerException;
 import com.codereligion.diff.internal.ComparatorRepository;
 import com.codereligion.diff.internal.SerializerRepository;
 import com.codereligion.diff.serializer.CheckableSerializer;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.Comparator;
@@ -66,38 +69,22 @@ class MapLineWriter extends TypeSafeCheckableLineWriter<Map<Object, Object>> {
             return Collections.emptyMap();
         }
         
-        final Object anyKey = tryFindFirstNonNullItem(value.keySet());
+        final Optional<Object> anyKey = Iterables.tryFind(value.keySet(), Predicates.notNull());
 
-        final boolean thereIsJustOneKeyAndItIsNull = anyKey == null;
+        final boolean thereIsJustOneKeyAndItIsNull = !anyKey.isPresent();
         if (thereIsJustOneKeyAndItIsNull) {
             return value;
         }
 
-        final Comparator<Object> comparator = comparatorFinder.findFor(anyKey);
+        final Comparator<Object> comparator = comparatorFinder.findFor(anyKey.get());
         
         if (comparator == null) {
-            throw MissingComparatorException.missingMapKeyComparator(path, anyKey.getClass());
+            throw MissingComparatorException.missingMapKeyComparator(path, anyKey.get().getClass());
         }
         
         final Map<Object, Object> sortedMap = new TreeMap<Object, Object>(comparator);
         sortedMap.putAll(value);
         return sortedMap;
-    }
-
-    /**
-     * Tries to find the first item in the given list which is not {@code null}.
-     *
-     * @param list the list to scan for the first non {@code null} item
-     * @return either the first non {@code null} item or {@code null} if there was none
-     */
-    private Object tryFindFirstNonNullItem(final Iterable<Object> list) {
-        for (final Object candidate : list) {
-            if (candidate != null) {
-                return candidate;
-            }
-        }
-
-        return null;
     }
 
     private CheckableSerializer<Object> findMapKeySerializerOrThrowException(final String path, final Object key) {
