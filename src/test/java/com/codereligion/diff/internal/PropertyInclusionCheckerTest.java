@@ -44,16 +44,22 @@ public class PropertyInclusionCheckerTest {
 
     @Test
     public void mustUsePropertiesNameAttribute() {
+        given: {
+            final Set<String> excludedProperties = Sets.newHashSet("actualFieldName");
+            final PropertyDescriptor propertyDescriptor = mock(PropertyDescriptor.class);
+            when(propertyDescriptor.getDisplayName()).thenReturn("someLocalizedName");
+            when(propertyDescriptor.getName()).thenReturn("actualFieldName");
 
-        final PropertyDescriptor propertyDescriptor = mock(PropertyDescriptor.class);
+            when: {
+                final PropertyInclusionChecker propertyInclusionChecker = new PropertyInclusionChecker(excludedProperties);
+                final boolean result = propertyInclusionChecker.apply(propertyDescriptor);
 
-        when(propertyDescriptor.getDisplayName()).thenReturn("someLocalizedName");
-        when(propertyDescriptor.getName()).thenReturn("actualFieldName");
+                then: {
+                    assertThat(result, is(false));
+                }
+            }
+        }
 
-        final Set<String> excludedProperties = Sets.newHashSet("actualFieldName");
-        final PropertyInclusionChecker propertyInclusionChecker = new PropertyInclusionChecker(excludedProperties);
-
-        assertThat(propertyInclusionChecker.apply(propertyDescriptor), is(false));
 
     }
 }

@@ -95,8 +95,7 @@ public class DifferTest {
 		expectedException.expect(MissingObjectComparatorException.class);
 		expectedException.expectMessage("Could not find CheckableComparator for iterable at 'User.credentials'");
 		
-		final User working = createUser();
-		working.withCredential(new Credential().withPassword("password"));
+		final User working = createUser().withCredential(new Credential().withPassword("password"));
 		
 		new Differ(configuration).diff(null, working);
 	}
@@ -288,8 +287,7 @@ public class DifferTest {
 			.useComparator(new StubComparator(Credential.class));
 	
 		final Address base = createAddress();
-		final Address working = createAddress();
-		working.setStreet("something new");
+		final Address working = createAddress().withStreet("something new");
 		
 		final List<String> result = new Differ(configuration).diff(base, working);
 		

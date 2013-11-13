@@ -40,53 +40,75 @@ public class CheckableComparatorFinderTest {
     @Test
     @SuppressWarnings("unchecked")
     public void prioritizesComparablesOverComparators() {
-        final Set<CheckableComparator<?>> checkableComparators = Sets.<CheckableComparator<?>>newHashSet(new StubComparator(Credential.class));
+        given: {
+            final Set<CheckableComparator<?>> checkableComparators = Sets.<CheckableComparator<?>>newHashSet(new StubComparator(Credential.class));
+            final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
+            final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
 
-        final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
+            when: {
+                final Comparator<Object> comparator = finder.findFor(new Credential());
+                final Comparator<Object> expected = ComparableComparator.INSTANCE;
 
-        final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
-        final Comparator<Object> comparator = finder.findFor(new Credential());
-
-        final Comparator<Object> expected = ComparableComparator.INSTANCE;
-        assertThat(comparator, is(expected));
+                then: {
+                    assertThat(comparator, is(expected));
+                }
+            }
+        }
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void findsComparatorForRegisteredComparable() {
-        final Set<CheckableComparator<?>> checkableComparators = Collections.emptySet();
-        final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
+        given: {
+            final Set<CheckableComparator<?>> checkableComparators = Collections.emptySet();
+            final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
+            final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
 
-        final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
-        final Comparator<Object> comparator = finder.findFor(new Credential());
+            when: {
+                final Comparator<Object> comparator = finder.findFor(new Credential());
+                final Comparator<Object> expected = ComparableComparator.INSTANCE;
 
-        final Comparator<Object> expected = ComparableComparator.INSTANCE;
-        assertThat(comparator, is(expected));
+                then: {
+                    assertThat(comparator, is(expected));
+                }
+            }
+        }
     }
 
     @Test
     public void findsRegisteredComparator() {
-        final CheckableComparator<Object> stubComparator = new StubComparator(Credential.class);
-        final Comparator<Object> expected = stubComparator;
+        given: {
+            final CheckableComparator<Object> stubComparator = new StubComparator(Credential.class);
+            final Comparator<Object> expected = stubComparator;
+            final Set<CheckableComparator<?>> checkableComparators = Sets.<CheckableComparator<?>>newHashSet(stubComparator);
+            final Set<Class<? extends Comparable<?>>> comparables = Collections.emptySet();
 
-        final Set<CheckableComparator<?>> checkableComparators = Sets.<CheckableComparator<?>>newHashSet(stubComparator);
-        final Set<Class<? extends Comparable<?>>> comparables = Collections.emptySet();
+            when: {
+                final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
+                final Comparator<Object> comparator = finder.findFor(new Credential());
 
-        final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
-        final Comparator<Object> comparator = finder.findFor(new Credential());
-
-        assertThat(comparator, is(expected));
+                then: {
+                    assertThat(comparator, is(expected));
+                }
+            }
+        }
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void returnsNullWhenNoComparatorCouldBeFound() {
-        final Set<CheckableComparator<?>> checkableComparators = Sets.<CheckableComparator<?>>newHashSet(new StubComparator(Credential.class));
-        final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
+        given: {
+            final Set<CheckableComparator<?>> checkableComparators = Sets.<CheckableComparator<?>>newHashSet(new StubComparator(Credential.class));
+            final Set<Class<? extends Comparable<?>>> comparables = Sets.<Class<? extends Comparable<?>>>newHashSet(Credential.class);
 
-        final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
-        final Comparator<Object> comparator = finder.findFor(new User());
+            when: {
+                final CheckableComparatorFinder finder = new CheckableComparatorFinder(checkableComparators, comparables);
+                final Comparator<Object> comparator = finder.findFor(new User());
 
-        assertThat(comparator, is(nullValue()));
+                then: {
+                    assertThat(comparator, is(nullValue()));
+                }
+            }
+        }
     }
 }
