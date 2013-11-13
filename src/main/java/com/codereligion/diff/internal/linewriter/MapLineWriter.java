@@ -21,15 +21,13 @@ import com.codereligion.diff.internal.CheckableComparatorFinder;
 import com.codereligion.diff.internal.CheckableSerializerFinder;
 import com.codereligion.diff.serializer.CheckableSerializer;
 import com.google.common.collect.Lists;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-class MapLineWriter implements CheckableLineWriter {
+class MapLineWriter extends TypeSafeCheckableLineWriter<Map<Object, Object>> {
     
     private final LineWriter lineWriter;
     private final CheckableSerializerFinder serializerFinder;
@@ -42,9 +40,7 @@ class MapLineWriter implements CheckableLineWriter {
     }
 
     @Override
-    public List<String> write(final String path, final Object value) throws IllegalAccessException, InvocationTargetException, IntrospectionException {
-        @SuppressWarnings("unchecked")
-        final Map<Object, Object> map = (Map<Object, Object>) value;
+    public List<String> typeSafeWrite(final String path, final Map<Object, Object> map) {
         final Map<Object, Object> mapProperty = transformToSortedMap(path, map);
         final List<String> lines = Lists.newArrayList();
         

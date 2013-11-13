@@ -18,17 +18,16 @@ package com.codereligion.diff.internal.linewriter;
 import java.util.List;
 
 /**
- * Serializes a given object to a list of strings, where a string represents a line in the to be diffed document.
- * The path determines the position of the value in the object graph and might be extended in case the implementation
- * delegates further serialization.
+ * Encapsulates type casting for those {@link CheckableLineWriter}s which another type than object.
  *
  * @author Sebastian Gröbler
- * @since 12.08.2013
+ * @since 13.11.2013
+ * @param <T> the type to which the value should be casted
  */
-public interface LineWriter {
+abstract class TypeSafeCheckableLineWriter<T> implements CheckableLineWriter {
 
     /**
-     * Serializes the given value to a list of strings and concatenates them with the given path.
+     * Type safe version of the {@link CheckableLineWriter#write(String, Object)} method.
      *
      * @param path the path defining the position of the given value in the object graph
      * @param value the value to be serialized into a list of strings
@@ -37,5 +36,11 @@ public interface LineWriter {
      *          when a getter of a property of the given object
      *          threw an exception during invocation
      */
-    List<String> write(String path, Object value);
+    abstract List<String> typeSafeWrite(String path, T value);
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<String> write(final String path, final Object value) {
+        return typeSafeWrite(path, (T) value);
+    }
 }

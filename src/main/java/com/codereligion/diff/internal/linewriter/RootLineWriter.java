@@ -16,13 +16,13 @@
 package com.codereligion.diff.internal.linewriter;
 
 import com.codereligion.diff.exception.MissingSerializerException;
+import com.codereligion.diff.exception.UnreadablePropertyException;
 import com.codereligion.diff.internal.CheckableComparatorFinder;
 import com.codereligion.diff.internal.CheckableSerializerFinder;
 import com.codereligion.diff.internal.PropertyInclusionChecker;
 import com.codereligion.reflect.BeanIntrospections;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -45,9 +45,7 @@ public class RootLineWriter implements LineWriter {
     }
 
     @Override
-    public List<String> write(final String path, final Object value) throws IllegalAccessException,
-                                                                    InvocationTargetException,
-                                                                    IntrospectionException {
+    public List<String> write(final String path, final Object value) {
         for (final CheckableLineWriter lineWriter : lineWriters) {
             if (lineWriter.applies(value)) {
                 return lineWriter.write(path, value);
@@ -56,9 +54,7 @@ public class RootLineWriter implements LineWriter {
         return traverseProperties(path, value);
     }
 
-    private List<String> traverseProperties(final String path, final Object value) throws IllegalAccessException,
-                                                                                 InvocationTargetException,
-                                                                                 IntrospectionException {
+    private List<String> traverseProperties(final String path, final Object value) {
 
         final List<String> lines = Lists.newArrayList();
         final Class<?> beanClass = value.getClass();
@@ -67,8 +63,8 @@ public class RootLineWriter implements LineWriter {
         for (final PropertyDescriptor descriptor : Iterables.filter(readableProperties, propertyInclusionChecker)) {
             final String propertyName = descriptor.getName();
             final Method readMethod = descriptor.getReadMethod();
-            final Object propertyValue = readMethod.invoke(value);
             final String extendedPath = PathBuilder.extendPathWithProperty(path, propertyName);
+            final Object propertyValue = safeInvoke(extendedPath, readMethod, value);
             lines.addAll(write(extendedPath, propertyValue));
         }
 
@@ -78,5 +74,15 @@ public class RootLineWriter implements LineWriter {
         }
 
         return lines;
+    }
+
+    private Object safeInvoke(final String path, final Method readMethod, final Object value) {
+        try {
+            return readMethod.invoke(value);
+        } catch (final IllegalAccessException e) {
+            throw new IllegalStateException("Could not read property value at: '" + path + "' through it's getter", e);
+        } catch (final InvocationTargetException e) {
+            throw new UnreadablePropertyException(path, e);
+        }
     }
 }

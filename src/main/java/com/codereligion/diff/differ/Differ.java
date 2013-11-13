@@ -17,20 +17,16 @@ package com.codereligion.diff.differ;
 
 import com.codereligion.diff.internal.CheckableComparatorFinder;
 import com.codereligion.diff.internal.CheckableSerializerFinder;
-import com.codereligion.diff.internal.linewriter.LineWriter;
 import com.codereligion.diff.internal.PropertyInclusionChecker;
+import com.codereligion.diff.internal.linewriter.LineWriter;
 import com.codereligion.diff.internal.linewriter.RootLineWriter;
 import com.google.common.collect.Lists;
 import difflib.DiffUtils;
 import difflib.Patch;
-
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
-
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
@@ -89,15 +85,15 @@ public final class Differ {
      * Creates a diff for the given {@code base} and {@code working} objects by
      * putting every readable and not excluded property of the given objects on
      * a single line and comparing the lines with the common diff algorithm.
-     * 
+     *
      * <p>
      * The returned list of strings represents the detected differences between
      * the given objects.
-     * 
+     *
      * <p>
      * The {@code base} object is optional, leaving it out indicates that
      * {@code working} is newly created.
-     * 
+     *
      * @param base the object which represents the state before a change
      * @param working the object which represents the state after a change
      * @throws IllegalArgumentException when the given {@code working} object is
@@ -106,14 +102,10 @@ public final class Differ {
      *             a {@link com.codereligion.diff.serializer.CheckableSerializer} to perform the diff
      * @throws com.codereligion.diff.exception.MissingComparatorException when the {@link Configuration} is
      *             missing an {@link com.codereligion.diff.comparator.CheckableComparator} to perform the diff
-     * @throws InvocationTargetException when a getter of one of the given
-     *             objects threw an exception
-     * @throws IllegalAccessException when a getter of one of the given objects
-     *             is not accessible
-     * @throws IntrospectionException when one of the given objects could not be
-     *             introspected
+     * @throws com.codereligion.diff.exception.UnreadablePropertyException when a getter of a property of the given
+     *             object threw an exception during invocation
      */
-    public List<String> diff(@Nullable final Object base, final Object working) throws IntrospectionException, IllegalAccessException, InvocationTargetException {
+    public List<String> diff(@Nullable final Object base, final Object working) {
 
         checkArgument(working != null, "working object must not be null.");
 
@@ -136,7 +128,7 @@ public final class Differ {
      * <p>
      * For example the simple class name for {@link java.lang.String} would be "String".
      *
-     * @param object
+     * @param object the object to get the simple class name from
      * @return the simple name of the class of the given object
      */
     private String getBeanName(final Object object) {

@@ -18,13 +18,17 @@ package com.codereligion.diff.internal.linewriter;
 import com.codereligion.diff.exception.MissingComparatorException;
 import com.codereligion.diff.internal.CheckableComparatorFinder;
 import com.google.common.collect.Lists;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-class IterableLineWriter implements CheckableLineWriter {
+/**
+ * Writes iterables to lines.
+ *
+ * @author Sebastian Gröbler
+ * @since 13.11.2013
+ */
+class IterableLineWriter extends TypeSafeCheckableLineWriter<Iterable<Object>> {
     
     private final LineWriter lineWriter;
     private final CheckableComparatorFinder comparatorFinder;
@@ -35,9 +39,7 @@ class IterableLineWriter implements CheckableLineWriter {
     }
 
     @Override
-    public List<String> write(final String path, final Object value) throws IllegalAccessException, InvocationTargetException, IntrospectionException {
-        @SuppressWarnings("unchecked")
-        final Iterable<Object> iterable = (Iterable<Object>) value;
+    List<String> typeSafeWrite(final String path, final Iterable<Object> iterable) {
         final List<Object> iterableProperty = transformToSortedList(path, iterable);
         final List<String> lines = Lists.newArrayList();
         
