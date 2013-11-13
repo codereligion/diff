@@ -15,7 +15,7 @@
  */
 package com.codereligion.diff.internal.linewriter;
 
-import com.codereligion.diff.exception.MissingObjectComparatorException;
+import com.codereligion.diff.exception.MissingComparatorException;
 import com.codereligion.diff.exception.MissingSerializerException;
 import com.codereligion.diff.internal.CheckableComparatorFinder;
 import com.codereligion.diff.internal.CheckableSerializerFinder;
@@ -74,7 +74,7 @@ class MapLineWriter implements CheckableLineWriter {
         final Comparator<Object> comparator = comparatorFinder.findFor(anyKey);
         
         if (comparator == null) {
-            throw MissingObjectComparatorException.missingMapKeyComparator(path, anyKey.getClass());
+            throw MissingComparatorException.missingMapKeyComparator(path, anyKey.getClass());
         }
         
         final Map<Object, Object> sortedMap = new TreeMap<Object, Object>(comparator);

@@ -15,7 +15,7 @@
  */
 package com.codereligion.diff.differ;
 
-import com.codereligion.diff.exception.MissingObjectComparatorException;
+import com.codereligion.diff.exception.MissingComparatorException;
 import com.codereligion.diff.exception.MissingSerializerException;
 import com.codereligion.diff.util.IncludeSerializer;
 import com.codereligion.diff.util.NaturalOrderComparator;
@@ -92,7 +92,7 @@ public class DifferTest {
 			.excludeProperty("class")
 			.useSerializer(new IncludeSerializer(Credential.class, Address.class, String.class, Integer.class));
 		
-		expectedException.expect(MissingObjectComparatorException.class);
+		expectedException.expect(MissingComparatorException.class);
 		expectedException.expectMessage("Could not find CheckableComparator for iterable at 'User.credentials'");
 		
 		final User working = createUser().withCredential(new Credential().withPassword("password"));
@@ -106,7 +106,7 @@ public class DifferTest {
 		final Map<Credential, String> working = Maps.newHashMap();
 		working.put(new Credential().withPassword("foo"), "bar");
 		
-		expectedException.expect(MissingObjectComparatorException.class);
+		expectedException.expect(MissingComparatorException.class);
 		expectedException.expectMessage("Could not find CheckableComparator for map keys of type 'Credential' at 'HashMap'");
 		new Differ(configuration).diff(null, working);
 	}

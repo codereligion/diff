@@ -25,32 +25,32 @@ package com.codereligion.diff.exception;
  * @see com.codereligion.diff.differ.Configuration
  * @see com.codereligion.diff.comparator.CheckableComparator
  */
-public final class MissingObjectComparatorException extends RuntimeException {
+public final class MissingComparatorException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Creates a new {@link MissingObjectComparatorException} in case that an
+     * Creates a new {@link MissingComparatorException} in case that an
      * iterable could not be ordered, due to a missing {@link com.codereligion.diff.comparator.CheckableComparator}.
      * 
      * @param path the path of the property which identifies the iterable
-     * @return a new instance of {@link MissingObjectComparatorException}
+     * @return a new instance of {@link MissingComparatorException}
      */
-    public static MissingObjectComparatorException missingIterableComparator(final String path) {
-        return new MissingObjectComparatorException("Could not find CheckableComparator for iterable at '" + path + "'");
+    public static MissingComparatorException missingIterableComparator(final String path) {
+        return new MissingComparatorException("Could not find CheckableComparator for iterable at '" + path + "'");
     }
 
     /**
-     * Creates a new {@link MissingObjectComparatorException} in case that map
+     * Creates a new {@link MissingComparatorException} in case that map
      * keys of a specific {@code type} could not be ordered, due to a missing
      * {@link com.codereligion.diff.comparator.CheckableComparator}.
      * 
      * @param path the path of the property which identifies the map
      * @param type the type of the map key
-     * @return a new instance of {@link MissingObjectComparatorException}
+     * @return a new instance of {@link MissingComparatorException}
      */
-    public static MissingObjectComparatorException missingMapKeyComparator(final String path, final Class<?> type) {
-        return new MissingObjectComparatorException("Could not find CheckableComparator for map keys of type '" + type.getSimpleName() + "' at '" + path + "'");
+    public static MissingComparatorException missingMapKeyComparator(final String path, final Class<?> type) {
+        return new MissingComparatorException("Could not find CheckableComparator for map keys of type '" + type.getSimpleName() + "' at '" + path + "'");
     }
 
     /**
@@ -58,7 +58,7 @@ public final class MissingObjectComparatorException extends RuntimeException {
      *
      * @param message the message to use
      */
-    private MissingObjectComparatorException(final String message) {
+    private MissingComparatorException(final String message) {
         super(message);
     }
 }

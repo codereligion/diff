@@ -15,7 +15,7 @@
  */
 package com.codereligion.diff.internal.linewriter;
 
-import com.codereligion.diff.exception.MissingObjectComparatorException;
+import com.codereligion.diff.exception.MissingComparatorException;
 import com.codereligion.diff.internal.CheckableComparatorFinder;
 import com.google.common.collect.Lists;
 import java.beans.IntrospectionException;
@@ -66,7 +66,7 @@ class IterableLineWriter implements CheckableLineWriter {
         final Comparator<Object> comparator = comparatorFinder.findFor(firstElement);
         
         if (comparator == null) {
-            throw MissingObjectComparatorException.missingIterableComparator(path);
+            throw MissingComparatorException.missingIterableComparator(path);
         }
         
         Collections.sort(list, comparator);

@@ -104,7 +104,7 @@ public final class Differ {
      *             {@code null}
      * @throws com.codereligion.diff.exception.MissingSerializerException when the {@link Configuration} is missing
      *             a {@link com.codereligion.diff.serializer.CheckableSerializer} to perform the diff
-     * @throws com.codereligion.diff.exception.MissingObjectComparatorException when the {@link Configuration} is
+     * @throws com.codereligion.diff.exception.MissingComparatorException when the {@link Configuration} is
      *             missing an {@link com.codereligion.diff.comparator.CheckableComparator} to perform the diff
      * @throws InvocationTargetException when a getter of one of the given
      *             objects threw an exception

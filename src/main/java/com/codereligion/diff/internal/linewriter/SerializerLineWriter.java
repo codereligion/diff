@@ -21,7 +21,6 @@ import com.codereligion.diff.serializer.Serializer;
 import java.util.Collections;
 import java.util.List;
 
-// TODO think of a better name
 class SerializerLineWriter implements CheckableLineWriter {
 
     private final CheckableSerializerFinder finder;

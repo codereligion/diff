@@ -17,7 +17,6 @@ package com.codereligion.diff.internal.linewriter;
 
 import com.codereligion.diff.Checkable;
 
-
 /**
  * Combines the {@link LineWriter} and {@link Checkable} to provide an interface
  * for implementations which can write lines and determine if they can write specific objects
