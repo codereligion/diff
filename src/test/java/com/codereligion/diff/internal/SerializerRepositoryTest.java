@@ -20,13 +20,13 @@ import com.codereligion.diff.serializer.CheckableSerializer;
 import com.codereligion.diff.util.IncludeSerializer;
 import com.codereligion.diff.util.bean.Credential;
 import com.codereligion.diff.util.bean.User;
+import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import java.util.Set;
 import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 
 /**
  * Tests the {@link SerializerRepository}.
@@ -45,9 +45,9 @@ public class SerializerRepositoryTest {
             final User user = new User();
 
             when: {
-                final CheckableSerializer<Object> actual = finder.findFor(user);
+                final Optional<CheckableSerializer<Object>> actual = finder.findFor(user);
                 final String expectedSerializedValue = serializer.serialize(user);
-                final String actualSerializedValue = actual.serialize(user);
+                final String actualSerializedValue = actual.get().serialize(user);
 
                 then: {
                     assertThat(actualSerializedValue, containsString(expectedSerializedValue));
@@ -64,10 +64,10 @@ public class SerializerRepositoryTest {
             final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
             when: {
-                final CheckableSerializer<Object> actual = finder.findFor(new Credential());
+                final Optional<CheckableSerializer<Object>> actual = finder.findFor(new Credential());
 
                 then: {
-                    assertThat(actual, is(nullValue()));
+                    assertThat(actual.isPresent(), is(false));
                 }
             }
         }
@@ -81,10 +81,10 @@ public class SerializerRepositoryTest {
             final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
             when: {
-                final CheckableSerializer<Object> actual = finder.findFor(new Credential());
+                final Optional<CheckableSerializer<Object>> actual = finder.findFor(new Credential());
 
                 then: {
-                    assertThat(actual, is(nullValue()));
+                    assertThat(actual.isPresent(), is(false));
                 }
             }
         }
@@ -98,10 +98,10 @@ public class SerializerRepositoryTest {
             final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
             when: {
-                final CheckableSerializer<Object> actual = finder.findFor(Credential.class);
+                final Optional<CheckableSerializer<Object>> actual = finder.findFor(Credential.class);
 
                 then: {
-                    assertThat(actual.serialize(Credential.class), containsString("com.codereligion.diff.util.bean.Credential"));
+                    assertThat(actual.get().serialize(Credential.class), containsString("com.codereligion.diff.util.bean.Credential"));
                 }
             }
         }
@@ -115,10 +115,10 @@ public class SerializerRepositoryTest {
             final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
             when: {
-                final CheckableSerializer<Object> actual = finder.findFor(null);
+                final Optional<CheckableSerializer<Object>> actual = finder.findFor(null);
 
                 then: {
-                    assertThat(actual.serialize(null), is("null"));
+                    assertThat(actual.get().serialize(null), is("null"));
                 }
             }
         }
@@ -132,10 +132,10 @@ public class SerializerRepositoryTest {
             final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
             when: {
-                final CheckableSerializer<Object> actual = finder.findFor(User.class);
+                final Optional<CheckableSerializer<Object>> actual = finder.findFor(User.class);
 
                 then: {
-                    assertThat(actual.serialize(User.class), containsString("class com.codereligion.diff.util.bean.User"));
+                    assertThat(actual.get().serialize(User.class), containsString("class com.codereligion.diff.util.bean.User"));
                 }
             }
         }
@@ -149,10 +149,10 @@ public class SerializerRepositoryTest {
             final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
             when: {
-                final CheckableSerializer<Object> actual = finder.findFor(new Credential());
+                final Optional<CheckableSerializer<Object>> actual = finder.findFor(new Credential());
 
                 then: {
-                    assertThat(actual, is(nullValue()));
+                    assertThat(actual.isPresent(), is(false));
                 }
             }
         }

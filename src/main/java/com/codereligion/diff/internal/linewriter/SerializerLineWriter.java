@@ -16,8 +16,8 @@
 package com.codereligion.diff.internal.linewriter;
 
 import com.codereligion.diff.internal.SerializerRepository;
-import com.codereligion.diff.serializer.Serializer;
-
+import com.codereligion.diff.serializer.CheckableSerializer;
+import com.google.common.base.Optional;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,13 +31,13 @@ class SerializerLineWriter implements CheckableLineWriter {
 
     @Override
     public boolean applies(Object value) {
-        return finder.findFor(value) != null;
+        return finder.findFor(value).isPresent();
     }
 
     @Override
     public List<String> write(final String path, final Object value) {
-        final Serializer<Object> serializer = finder.findFor(value);
-        final String serializedValue = PathBuilder.extendPathWithValue(path, serializer.serialize(value));
+        final Optional<CheckableSerializer<Object>> serializer = finder.findFor(value);
+        final String serializedValue = PathBuilder.extendPathWithValue(path, serializer.get().serialize(value));
         return Collections.singletonList(serializedValue);
     }
 }

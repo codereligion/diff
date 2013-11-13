@@ -76,23 +76,23 @@ class MapLineWriter extends TypeSafeCheckableLineWriter<Map<Object, Object>> {
             return value;
         }
 
-        final Comparator<Object> comparator = comparatorFinder.findFor(anyKey.get());
+        final Optional<Comparator<Object>> comparator = comparatorFinder.findFor(anyKey.get());
         
-        if (comparator == null) {
+        if (!comparator.isPresent()) {
             throw MissingComparatorException.missingMapKeyComparator(path, anyKey.get().getClass());
         }
         
-        final Map<Object, Object> sortedMap = new TreeMap<Object, Object>(comparator);
+        final Map<Object, Object> sortedMap = new TreeMap<Object, Object>(comparator.get());
         sortedMap.putAll(value);
         return sortedMap;
     }
 
     private CheckableSerializer<Object> findMapKeySerializerOrThrowException(final String path, final Object key) {
-        final CheckableSerializer<Object> serializer = serializerFinder.findFor(key);
-        if (serializer == null) {
+        final Optional<CheckableSerializer<Object>> serializer = serializerFinder.findFor(key);
+        if (!serializer.isPresent()) {
             throw MissingSerializerException.missingMapKeySerializer(path, key.getClass());
         }
         
-        return serializer;
+        return serializer.get();
     }
 }

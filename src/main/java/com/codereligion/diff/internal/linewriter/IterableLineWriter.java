@@ -93,13 +93,13 @@ class IterableLineWriter extends TypeSafeCheckableLineWriter<Iterable<Object>> {
             return list;
         }
 
-        final Comparator<Object> comparator = comparatorRepository.findFor(firstElement.get());
+        final Optional<Comparator<Object>> comparator = comparatorRepository.findFor(firstElement.get());
         
-        if (comparator == null) {
+        if (!comparator.isPresent()) {
             throw MissingComparatorException.missingIterableComparator(path);
         }
         
-        Collections.sort(list, comparator);
+        Collections.sort(list, comparator.get());
         return list;
     }
 }

@@ -16,7 +16,7 @@
 package com.codereligion.diff.internal;
 
 import com.codereligion.diff.comparator.CheckableComparator;
-
+import com.google.common.base.Optional;
 import java.util.Comparator;
 import java.util.Set;
 
@@ -57,36 +57,35 @@ public class ComparatorRepository {
      * Checks whether this object's class has been configured to be a comparable and if so
      * returns a comparator which applies the natural ordering according to the object {@link Comparable}
      * implementation. In case the no comparable has been registered for the given object's type the logic will
-     * try to find a configured comparator for the given object or return {@code null} in case no comparator could
-     * be found
+     * try to find a configured comparator for the given object.
      *
-     * @param object the objec to find a comparator for
-     * @return a matching {@link Comparator} or {@code null} if non was found
+     * @param object the object to find a comparator for
+     * @return an optional of a {@link Comparator}
      */
-    public Comparator<Object> findFor(final Object object) {
+    public Optional<Comparator<Object>> findFor(final Object object) {
         
         if (isComparable(object)) {
-            return ComparableComparator.INSTANCE;
+            return Optional.<Comparator<Object>>of(ComparableComparator.INSTANCE);
         }
         
         return findComparatorFor(object);
     }
 
     /**
-     * Finds a comparator suitable for the given {@code object}.
+     * Finds an optional comparator suitable for the given {@code object}.
      * 
      * @param object the {@link Object} to find a comparator for
-     * @return a {@link Comparator} or {@code null} if none was found
+     * @return an optional of a {@link Comparator}
      * @see Comparator
      */
     @SuppressWarnings("unchecked")
-    private Comparator<Object> findComparatorFor(final Object object) {
+    private Optional<Comparator<Object>> findComparatorFor(final Object object) {
         for (final CheckableComparator<?> comparator : checkableComparators) {
             if (comparator.applies(object)) {
-                return (Comparator<Object>) comparator;
+                return Optional.of((Comparator<Object>) comparator);
             }
         }
-        return null;
+        return Optional.absent();
     }
 
     /**

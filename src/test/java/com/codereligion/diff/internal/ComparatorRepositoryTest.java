@@ -20,13 +20,13 @@ import com.codereligion.diff.comparator.CheckableComparator;
 import com.codereligion.diff.util.StubComparator;
 import com.codereligion.diff.util.bean.Credential;
 import com.codereligion.diff.util.bean.User;
+import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
 import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -46,11 +46,11 @@ public class ComparatorRepositoryTest {
             final ComparatorRepository finder = new ComparatorRepository(checkableComparators, comparables);
 
             when: {
-                final Comparator<Object> comparator = finder.findFor(new Credential());
+                final Optional<Comparator<Object>> comparator = finder.findFor(new Credential());
                 final Comparator<Object> expected = ComparableComparator.INSTANCE;
 
                 then: {
-                    assertThat(comparator, is(expected));
+                    assertThat(comparator.get(), is(expected));
                 }
             }
         }
@@ -65,11 +65,11 @@ public class ComparatorRepositoryTest {
             final ComparatorRepository finder = new ComparatorRepository(checkableComparators, comparables);
 
             when: {
-                final Comparator<Object> comparator = finder.findFor(new Credential());
+                final Optional<Comparator<Object>> comparator = finder.findFor(new Credential());
                 final Comparator<Object> expected = ComparableComparator.INSTANCE;
 
                 then: {
-                    assertThat(comparator, is(expected));
+                    assertThat(comparator.get(), is(expected));
                 }
             }
         }
@@ -85,10 +85,10 @@ public class ComparatorRepositoryTest {
 
             when: {
                 final ComparatorRepository finder = new ComparatorRepository(checkableComparators, comparables);
-                final Comparator<Object> comparator = finder.findFor(new Credential());
+                final Optional<Comparator<Object>> comparator = finder.findFor(new Credential());
 
                 then: {
-                    assertThat(comparator, is(expected));
+                    assertThat(comparator.get(), is(expected));
                 }
             }
         }
@@ -103,10 +103,10 @@ public class ComparatorRepositoryTest {
 
             when: {
                 final ComparatorRepository finder = new ComparatorRepository(checkableComparators, comparables);
-                final Comparator<Object> comparator = finder.findFor(new User());
+                final Optional<Comparator<Object>> comparator = finder.findFor(new User());
 
                 then: {
-                    assertThat(comparator, is(nullValue()));
+                    assertThat(comparator.isPresent(), is(false));
                 }
             }
         }
