@@ -40,7 +40,7 @@ class MapLineWriter extends TypeSafeCheckableLineWriter<Map<Object, Object>> {
     }
 
     @Override
-    public List<String> typeSafeWrite(final String path, final Map<Object, Object> map) {
+    List<String> typeSafeWrite(final String path, final Map<Object, Object> map) {
         final Map<Object, Object> mapProperty = transformToSortedMap(path, map);
         final List<String> lines = Lists.newArrayList();
         

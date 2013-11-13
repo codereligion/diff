@@ -17,6 +17,7 @@ package com.codereligion.diff.differ;
 
 import com.codereligion.diff.exception.MissingComparatorException;
 import com.codereligion.diff.exception.MissingSerializerException;
+import com.codereligion.diff.exception.UnreadablePropertyException;
 import com.codereligion.diff.util.IncludeSerializer;
 import com.codereligion.diff.util.NaturalOrderComparator;
 import com.codereligion.diff.util.StubComparator;
@@ -33,11 +34,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import static com.codereligion.matcher.IterableOfStringsMatchers.hasItem;
+import static com.codereligion.matcher.PatternMatcher.pattern;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests {@link Differ} features.
@@ -87,7 +92,7 @@ public class DifferTest {
 	}
 	
 	@Test
-	public void throwsMissingObjectComparatorExceptionForUncomparableIterableType() throws Exception {
+	public void throwsMissingComparatorExceptionForUncomparableIterableType() throws Exception {
 		final Configuration configuration = new Configuration()
 			.excludeProperty("class")
 			.useSerializer(new IncludeSerializer(Credential.class, Address.class, String.class, Integer.class));
@@ -101,7 +106,7 @@ public class DifferTest {
 	}
 	
 	@Test
-	public void throwsMissingObjectComparatorExceptionForUncomparableMapKeyType() throws Exception {
+	public void throwsMissingComparatorExceptionForUncomparableMapKeyType() throws Exception {
 		final Configuration configuration = new Configuration();
 		final Map<Credential, String> working = Maps.newHashMap();
 		working.put(new Credential().withPassword("foo"), "bar");
@@ -111,7 +116,23 @@ public class DifferTest {
 		new Differ(configuration).diff(null, working);
 	}
 
-	@Test
+    @Test
+    public void throwsUnreadablePropertyExceptionForExceptionThrowingGetter() throws Exception {
+		final Configuration configuration = new Configuration();
+		final Credential working = spy(new Credential().withPassword("foo"));
+
+        final NullPointerException NPE = new NullPointerException();
+        when(working.getPassword()).thenThrow(NPE);
+
+		expectedException.expect(UnreadablePropertyException.class);
+		expectedException.expectMessage(pattern("^Could not read property at 'Credential(\\S+).password' due to an exception during invocation.$"));
+        expectedException.expectCause(is(NPE));
+
+		new Differ(configuration).diff(null, working);
+    }
+
+
+    @Test
 	public void throwsIllegalArgumentExceptionForNullWorkingObject() throws Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
