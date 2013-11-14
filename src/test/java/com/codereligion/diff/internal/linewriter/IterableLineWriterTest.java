@@ -18,6 +18,7 @@ package com.codereligion.diff.internal.linewriter;
 import org.junit.Test;
 
 /**
+ * TODO
  * Tests the {@link IterableLineWriter}.
  *
  * @author Sebastian Gröbler

@@ -39,7 +39,7 @@ class IterableLineWriter extends TypeSafeCheckableLineWriter<Iterable<Object>> {
     private final LineWriter lineWriter;
 
     /**
-     * Repository for comparators to use for sorting the given iterables.
+     * Repository to lookup comparators to use for sorting the given iterables.
      */
     private final ComparatorRepository comparatorRepository;
 
@@ -74,32 +74,45 @@ class IterableLineWriter extends TypeSafeCheckableLineWriter<Iterable<Object>> {
     }
 
     /**
-     * Transforms the given iterable value into a sorted list.
+     * Transforms the given iterable value into a sorted list or throws an {@link MissingComparatorException}
+     * if none was found.
      *
-     * @param path the path pointing to the property value which is about to get sorted into a list
+     * @param path the path which describes the position of the given item's iterable in the object graph
      * @param value the property value to sort into a list
-     * @return a sorted list of the given iterable
+     * @return a new sorted list of the given iterable
+     * @throws MissingComparatorException if no comparator could be found for the given iterable
      */
     private List<Object> transformToSortedList(final String path, final Iterable<Object> value) {
         final List<Object> list = Lists.newArrayList(value);
-
-        if (list.isEmpty()) {
-            return list;
-        }
-        
         final Optional<Object> firstElement = Iterables.tryFind(list, Predicates.notNull());
 
         if (!firstElement.isPresent()) {
             return list;
         }
 
-        final Optional<Comparator<Object>> comparator = comparatorRepository.findFor(firstElement.get());
-        
-        if (!comparator.isPresent()) {
+        final Comparator<Object> comparator = findComparatorOrThrowException(path, firstElement.get());
+        Collections.sort(list, comparator);
+
+        return list;
+    }
+
+    /**
+     * Tries to find a matching comparator for the given {@code item} or throws a
+     * {@link MissingComparatorException} if none was found.
+     *
+     * @param path the path which describes the position of the given item's iterable in the object graph
+     * @param item the item to find a matching comparator for
+     * @return a {@link Comparator} for the given {@code item}
+     * @throws MissingComparatorException if no comparator could be found for the given item
+     */
+    private Comparator<Object> findComparatorOrThrowException(final String path, final Object item) {
+
+        final Optional<Comparator<Object>> optional = comparatorRepository.findFor(item);
+
+        if (!optional.isPresent()) {
             throw MissingComparatorException.missingIterableComparator(path);
         }
-        
-        Collections.sort(list, comparator.get());
-        return list;
+
+        return optional.get();
     }
 }

@@ -16,27 +16,41 @@
 package com.codereligion.diff.internal.linewriter;
 
 import com.codereligion.diff.internal.SerializerRepository;
-import com.codereligion.diff.serializer.CheckableSerializer;
+import com.codereligion.diff.serializer.Serializer;
 import com.google.common.base.Optional;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Serializes objects to lines by using the {@link Serializer}s provided by the user.
+ *
+ * @author Sebastian Gröbler
+ * @since 14.11.2013
+ */
 class SerializerLineWriter implements CheckableLineWriter {
 
-    private final SerializerRepository finder;
+    /**
+     * Repository to look up serializers for the given objects.
+     */
+    private final SerializerRepository serializerRepository;
 
-    public SerializerLineWriter(final SerializerRepository customFinder) {
-        this.finder = customFinder;
+    /**
+     * Creates a new instance for the given {@code serializerRepository}.
+     *
+     * @param serializerRepository the repository to look up serializers for the given objects
+     */
+    public SerializerLineWriter(final SerializerRepository serializerRepository) {
+        this.serializerRepository = serializerRepository;
     }
 
     @Override
-    public boolean applies(Object value) {
-        return finder.findFor(value).isPresent();
+    public boolean applies(final Object value) {
+        return serializerRepository.findFor(value).isPresent();
     }
 
     @Override
     public List<String> write(final String path, final Object value) {
-        final Optional<CheckableSerializer<Object>> serializer = finder.findFor(value);
+        final Optional<Serializer<Object>> serializer = serializerRepository.findFor(value);
         final String serializedValue = PathBuilder.extendPathWithValue(path, serializer.get().serialize(value));
         return Collections.singletonList(serializedValue);
     }

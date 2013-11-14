@@ -18,6 +18,7 @@ package com.codereligion.diff.internal;
 import com.codereligion.diff.serializer.CheckableSerializer;
 import com.codereligion.diff.serializer.ClassSerializer;
 import com.codereligion.diff.serializer.NullSerializer;
+import com.codereligion.diff.serializer.Serializer;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import java.util.Set;
@@ -53,23 +54,23 @@ public final class SerializerRepository {
     }
 
     /**
-     * Tries to find a checkable serializer for the given {@code object} by first searching through
+     * Tries to find a serializer for the given {@code object} by first searching through
      * custom serializers and second through the default serializers.
      *
      * @param object the object to find the serializer for
-     * @return an optional of a {@link CheckableSerializer}
+     * @return an optional of a {@link Serializer}
      */
     @SuppressWarnings("unchecked")
-    public Optional<CheckableSerializer<Object>> findFor(final Object object) {
+    public Optional<Serializer<Object>> findFor(final Object object) {
         for (final CheckableSerializer<?> serializer : customSerializer) {
             if (serializer.applies(object)) {
-                return Optional.of((CheckableSerializer<Object>) serializer);
+                return Optional.of((Serializer<Object>) serializer);
             }
         }
 
         for (final CheckableSerializer<?> serializer : defaultSerializer) {
             if (serializer.applies(object)) {
-                return Optional.of((CheckableSerializer<Object>) serializer);
+                return Optional.of((Serializer<Object>) serializer);
             }
         }
 

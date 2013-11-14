@@ -29,19 +29,40 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * The root line writer which aggregates other line writers and provides recursive traversing of the object graph.
+ *
+ * @author Sebastian Gröbler
+ * @since 13.11.2013
+ */
 public class RootLineWriter implements LineWriter {
 
+    /**
+     * The line writers which are applied to the given object graph.
+     */
     private final List<CheckableLineWriter> lineWriters;
-    private PropertyInclusionChecker propertyInclusionChecker;
 
+    /**
+     * Checker which allows to look up if properties are supposed to be included in the serialization of the object graph.
+     */
+    private final PropertyInclusionChecker propertyInclusionChecker;
+
+    /**
+     * Creates a new instance for the given {@code propertyInclusionChecker}, {@code serializerRepository} and
+     * {@code comparatorRepository}.
+     *
+     * @param propertyInclusionChecker allows to look up which properties to included in the serialization
+     * @param serializerRepository repository to find serializers
+     * @param comparatorRepository repository to find comparators
+     */
     public RootLineWriter(final PropertyInclusionChecker propertyInclusionChecker,
-                          final SerializerRepository serializerFinder,
-                          final ComparatorRepository comparatorFinder) {
+                          final SerializerRepository serializerRepository,
+                          final ComparatorRepository comparatorRepository) {
 
         this.propertyInclusionChecker = propertyInclusionChecker;
-        this.lineWriters = Lists.newArrayList(new SerializerLineWriter(serializerFinder),
-                                              new IterableLineWriter(this, comparatorFinder),
-                                              new MapLineWriter(this, serializerFinder, comparatorFinder));
+        this.lineWriters = Lists.newArrayList(new SerializerLineWriter(serializerRepository),
+                                              new IterableLineWriter(this, comparatorRepository),
+                                              new MapLineWriter(this, serializerRepository, comparatorRepository));
     }
 
     @Override
@@ -54,6 +75,16 @@ public class RootLineWriter implements LineWriter {
         return traverseProperties(path, value);
     }
 
+    /**
+     * Builds a recursion to traverse the object graph together with the {@link RootLineWriter#write(String, Object)}
+     * method. It traverses all public readable properties of the given {@code value} and delegates line writing
+     * the write method.
+     *
+     * @param path the path representing the position of the given {@code value} in the object graph
+     * @param value the object to traverse the properties of
+     * @return a list of strings representing the serialized properties of the given {@code value}
+     * @throws MissingSerializerException when a branch of the graph could not be serialized
+     */
     private List<String> traverseProperties(final String path, final Object value) {
 
         final List<String> lines = Lists.newArrayList();
@@ -64,7 +95,7 @@ public class RootLineWriter implements LineWriter {
             final String propertyName = descriptor.getName();
             final Method readMethod = descriptor.getReadMethod();
             final String extendedPath = PathBuilder.extendPathWithProperty(path, propertyName);
-            final Object propertyValue = safeInvoke(extendedPath, readMethod, value);
+            final Object propertyValue = safeInvoke(extendedPath, value, readMethod);
             lines.addAll(write(extendedPath, propertyValue));
         }
 
@@ -76,11 +107,20 @@ public class RootLineWriter implements LineWriter {
         return lines;
     }
 
-    private Object safeInvoke(final String path, final Method readMethod, final Object value) {
+    /**
+     * Safely invokes the given {@code readMethod} on the given {@code object} and returns the result.
+     *
+     * @param path the path representing the position of the read methods property in the object graph
+     * @param object the object to call the method on
+     * @param readMethod the {@link Method} to call
+     * @return the return value of the given {@code readMethod}
+     * @throws UnreadablePropertyException in case the given {@code readMethod} threw an exception during invocation
+     */
+    private Object safeInvoke(final String path, final Object object, final Method readMethod) {
         try {
-            return readMethod.invoke(value);
+            return readMethod.invoke(object);
         } catch (final IllegalAccessException e) {
-            throw new IllegalStateException("Could not read property value at: '" + path + "' through it's getter", e);
+            throw new IllegalStateException("Could not read property value at: '" + path + "' through it's getter.", e);
         } catch (final InvocationTargetException e) {
             throw new UnreadablePropertyException(path, e);
         }
