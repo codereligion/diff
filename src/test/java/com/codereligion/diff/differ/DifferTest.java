@@ -300,7 +300,22 @@ public class DifferTest {
 		assertThat(result, hasItem("+HashMap['Credential [password=bbbb]'].street='someOtherStreet'"));
 		assertThat(result, hasItem("+HashMap['Credential [password=bbbb]'].zipCode='2'"));
 	}
-	
+
+    @Test
+    public void diffsMapsWithNullKeys() {
+        final Configuration configuration = new Configuration()
+                .useComparator(NaturalOrderComparator.newInstance(Integer.class))
+                .useSerializer(new IncludeSerializer(String.class, Integer.class));
+
+        final Map<Integer, String> working = Maps.newHashMap();
+        working.put(1, "bar");
+        working.put(null, "foo");
+
+        final List<String> result = new Differ(configuration).diff(null, working);
+        assertThat(result, hasItem("+HashMap[null]='foo'"));
+        assertThat(result, hasItem("+HashMap['1']='bar'"));
+    }
+
 	@Test
 	public void diffsFlatObjects() throws Exception {
 		final Configuration configuration = new Configuration()
@@ -349,6 +364,20 @@ public class DifferTest {
 		assertThat(result, hasItem("+HashSet[1]='3'"));
 		assertThat(result, hasItem("+HashSet[2]='4'"));
 	}
+
+    @Test
+    public void diffsIterablesWithNullValues() {
+        final Configuration configuration = new Configuration()
+                .useSerializer(new IncludeSerializer(Integer.class))
+                .useComparator(NaturalOrderComparator.newInstance(Integer.class));
+
+        final List<Integer> working = Lists.newArrayList(null, 2, null);
+
+        final List<String> result = new Differ(configuration).diff(null, working);
+        assertThat(result, hasItem("+ArrayList[0]=null"));
+        assertThat(result, hasItem("+ArrayList[1]=null"));
+        assertThat(result, hasItem("+ArrayList[2]='2'"));
+    }
 	
 	@Test
 	public void ordersIterablesWithSpecifiedComparator() throws Exception {

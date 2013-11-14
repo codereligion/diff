@@ -37,8 +37,17 @@ public class NaturalOrderComparator <T extends Comparable<T>> implements Checkab
 	}
 	
 	@Override
-	public int compare(T o1, T o2) {
-		return o1.compareTo(o2);
+	public int compare(T first, T second) {
+
+        if (first == null ^ second == null) {
+            return (first == null) ? -1 : 1;
+        }
+
+        if (first == null && second == null) {
+            return 0;
+        }
+
+		return first.compareTo(second);
 	}
 	
 	@Override
