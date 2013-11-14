@@ -13,9 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.codereligion.diff.serializer;
+
 /**
- * This package contains internal classes, which should not be used or overridden.
- * They are subject to change without any notice.
+ * Serializes objects which are null to the string "null".
+ *
+ * @author Sebastian Gröbler
+ * @since 12.11.2013
  */
-@javax.annotation.ParametersAreNonnullByDefault
-package com.codereligion.diff.internal;
+public enum NullSerializer implements CheckableSerializer<Object> {
+
+    /**
+     * Singleton instance of this class.
+     */
+    INSTANCE; 
+    
+    private static final String NULL_VALUE = "null";
+
+    @Override
+    public boolean applies(Object object) {
+        return object == null;
+    }
+
+    @Override
+    public String serialize(Object object) {
+        return NULL_VALUE;
+    }
+
+}

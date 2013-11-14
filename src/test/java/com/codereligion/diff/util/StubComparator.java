@@ -15,17 +15,19 @@
  */
 package com.codereligion.diff.util;
 
-import com.codereligion.diff.ObjectComparator;
+import com.codereligion.diff.comparator.CheckableComparator;
+
 import com.google.common.collect.Sets;
 import java.util.Set;
 
 /**
- * Compares every object, constantly returns 0 as difference.
+ * Compares those objects which are instances of the given {@code types} and
+ * constantly returns 0 as difference.
  * 
  * @author Sebastian Gröbler
  * @since 13.05.2013
  */
-public class StubComparator implements ObjectComparator<Object>{
+public class StubComparator implements CheckableComparator<Object>{
 	
 	private final Set<Class<?>> types;
 	
@@ -39,7 +41,7 @@ public class StubComparator implements ObjectComparator<Object>{
 	}
 
 	@Override
-	public boolean compares(Object object) {
+	public boolean applies(Object object) {
 		
 		for (final Class<?> type : types) {
 			if (type.isInstance(object)) {

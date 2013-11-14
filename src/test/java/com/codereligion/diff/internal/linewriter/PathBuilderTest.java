@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.internal;
+package com.codereligion.diff.internal.linewriter;
+
+import com.codereligion.diff.internal.linewriter.PathBuilder;
+import org.junit.Test;
 
 import static com.codereligion.matcher.IsNotInstantiatable.isNotInstantiatable;
 import static org.junit.Assert.assertThat;
-
-import org.junit.Test;
 
 /**
  * This is a kind of esoteric test to bring coverage into a utility class with a
@@ -30,7 +31,7 @@ import org.junit.Test;
 public class PathBuilderTest {
 	
 	@Test
-	public void mustNotBeInstantiatable() throws Exception {
+	public void isNotPublicInstantiatable() throws Exception {
 		assertThat(PathBuilder.class, isNotInstantiatable());
 	}
 }

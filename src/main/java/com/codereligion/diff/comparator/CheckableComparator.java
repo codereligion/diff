@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff;
+package com.codereligion.diff.comparator;
 
+import com.codereligion.diff.Checkable;
 import java.util.Comparator;
 
 /**
@@ -25,16 +26,6 @@ import java.util.Comparator;
  * @since 11.05.2013
  * @param <T> The type of the object which should be compared.
  */
-public interface ObjectComparator<T> extends Comparator<T> {
-	
-	/**
-	 * Determines whether this comparator compares the given {@link Object}.
-	 * 
-	 * <p>An {@code object} is considered comparable by this class,
-	 * when it is an "instance of" the {@code type}.
-	 * 
-	 * @param object the object to check
-	 * @return true if it does compare, false if not
-	 */
-	boolean compares(Object object);
+public interface CheckableComparator<T> extends Comparator<T>, Checkable {
+
 }

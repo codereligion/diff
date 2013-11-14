@@ -13,9 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.codereligion.diff;
+
 /**
- * This package contains internal classes, which should not be used or overridden.
- * They are subject to change without any notice.
+ * Defines whether an instance of an implementation of this interface can be applied to a given object.
  */
-@javax.annotation.ParametersAreNonnullByDefault
-package com.codereligion.diff.internal;
+public interface Checkable {
+
+    /**
+     * Defines whether this instance can be applied to the given {@code object}.
+     *
+     * @param object the object to check
+     * @return true if this object can be applied to the given one
+     */
+    boolean applies(Object object);
+}

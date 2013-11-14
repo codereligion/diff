@@ -13,9 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.codereligion.diff.internal.linewriter;
+
+import com.codereligion.diff.Checkable;
+
 /**
- * This package contains internal classes, which should not be used or overridden.
- * They are subject to change without any notice.
+ * Combines the {@link LineWriter} and {@link Checkable} to provide an interface
+ * for implementations which can write lines and determine if they can write specific objects
+ * to lines.
+ *
+ * @author Sebastian Gröbler
+ * @since 10.11.2013
  */
-@javax.annotation.ParametersAreNonnullByDefault
-package com.codereligion.diff.internal;
+interface CheckableLineWriter extends LineWriter, Checkable {
+    
+}

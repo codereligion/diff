@@ -15,7 +15,7 @@
  */
 package com.codereligion.diff.util;
 
-import com.codereligion.diff.ObjectComparator;
+import com.codereligion.diff.comparator.CheckableComparator;
 
 /**
  * Compares objects by their natural order.
@@ -24,11 +24,11 @@ import com.codereligion.diff.ObjectComparator;
  * @since 11.06.2013
  * @param <T> the type extending {@link Comparable} to which the natural ordering should be applied
  */
-public class NaturalOrderComparator <T extends Comparable<T>> implements ObjectComparator<T>{
+public class NaturalOrderComparator <T extends Comparable<T>> implements CheckableComparator<T>{
 	
 	private final Class<? extends Comparable<T>> type;
 
-	public static <T extends Comparable<T>> ObjectComparator<T> newInstance(final Class<? extends Comparable<T>> type) {
+	public static <T extends Comparable<T>> CheckableComparator<T> newInstance(final Class<? extends Comparable<T>> type) {
 		return new NaturalOrderComparator<T>(type);
 	}
 	
@@ -37,12 +37,21 @@ public class NaturalOrderComparator <T extends Comparable<T>> implements ObjectC
 	}
 	
 	@Override
-	public int compare(T o1, T o2) {
-		return o1.compareTo(o2);
+	public int compare(T first, T second) {
+
+        if (first == null ^ second == null) {
+            return (first == null) ? -1 : 1;
+        }
+
+        if (first == null && second == null) {
+            return 0;
+        }
+
+		return first.compareTo(second);
 	}
 	
 	@Override
-	public boolean compares(Object object) {
+	public boolean applies(Object object) {
 		
 		if (type.isInstance(object)) {
 			return true;

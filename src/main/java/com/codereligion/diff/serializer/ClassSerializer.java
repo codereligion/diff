@@ -13,9 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.codereligion.diff.serializer;
+
 /**
- * This package contains internal classes, which should not be used or overridden.
- * They are subject to change without any notice.
+ * Serializes classes into their canonical name.
+ *
+ * @author Sebastian Gröbler
+ * @since 12.11.2013
  */
-@javax.annotation.ParametersAreNonnullByDefault
-package com.codereligion.diff.internal;
+public enum ClassSerializer implements CheckableSerializer<Class<?>> {
+
+    /**
+     * Singleton instance of this class.
+     */
+    INSTANCE; 
+
+    @Override
+    public boolean applies(final Object object) {
+        return object instanceof Class;
+    }
+
+    @Override
+    public String serialize(Class<?> object) {
+        return object.getCanonicalName();
+    }
+
+}

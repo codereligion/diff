@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * This package contains classes to diff any two Java objects and produce a unified diff without any contextual lines.
+ * This package contains classes to implement custom serializers to allow flexible serialization strategies.
  */
 @javax.annotation.ParametersAreNonnullByDefault
-package com.codereligion.diff;
+package com.codereligion.diff.serializer;

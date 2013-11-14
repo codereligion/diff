@@ -13,9 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.codereligion.diff.serializer;
+
+import com.codereligion.diff.Checkable;
+
 /**
- * This package contains internal classes, which should not be used or overridden.
- * They are subject to change without any notice.
+ * Combines the {@link Serializer} and {@link Checkable} to provide an interface
+ * for implementations which can serialize objects and determine if they can serialize specific objects.
+ *
+ * @author Sebastian Gröbler
+ * @since 11.05.2013
+ * @param <T> The type of the object which should be serialized.
  */
-@javax.annotation.ParametersAreNonnullByDefault
-package com.codereligion.diff.internal;
+public interface CheckableSerializer<T> extends Serializer<T>, Checkable {
+
+}

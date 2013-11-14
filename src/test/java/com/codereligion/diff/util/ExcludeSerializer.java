@@ -15,7 +15,8 @@
  */
 package com.codereligion.diff.util;
 
-import com.codereligion.diff.Serializer;
+import com.codereligion.diff.serializer.CheckableSerializer;
+
 import com.google.common.collect.Sets;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ import java.util.Set;
  * @author Sebastian Gröbler
  * @since 13.05.2013
  */
-public class ExcludeSerializer implements Serializer<Object> {
+public class ExcludeSerializer implements CheckableSerializer<Object> {
 	
 	private Set<Class<?>> excludedTypes = Sets.newHashSet();
 
@@ -34,7 +35,7 @@ public class ExcludeSerializer implements Serializer<Object> {
 	}
 	
 	@Override
-	public boolean serializes(Object object) {
+	public boolean applies(Object object) {
 		for (final Class<?> excludedType : excludedTypes) {
 			if (excludedType.isInstance(object)) {
 				return false;
