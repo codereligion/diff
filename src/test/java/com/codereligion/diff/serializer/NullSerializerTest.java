@@ -15,12 +15,13 @@
  */
 package com.codereligion.diff.serializer;
 
+import com.codereligion.diff.internal.serializer.NullSerializer;
 import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 /**
- * Tests the {@link NullSerializer}.
+ * Tests the {@link com.codereligion.diff.internal.serializer.NullSerializer}.
  *
  * @author Sebastian Gröbler
  * @since 12.11.2013

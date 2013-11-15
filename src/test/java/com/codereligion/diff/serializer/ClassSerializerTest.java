@@ -15,13 +15,14 @@
  */
 package com.codereligion.diff.serializer;
 
+import com.codereligion.diff.internal.serializer.ClassSerializer;
 import com.codereligion.diff.util.bean.User;
 import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 /**
- * Tests the {@link ClassSerializer}.
+ * Tests the {@link com.codereligion.diff.internal.serializer.ClassSerializer}.
  *
  * @author Sebastian Gröbler
  * @since 12.11.2013

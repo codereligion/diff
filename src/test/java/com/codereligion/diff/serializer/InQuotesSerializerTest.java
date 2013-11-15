@@ -15,6 +15,7 @@
  */
 package com.codereligion.diff.serializer;
 
+import com.codereligion.diff.internal.serializer.InQuotesSerializer;
 import com.codereligion.diff.util.bean.User;
 import com.google.common.collect.Sets;
 import java.util.Set;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests the {@link InQuotesSerializer}.
+ * Tests the {@link com.codereligion.diff.internal.serializer.InQuotesSerializer}.
  *
  * @author Sebastian Gröbler
  * @since 12.11.2013

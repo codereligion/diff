@@ -16,13 +16,13 @@
 package com.codereligion.diff.internal;
 
 import com.codereligion.diff.serializer.CheckableSerializer;
-import com.codereligion.diff.serializer.ClassSerializer;
-import com.codereligion.diff.serializer.NullSerializer;
+import com.codereligion.diff.internal.serializer.ClassSerializer;
+import com.codereligion.diff.internal.serializer.NullSerializer;
 import com.codereligion.diff.serializer.Serializer;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import java.util.Set;
-import static com.codereligion.diff.serializer.InQuotesSerializer.wrapInQuotes;
+import static com.codereligion.diff.internal.serializer.InQuotesSerializer.wrapInQuotes;
 
 /**
  * Allows the internals to easily lookup a matching serializer for a given object.

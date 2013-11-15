@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.serializer;
+package com.codereligion.diff.internal.serializer;
 
+import com.codereligion.diff.serializer.CheckableSerializer;
 import com.google.common.collect.Sets;
 import java.util.Set;
 
 /**
- * Decorates a given {@link CheckableSerializer} so that each serialized value is enclosed by single quotes.
+ * Decorates a given {@link com.codereligion.diff.serializer.CheckableSerializer} so that each serialized value is enclosed by single quotes.
  *
  * @author Sebastian Gröbler
  * @since 12.11.2013
