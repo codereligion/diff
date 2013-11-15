@@ -39,123 +39,102 @@ public class SerializerRepositoryTest {
 
     @Test
     public void findsExistingSerializer() {
-        given: {
-            final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
-            final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
-            final SerializerRepository finder = new SerializerRepository(checkableSerializers);
-            final User user = new User();
+        // given
+        final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
+        final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
+        final SerializerRepository finder = new SerializerRepository(checkableSerializers);
+        final User user = new User();
 
-            when: {
-                final Optional<Serializer<Object>> actual = finder.findFor(user);
-                final String expectedSerializedValue = serializer.serialize(user);
-                final String actualSerializedValue = actual.get().serialize(user);
+        // when
+        final Optional<Serializer<Object>> actual = finder.findFor(user);
+        final String expectedSerializedValue = serializer.serialize(user);
+        final String actualSerializedValue = actual.get().serialize(user);
 
-                then: {
-                    assertThat(actualSerializedValue, containsString(expectedSerializedValue));
-                }
-            }
-        }
+        // then
+        assertThat(actualSerializedValue, containsString(expectedSerializedValue));
     }
 
     @Test
     public void doesNotFindNonExistingSerializer() {
-        given: {
-            final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
-            final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
-            final SerializerRepository finder = new SerializerRepository(checkableSerializers);
+        // given
+        final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
+        final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
+        final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
-            when: {
-                final Optional<Serializer<Object>> actual = finder.findFor(new Credential());
+        // when
+        final Optional<Serializer<Object>> actual = finder.findFor(new Credential());
 
-                then: {
-                    assertThat(actual.isPresent(), is(false));
-                }
-            }
-        }
+        // then
+        assertThat(actual.isPresent(), is(false));
     }
 
     @Test
     public void wrapsGivenSerializerResultsInQuotes() {
-        given: {
-            final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
-            final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
-            final SerializerRepository finder = new SerializerRepository(checkableSerializers);
+        // given
+        final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
+        final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
+        final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
-            when: {
-                final Optional<Serializer<Object>> actual = finder.findFor(new Credential());
+        // when
+        final Optional<Serializer<Object>> actual = finder.findFor(new Credential());
 
-                then: {
-                    assertThat(actual.isPresent(), is(false));
-                }
-            }
-        }
+        // then
+        assertThat(actual.isPresent(), is(false));
     }
 
     @Test
     public void providesDefaultSerializerForClass() {
-        given: {
-            final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
-            final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
-            final SerializerRepository finder = new SerializerRepository(checkableSerializers);
+        // given
+        final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
+        final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
+        final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
-            when: {
-                final Optional<Serializer<Object>> actual = finder.findFor(Credential.class);
+        // when
+        final Optional<Serializer<Object>> actual = finder.findFor(Credential.class);
 
-                then: {
-                    assertThat(actual.get().serialize(Credential.class), containsString("com.codereligion.diff.util.bean.Credential"));
-                }
-            }
-        }
+        // then
+        assertThat(actual.get().serialize(Credential.class), containsString("com.codereligion.diff.util.bean.Credential"));
     }
 
     @Test
     public void providesDefaultSerializerForNullValue() {
-        given: {
-            final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
-            final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
-            final SerializerRepository finder = new SerializerRepository(checkableSerializers);
+        // given
+        final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
+        final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
+        final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
-            when: {
-                final Optional<Serializer<Object>> actual = finder.findFor(null);
+        // when
+        final Optional<Serializer<Object>> actual = finder.findFor(null);
 
-                then: {
-                    assertThat(actual.get().serialize(null), is("null"));
-                }
-            }
-        }
+        // then
+        assertThat(actual.get().serialize(null), is("null"));
     }
 
     @Test
     public void prioritizesCustomSerializersOverDefaultSerializers() {
-        given: {
-            final CheckableSerializer<Object> serializer = new ToStringSerializer(Class.class);
-            final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
-            final SerializerRepository finder = new SerializerRepository(checkableSerializers);
+        // given
+        final CheckableSerializer<Object> serializer = new ToStringSerializer(Class.class);
+        final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
+        final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
-            when: {
-                final Optional<Serializer<Object>> actual = finder.findFor(User.class);
+        // when
+        final Optional<Serializer<Object>> actual = finder.findFor(User.class);
 
-                then: {
-                    assertThat(actual.get().serialize(User.class), containsString("class com.codereligion.diff.util.bean.User"));
-                }
-            }
-        }
+        // then
+        assertThat(actual.get().serialize(User.class), containsString("class com.codereligion.diff.util.bean.User"));
     }
 
     @Test
     public void returnNullInCaseNoMatchWasFound() {
-        given: {
-            final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
-            final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
-            final SerializerRepository finder = new SerializerRepository(checkableSerializers);
+        // given
+        final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
+        final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
+        final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
-            when: {
-                final Optional<Serializer<Object>> actual = finder.findFor(new Credential());
+        // when
+        final Optional<Serializer<Object>> actual = finder.findFor(new Credential());
 
-                then: {
-                    assertThat(actual.isPresent(), is(false));
-                }
-            }
-        }
+        // then
+        assertThat(actual.isPresent(), is(false));
     }
 }

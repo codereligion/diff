@@ -71,22 +71,19 @@ public class InQuotesSerializerTest {
     @SuppressWarnings("unchecked")
     public void serializeEnclosesWithSingleQuotesAndDelegateActualSerializationToDecoratedObject() throws Exception {
 
-        given: {
-            final User user = new User();
-            final CheckableSerializer<Object> mock = mock(CheckableSerializer.class);
-            final CheckableSerializer<Object> checkableSerializer = (CheckableSerializer<Object>) InQuotesSerializer.wrapInQuotes(mock);
+        // given
+        final User user = new User();
+        final CheckableSerializer<Object> mock = mock(CheckableSerializer.class);
+        final CheckableSerializer<Object> checkableSerializer = (CheckableSerializer<Object>) InQuotesSerializer.wrapInQuotes(mock);
 
-            when(mock.serialize(user)).thenReturn("Foo");
+        when(mock.serialize(user)).thenReturn("Foo");
 
-            when: {
-                final String result = checkableSerializer.serialize(user);
+        // when
+        final String result = checkableSerializer.serialize(user);
 
-                then: {
-                    assertThat(result, is("'Foo'"));
-                    verify(mock).serialize(user);
-                }
-            }
-        }
+        // then
+        assertThat(result, is("'Foo'"));
+        verify(mock).serialize(user);
     }
 
     private Matcher<Iterable<? super CheckableSerializer<?>>> hasItem(final Matcher<? super CheckableSerializer<?>> matcher) {
