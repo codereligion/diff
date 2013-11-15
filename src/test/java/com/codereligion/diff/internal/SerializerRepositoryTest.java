@@ -18,7 +18,7 @@ package com.codereligion.diff.internal;
 
 import com.codereligion.diff.serializer.CheckableSerializer;
 import com.codereligion.diff.serializer.Serializer;
-import com.codereligion.diff.util.IncludeSerializer;
+import com.codereligion.diff.util.ToStringSerializer;
 import com.codereligion.diff.util.bean.Credential;
 import com.codereligion.diff.util.bean.User;
 import com.google.common.base.Optional;
@@ -40,7 +40,7 @@ public class SerializerRepositoryTest {
     @Test
     public void findsExistingSerializer() {
         given: {
-            final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
+            final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
             final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
             final SerializerRepository finder = new SerializerRepository(checkableSerializers);
             final User user = new User();
@@ -60,7 +60,7 @@ public class SerializerRepositoryTest {
     @Test
     public void doesNotFindNonExistingSerializer() {
         given: {
-            final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
+            final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
             final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
             final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
@@ -77,7 +77,7 @@ public class SerializerRepositoryTest {
     @Test
     public void wrapsGivenSerializerResultsInQuotes() {
         given: {
-            final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
+            final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
             final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
             final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
@@ -94,7 +94,7 @@ public class SerializerRepositoryTest {
     @Test
     public void providesDefaultSerializerForClass() {
         given: {
-            final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
+            final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
             final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
             final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
@@ -111,7 +111,7 @@ public class SerializerRepositoryTest {
     @Test
     public void providesDefaultSerializerForNullValue() {
         given: {
-            final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
+            final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
             final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
             final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
@@ -128,7 +128,7 @@ public class SerializerRepositoryTest {
     @Test
     public void prioritizesCustomSerializersOverDefaultSerializers() {
         given: {
-            final CheckableSerializer<Object> serializer = new IncludeSerializer(Class.class);
+            final CheckableSerializer<Object> serializer = new ToStringSerializer(Class.class);
             final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
             final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 
@@ -145,7 +145,7 @@ public class SerializerRepositoryTest {
     @Test
     public void returnNullInCaseNoMatchWasFound() {
         given: {
-            final CheckableSerializer<Object> serializer = new IncludeSerializer(User.class);
+            final CheckableSerializer<Object> serializer = new ToStringSerializer(User.class);
             final Set<CheckableSerializer<?>> checkableSerializers = Sets.<CheckableSerializer<?>>newHashSet(serializer);
             final SerializerRepository finder = new SerializerRepository(checkableSerializers);
 

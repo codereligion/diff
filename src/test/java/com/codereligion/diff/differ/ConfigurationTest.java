@@ -18,7 +18,7 @@ package com.codereligion.diff.differ;
 
 import com.codereligion.diff.comparator.CheckableComparator;
 import com.codereligion.diff.serializer.CheckableSerializer;
-import com.codereligion.diff.util.IncludeSerializer;
+import com.codereligion.diff.util.ToStringSerializer;
 import com.codereligion.diff.util.StubComparator;
 import com.codereligion.diff.util.bean.Credential;
 import org.junit.Rule;
@@ -100,7 +100,7 @@ public class ConfigurationTest {
 	@Test
 	public void useSerializerReturnsNewInstance() {
 		final Configuration original = new Configuration();
-		final Configuration copy = original.useSerializer(new IncludeSerializer());
+		final Configuration copy = original.useSerializer(new ToStringSerializer());
 
 		assertThat(original, is(not(sameInstance(copy))));
 	}
@@ -108,7 +108,7 @@ public class ConfigurationTest {
 	@Test
 	public void useSerializerLeavesOriginalUntouched() {
 		final Configuration original = new Configuration();
-        final IncludeSerializer serializer = new IncludeSerializer(String.class);
+        final ToStringSerializer serializer = new ToStringSerializer(String.class);
         original.useSerializer(serializer);
 
         assertThat(original.getCheckableSerializer(), is(empty()));
@@ -117,7 +117,7 @@ public class ConfigurationTest {
 	@Test
 	public void useSerializerAddsGivenSerialized() {
 		final Configuration original = new Configuration();
-        final CheckableSerializer<?> serializer = new IncludeSerializer(String.class);
+        final CheckableSerializer<?> serializer = new ToStringSerializer(String.class);
         final Configuration copy = original.useSerializer(serializer);
 
         assertThat(copy.getCheckableSerializer(), hasSize(1));

@@ -21,28 +21,28 @@ import com.google.common.collect.Sets;
 import java.util.Set;
 
 /**
- * Serializes every object to string by just calling its toString method.
+ * Serializes every object to string by just calling its {@link Object#toString()} method.
  * 
  * @author Sebastian Gröbler
  * @since 13.05.2013
  */
-public class ExcludeSerializer implements CheckableSerializer<Object> {
+public class ToStringSerializer implements CheckableSerializer<Object> {
 	
-	private Set<Class<?>> excludedTypes = Sets.newHashSet();
+	private Set<Class<?>> includedTypes = Sets.newHashSet();
 
-	public ExcludeSerializer(final Class<?>... excludedTypes) {
-		this.excludedTypes = Sets.newHashSet(excludedTypes);
+	public ToStringSerializer(final Class<?>... includedTypes) {
+		this.includedTypes = Sets.newHashSet(includedTypes);
 	}
 	
 	@Override
 	public boolean applies(Object object) {
-		for (final Class<?> excludedType : excludedTypes) {
-			if (excludedType.isInstance(object)) {
-				return false;
+		for (final Class<?> includedType : includedTypes) {
+			if (includedType.isInstance(object)) {
+				return true;
 			}
 		}
 		
-		return true;
+		return false;
 	}
 
 	@Override
