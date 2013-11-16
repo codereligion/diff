@@ -15,7 +15,7 @@
  */
 package com.codereligion.diff.util;
 
-import com.codereligion.diff.serializer.CheckableSerializer;
+import com.codereligion.diff.CheckableSerializer;
 
 import com.google.common.collect.Sets;
 import java.util.Set;

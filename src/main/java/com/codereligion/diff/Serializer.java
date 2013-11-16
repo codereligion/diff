@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.serializer;
+package com.codereligion.diff;
 
 /**
  * Serializes a given object to a string, if supported.
@@ -28,7 +28,7 @@ public interface Serializer<T> {
      * Serializes a given {@code object} to a string.
      * 
      * @param object the {@link Object} to serialize
-     * @return the serialized for of the given object as a string
+     * @return the serialized representation of the given object as a string
      */
     String serialize(T object);
 }

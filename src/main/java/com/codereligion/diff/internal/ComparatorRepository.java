@@ -15,7 +15,7 @@
  */
 package com.codereligion.diff.internal;
 
-import com.codereligion.diff.comparator.CheckableComparator;
+import com.codereligion.diff.CheckableComparator;
 import com.google.common.base.Optional;
 import java.util.Comparator;
 import java.util.Set;

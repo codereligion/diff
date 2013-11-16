@@ -16,7 +16,7 @@
 package com.codereligion.diff.internal;
 
 
-import com.codereligion.diff.comparator.CheckableComparator;
+import com.codereligion.diff.CheckableComparator;
 import com.codereligion.diff.util.StubComparator;
 import com.codereligion.diff.util.bean.Credential;
 import com.codereligion.diff.util.bean.User;

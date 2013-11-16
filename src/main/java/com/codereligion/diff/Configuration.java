@@ -15,8 +15,6 @@
  */
 package com.codereligion.diff;
 
-import com.codereligion.diff.comparator.CheckableComparator;
-import com.codereligion.diff.serializer.CheckableSerializer;
 import com.google.common.collect.Sets;
 
 import javax.annotation.Nullable;
@@ -159,7 +157,7 @@ public final class Configuration {
     }
 
     /**
-     * Returns a copy of this config with the given {@code objectName} added to
+     * Returns a copy of this configuration with the given {@code objectName} added to
      * be used for the base object. This property is optional.
      * 
      * @param objectName the name of the base object, may be null

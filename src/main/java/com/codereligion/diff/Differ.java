@@ -99,9 +99,9 @@ public final class Differ {
      * @throws IllegalArgumentException when the given {@code working} object is
      *             {@code null}
      * @throws com.codereligion.diff.exception.MissingSerializerException when the {@link Configuration} is missing
-     *             a {@link com.codereligion.diff.serializer.CheckableSerializer} to perform the diff
+     *             a {@link CheckableSerializer} to perform the diff
      * @throws com.codereligion.diff.exception.MissingComparatorException when the {@link Configuration} is
-     *             missing an {@link com.codereligion.diff.comparator.CheckableComparator} to perform the diff
+     *             missing an {@link CheckableComparator} to perform the diff
      * @throws com.codereligion.diff.exception.UnreadablePropertyException when a getter of a property of the given
      *             object threw an exception during invocation
      */

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.serializer;
+package com.codereligion.diff.internal.serializer;
 
-import com.codereligion.diff.internal.serializer.InQuotesSerializer;
+import com.codereligion.diff.CheckableSerializer;
 import com.codereligion.diff.util.bean.User;
 import com.google.common.collect.Sets;
 import java.util.Set;

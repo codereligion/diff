@@ -19,7 +19,7 @@ import com.codereligion.diff.exception.MissingComparatorException;
 import com.codereligion.diff.exception.MissingSerializerException;
 import com.codereligion.diff.internal.ComparatorRepository;
 import com.codereligion.diff.internal.SerializerRepository;
-import com.codereligion.diff.serializer.Serializer;
+import com.codereligion.diff.Serializer;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;

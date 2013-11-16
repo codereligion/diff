@@ -17,21 +17,21 @@ package com.codereligion.diff.exception;
 
 /**
  * Indicates that the {@link com.codereligion.diff.Differ} could not create the diff, because of a
- * missing {@link com.codereligion.diff.comparator.CheckableComparator}.
+ * missing {@link com.codereligion.diff.CheckableComparator}.
  * 
  * @author Sebastian Gröbler
  * @since 12.05.2013
  * @see com.codereligion.diff.Differ
  * @see com.codereligion.diff.Configuration
- * @see com.codereligion.diff.comparator.CheckableComparator
+ * @see com.codereligion.diff.CheckableComparator
  */
 public final class MissingComparatorException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Creates a new {@link MissingComparatorException} in case that an
-     * iterable could not be ordered, due to a missing {@link com.codereligion.diff.comparator.CheckableComparator}.
+     * Creates a new {@link MissingComparatorException} to indicate that an
+     * iterable could not be ordered, due to a missing {@link com.codereligion.diff.CheckableComparator}.
      * 
      * @param path the path of the property which identifies the iterable
      * @return a new instance of {@link MissingComparatorException}
@@ -41,9 +41,9 @@ public final class MissingComparatorException extends RuntimeException {
     }
 
     /**
-     * Creates a new {@link MissingComparatorException} in case that map
+     * Creates a new {@link MissingComparatorException} to indicate that map
      * keys of a specific {@code type} could not be ordered, due to a missing
-     * {@link com.codereligion.diff.comparator.CheckableComparator}.
+     * {@link com.codereligion.diff.CheckableComparator}.
      * 
      * @param path the path of the property which identifies the map
      * @param type the type of the map key

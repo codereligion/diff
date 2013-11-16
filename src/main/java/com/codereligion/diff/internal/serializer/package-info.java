@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * This package contains {@link com.codereligion.diff.serializer.Serializer} implementations used internally.
+ * This package contains {@link com.codereligion.diff.Serializer} implementations used internally.
  */
 @javax.annotation.ParametersAreNonnullByDefault
 package com.codereligion.diff.internal.serializer;

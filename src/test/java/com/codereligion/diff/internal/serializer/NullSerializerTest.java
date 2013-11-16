@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.serializer;
+package com.codereligion.diff.internal.serializer;
 
-import com.codereligion.diff.internal.serializer.NullSerializer;
 import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;

@@ -18,24 +18,24 @@ package com.codereligion.diff.exception;
 
 /**
  * Indicates that the {@link com.codereligion.diff.Differ} could not create the diff, because of a
- * missing {@link com.codereligion.diff.serializer.CheckableSerializer}.
+ * missing {@link com.codereligion.diff.CheckableSerializer}.
  * 
  * @author Sebastian Gröbler
  * @since 12.05.2013
  * @see com.codereligion.diff.Differ
  * @see com.codereligion.diff.Configuration
- * @see com.codereligion.diff.serializer.CheckableSerializer
+ * @see com.codereligion.diff.CheckableSerializer
  */
 public final class MissingSerializerException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Creates a new instance of {@link MissingSerializerException} in case no
-     * {@link com.codereligion.diff.serializer.CheckableSerializer} could be found to serialize an object.
+     * Creates a new instance of {@link MissingSerializerException} to indicate no
+     * {@link com.codereligion.diff.CheckableSerializer} could be found to serialize an object.
      * 
      * @param path the path of the property which identifies the object
-     * @param type of the object for which no {@link com.codereligion.diff.serializer.CheckableSerializer} could be found
+     * @param type the type of the object for which no {@link com.codereligion.diff.CheckableSerializer} could be found
      * @return a new instance of {@link MissingSerializerException}
      */
     public static MissingSerializerException missingPropertySerializer(final String path, final Class<?> type) {
@@ -43,8 +43,8 @@ public final class MissingSerializerException extends RuntimeException {
     }
 
     /**
-     * Creates a new instance of {@link MissingSerializerException} in case no
-     * {@link com.codereligion.diff.serializer.CheckableSerializer} could be found to serialize keys of a map.
+     * Creates a new instance of {@link MissingSerializerException} to indicate no
+     * {@link com.codereligion.diff.CheckableSerializer} could be found to serialize keys of a map.
      * 
      * @param path the path of the property which identifies the map
      * @param type the type of the keys of the map

@@ -15,7 +15,7 @@
  */
 package com.codereligion.diff.internal.serializer;
 
-import com.codereligion.diff.serializer.CheckableSerializer;
+import com.codereligion.diff.CheckableSerializer;
 
 /**
  * Serializes classes into their canonical name.

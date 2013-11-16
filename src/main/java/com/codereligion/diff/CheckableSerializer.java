@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.serializer;
-
-import com.codereligion.diff.Checkable;
+package com.codereligion.diff;
 
 /**
- * Combines the {@link Serializer} and {@link Checkable} to provide an interface
- * for implementations which can serialize objects and determine if they can serialize specific objects.
+ * Combines the {@link Serializer} and {@link Checkable} interface to allow implementations of this interface
+ * to define if they can serialize a specific object.
  *
  * @author Sebastian Gröbler
  * @since 11.05.2013

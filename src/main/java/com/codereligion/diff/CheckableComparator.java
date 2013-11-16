@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.comparator;
+package com.codereligion.diff;
 
 import com.codereligion.diff.Checkable;
 import java.util.Comparator;
 
 /**
- * Extends the {@link Comparator} by moving the responsibility to decide whether
- * this comparator can compare certain objects into the comparator.
+ * Combines the {@link Comparator} and {@link Checkable} interface to allow implementations of this interface
+ * to define if they can compare a specific object.
  * 
  * @author Sebastian Gröbler
  * @since 11.05.2013
