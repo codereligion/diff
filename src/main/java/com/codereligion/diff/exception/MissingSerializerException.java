@@ -17,13 +17,13 @@ package com.codereligion.diff.exception;
 
 
 /**
- * Indicates that the {@link com.codereligion.diff.Differ} could not create the diff, because of a
+ * Indicates that the {@link com.codereligion.diff.differ.Differ} could not create the diff, because of a
  * missing {@link com.codereligion.diff.serializer.CheckableSerializer}.
  * 
  * @author Sebastian Gröbler
  * @since 12.05.2013
- * @see com.codereligion.diff.Differ
- * @see com.codereligion.diff.Configuration
+ * @see com.codereligion.diff.differ.Differ
+ * @see com.codereligion.diff.differ.Configuration
  * @see com.codereligion.diff.serializer.CheckableSerializer
  */
 public final class MissingSerializerException extends RuntimeException {

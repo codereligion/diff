@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff;
+package com.codereligion.diff.differ;
 
 import com.codereligion.diff.comparator.CheckableComparator;
 import com.codereligion.diff.serializer.CheckableSerializer;

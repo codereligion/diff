@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff;
+package com.codereligion.diff.differ;
 
 
 import com.codereligion.diff.comparator.CheckableComparator;
@@ -33,7 +33,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 
 /**
- * Tests {@link com.codereligion.diff.Configuration} features.
+ * Tests {@link Configuration} features.
  * 
  * @author Sebastian Gröbler
  * @since 12.05.2013

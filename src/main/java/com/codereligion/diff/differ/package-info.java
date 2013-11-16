@@ -17,4 +17,4 @@
  * This package contains classes to diff any two Java objects and produce a unified diff without any contextual lines.
  */
 @javax.annotation.ParametersAreNonnullByDefault
-package com.codereligion.diff;
+package com.codereligion.diff.differ;
