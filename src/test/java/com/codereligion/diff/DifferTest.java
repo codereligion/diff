@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codereligion.diff.differ;
+package com.codereligion.diff;
 
+import com.codereligion.diff.Configuration;
+import com.codereligion.diff.Differ;
 import com.codereligion.diff.exception.MissingComparatorException;
 import com.codereligion.diff.exception.MissingSerializerException;
 import com.codereligion.diff.exception.UnreadablePropertyException;
@@ -45,7 +47,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests {@link Differ} features.
+ * Tests {@link com.codereligion.diff.Differ} features.
  * 
  * @author Sebastian Gröbler
  * @since 12.05.2013
