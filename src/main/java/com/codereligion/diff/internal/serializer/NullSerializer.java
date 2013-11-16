@@ -15,7 +15,7 @@
  */
 package com.codereligion.diff.internal.serializer;
 
-import com.codereligion.diff.CheckableSerializer;
+import com.codereligion.diff.serializer.CheckableSerializer;
 
 /**
  * Serializes objects which are null to the string "null".

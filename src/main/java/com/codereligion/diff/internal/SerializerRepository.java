@@ -15,10 +15,10 @@
  */
 package com.codereligion.diff.internal;
 
-import com.codereligion.diff.CheckableSerializer;
+import com.codereligion.diff.serializer.CheckableSerializer;
 import com.codereligion.diff.internal.serializer.ClassSerializer;
 import com.codereligion.diff.internal.serializer.NullSerializer;
-import com.codereligion.diff.Serializer;
+import com.codereligion.diff.serializer.Serializer;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import java.util.Set;

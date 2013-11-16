@@ -15,6 +15,8 @@
  */
 package com.codereligion.diff;
 
+import com.codereligion.diff.comparator.CheckableComparator;
+import com.codereligion.diff.serializer.CheckableSerializer;
 import com.google.common.collect.Sets;
 
 import javax.annotation.Nullable;

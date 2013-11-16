@@ -16,7 +16,7 @@
 package com.codereligion.diff.internal.linewriter;
 
 import com.codereligion.diff.internal.SerializerRepository;
-import com.codereligion.diff.Serializer;
+import com.codereligion.diff.serializer.Serializer;
 import com.google.common.base.Optional;
 import java.util.Collections;
 import java.util.List;

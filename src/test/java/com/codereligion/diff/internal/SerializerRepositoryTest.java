@@ -16,8 +16,8 @@
 package com.codereligion.diff.internal;
 
 
-import com.codereligion.diff.CheckableSerializer;
-import com.codereligion.diff.Serializer;
+import com.codereligion.diff.serializer.CheckableSerializer;
+import com.codereligion.diff.serializer.Serializer;
 import com.codereligion.diff.util.ToStringSerializer;
 import com.codereligion.diff.util.bean.Credential;
 import com.codereligion.diff.util.bean.User;

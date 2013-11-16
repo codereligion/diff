@@ -15,7 +15,7 @@
  */
 package com.codereligion.diff.util;
 
-import com.codereligion.diff.CheckableComparator;
+import com.codereligion.diff.comparator.CheckableComparator;
 
 /**
  * Compares objects by their natural order.
