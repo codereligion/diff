@@ -1,4 +1,4 @@
-# Contribution
+# Contributing
 
 ## Issues
 We welcome any feature requests or bug reports. Keep in mind to be as detailed as you can in the description, or even better if you can provide a failing unit test.
