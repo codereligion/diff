@@ -12,7 +12,7 @@ The result is a [unified diff](http://en.wikipedia.org/wiki/Diff#Unified_format)
 <dependency>
 	<groupId>com.codereligion</groupId>
 	<artifactId>codereligion-diff</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.0</version>
 </dependency>
 ```
 
