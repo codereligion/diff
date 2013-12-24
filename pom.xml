@@ -46,7 +46,6 @@
 		<!-- basic maven properties -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<resources.plugin.version>2.6</resources.plugin.version>
-		<gmaven.plugin.version>1.4</gmaven.plugin.version>
 		<compiler.plugin.version>3.1</compiler.plugin.version>
 		<surefire.plugin.version>2.15</surefire.plugin.version>
 		<license.plugin.version>1.9.0</license.plugin.version>
@@ -72,51 +71,6 @@
 
 	<build>
 		<plugins>
-
-			<!-- add example folder to test-sources -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>${build.helper.plugin.version}</version>
-				<executions>
-					<execution>
-						<id>add-source</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-test-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>${project.basedir}/src/example/java</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- read Example.java into property -->
-			<plugin>
-				<groupId>org.codehaus.gmaven</groupId>
-				<artifactId>gmaven-plugin</artifactId>
-				<version>${gmaven.plugin.version}</version>
-				<configuration>
-					<properties>
-						<examplePath>${project.basedir}/src/example/java/com/codereligion/example/ExampleTest.java</examplePath>
-					</properties>
-					<source>
-						project.properties.example = new
-						File(project.properties.examplePath).getText()
-					</source>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 
 			<!-- copy resources and replace variables -->
 			<plugin>
@@ -205,9 +159,6 @@
 					<includes>
 						<include>src/</include>
 					</includes>
-					<excludes>
-						<exclude>src/example/java/com/codereligion/example/Example.java</exclude>
-					</excludes>
 				</configuration>
 				<executions>
 					<execution>
