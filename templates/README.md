@@ -1,4 +1,4 @@
-# Diff [![Build Status](https://ssl.webpack.de/secure-jenkins.codereligion.com/buildStatus/icon?job=codereligion-diff-master-build-flow)](http://jenkins.codereligion.com/view/codereligion-diff/job/codereligion-diff-master-build-flow/)
+# Diff [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.codereligion/codereligion-diff/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.codereligion/codereligion-diff) [![Build Status](https://ssl.webpack.de/secure-jenkins.codereligion.com/buildStatus/icon?job=codereligion-diff-master-build-flow)](http://jenkins.codereligion.com/view/codereligion-diff/job/codereligion-diff-master-build-flow/) [![SonarQube Coverage](https://img.shields.io/sonar/http/sonar.codereligion.com/com.codereligion:codereligion-diff/coverage.svg)](http://sonar.codereligion.com/dashboard/index/44)
 
 Allows to diff any two Java objects and retrieve the diff result as a list of strings.
 The result is a [unified diff](http://en.wikipedia.org/wiki/Diff#Unified_format) without any contextual lines.
@@ -6,15 +6,6 @@ The result is a [unified diff](http://en.wikipedia.org/wiki/Diff#Unified_format)
 ## Requirements
 * Java 1.5 or higher
 * dependencies see [maven pom](pom.xml)
-
-## Maven ##
-```xml
-<dependency>
-	<groupId>com.codereligion</groupId>
-	<artifactId>codereligion-diff</artifactId>
-	<version>${project.version}</version>
-</dependency>
-```
 
 ## Example code
 ```java
