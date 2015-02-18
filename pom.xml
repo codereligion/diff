@@ -53,7 +53,7 @@
 		<license.plugin.version>1.9.0</license.plugin.version>
 		<source.plugin.version>2.4</source.plugin.version>
 		<javadoc.plugin.version>2.9.1</javadoc.plugin.version>
-		<release.plugin.version>2.4.1</release.plugin.version>
+		<release.plugin.version>2.5.1</release.plugin.version>
 		<build.helper.plugin.version>1.8</build.helper.plugin.version>
 		<scm.plugin.version>1.8.1</scm.plugin.version>
 
