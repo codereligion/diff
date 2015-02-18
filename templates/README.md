@@ -4,7 +4,7 @@ Allows to diff any two Java objects and retrieve the diff result as a list of st
 The result is a [unified diff](http://en.wikipedia.org/wiki/Diff#Unified_format) without any contextual lines.
 
 ## Requirements
-* Java 1.5 or higher
+* Java 1.6 or higher
 * dependencies see [maven pom](pom.xml)
 
 ## Example code
