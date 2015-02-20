@@ -15,12 +15,12 @@
  */
 package com.codereligion.diff.internal.linewriter;
 
+import com.codereligion.cherry.reflect.BeanIntrospections;
 import com.codereligion.diff.exception.MissingSerializerException;
 import com.codereligion.diff.exception.UnreadablePropertyException;
 import com.codereligion.diff.internal.ComparatorRepository;
-import com.codereligion.diff.internal.SerializerRepository;
 import com.codereligion.diff.internal.PropertyInclusionChecker;
-import com.codereligion.reflect.BeanIntrospections;
+import com.codereligion.diff.internal.SerializerRepository;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.beans.PropertyDescriptor;
